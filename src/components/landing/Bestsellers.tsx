@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { prisma, getProducts } from "@/lib/db";
+import HomepageFragranceCard from "@/components/landing/HomepageFragranceCard";
 
 const defaultBestsellers = [
   {
@@ -26,20 +27,19 @@ const defaultBestsellers = [
 export default async function Bestsellers() {
   const imageKeys = ["homeBestsellerImage1", "homeBestsellerImage2", "homeBestsellerImage3"] as const;
   const imageSettings = new Map<string, string>();
-  const saleNames = new Set<string>();
+  let catalogProducts: Awaited<ReturnType<typeof getProducts>> = [];
   try {
     const [rows, products] = await Promise.all([
       prisma.siteSetting.findMany({ where: { key: { in: [...imageKeys] } }, select: { key: true, value: true } }),
-      prisma.product.findMany({ where: { isGiftSet: false }, select: { name: true, isSale: true, price: true, originalPrice: true } }),
+      getProducts({ giftSets: false }),
     ]);
     for (const row of rows) imageSettings.set(row.key, row.value);
-    for (const product of products) {
-      if (product.isSale || (product.originalPrice != null && product.originalPrice > product.price)) saleNames.add(product.name.toLowerCase());
-    }
+    catalogProducts = products;
   } catch (error) {
     console.error("Homepage bestseller images could not be loaded:", error);
   }
-  const bestsellers = defaultBestsellers.map((product, index) => ({ ...product, image: imageSettings.get(imageKeys[index]) || product.image }));
+  const normalizeName = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "");
+  const bestsellers = defaultBestsellers.map((product, index) => ({ ...product, image: imageSettings.get(imageKeys[index]) || product.image, catalogProduct: catalogProducts.find((item) => normalizeName(item.name) === normalizeName(product.name)) }));
 
   return (
     <section id="bestsellers" className="bg-[#222a37] px-6 py-20 text-white sm:px-10 sm:py-24 lg:px-[3.5vw] lg:py-28">
