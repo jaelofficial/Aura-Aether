@@ -72,7 +72,7 @@ export default async function Bestsellers() {
           <article
             key={product.name}
             className={index === 1
-              ? "relative z-10 w-[36%] max-w-[430px] shrink-0 sm:w-[34%]"
+              ? "relative z-10 -mx-[2%] w-[36%] max-w-[430px] shrink-0 sm:w-[34%]"
               : "relative z-0 w-[28%] max-w-[340px] shrink-0 sm:w-[25%]"}
           >
             <Link href={product.product ? `/shop/${product.product.slug}` : "/shop"} className="group block">
