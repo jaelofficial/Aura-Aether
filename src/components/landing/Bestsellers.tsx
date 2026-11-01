@@ -1,12 +1,9 @@
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
-import { getProducts } from "@/lib/db";
+import type { Product } from "@/types";
 
-export default async function Bestsellers() {
-  const products = await getProducts({
-    giftSets: false,
-    sort: "newest",
-  });
+export default function Bestsellers({ products }: { products: Product[] }) {
+  const fragrances = products.filter((product) => !product.isGiftSet);
 
   return (
     <section
@@ -36,13 +33,13 @@ export default async function Bestsellers() {
         </Link>
       </div>
 
-      {products.length === 0 ? (
+      {fragrances.length === 0 ? (
         <p className="py-12 text-center text-sm text-white/75">
           Our fragrance collection is being updated. Please check back soon.
         </p>
       ) : (
         <div className="grid grid-cols-2 gap-x-3 gap-y-9 sm:grid-cols-3 sm:gap-x-5 lg:grid-cols-6 lg:gap-x-5 lg:gap-y-10">
-          {products.map((product) => (
+          {fragrances.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
