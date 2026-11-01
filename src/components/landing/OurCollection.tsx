@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import { prisma } from "@/lib/db";
 
 const notes = [
   {
@@ -73,11 +74,24 @@ function CollectionNote({
   );
 }
 
-export default function OurCollection() {
+export default async function OurCollection() {
+  const imageKeys = ["homeCollectionImage1", "homeCollectionImage2", "homeCollectionImage3", "homeCollectionImage4"];
+  let savedImages: Record<string, string> = {};
+  try {
+    const rows = await prisma.siteSetting.findMany({ where: { key: { in: imageKeys } } });
+    savedImages = Object.fromEntries(rows.map((row) => [row.key, row.value]));
+  } catch (error) {
+    console.error("Could not load collection images:", error);
+  }
+  const editableImages = collectionImages.map((image, index) => ({
+    ...image,
+    src: savedImages[imageKeys[index]] || image.src,
+  }));
+
   return (
     <section aria-labelledby="collection-title" className="bg-white px-4 pb-20 pt-16 sm:px-6 sm:pb-24 sm:pt-20 lg:px-[4vw] lg:pb-28 lg:pt-[6.8vw]">
       <div className="mx-auto grid grid-cols-1 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-[8.5vw] lg:gap-y-0">
-        {collectionImages.slice(0, 2).map((image, index) => (
+        {editableImages.slice(0, 2).map((image, index) => (
           <Image
             key={image.src}
             src={image.src}
@@ -116,7 +130,7 @@ export default function OurCollection() {
           className="order-3 sm:order-none lg:col-start-1 lg:row-start-3 lg:mt-[2.5vw] lg:pt-[15vw]"
         />
 
-        {collectionImages.slice(2).map((image) => (
+        {editableImages.slice(2).map((image) => (
           <Image
             key={image.src}
             src={image.src}
