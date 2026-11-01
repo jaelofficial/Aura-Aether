@@ -100,14 +100,16 @@ export default async function OurCollection() {
     <section aria-labelledby="collection-title" className="bg-white px-4 pb-20 pt-16 sm:px-6 sm:pb-24 sm:pt-20 lg:px-[4vw] lg:pb-28 lg:pt-[6.8vw]">
       <div className="mx-auto grid grid-cols-1 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-[8.5vw] lg:gap-y-0">
         {collectionImages.slice(0, 2).map((image, index) => (
-          <Image
-            src={image.src}
-            alt={image.alt}
-            width={1361}
-            height={1824}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 30vw"
-            className={`hidden aspect-square w-full object-cover ${index === 0 ? "order-2" : "order-3"} sm:block sm:order-none ${image.className}`}
-          />
+          <div key={image.src} className={`relative hidden aspect-square w-full overflow-hidden ${index === 0 ? "order-2" : "order-3"} sm:block sm:order-none ${image.className}`}>
+            <Image
+              src={image.src}
+              alt={image.alt}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 30vw"
+              className="object-cover"
+            />
+            {image.onSale && <span className="absolute left-3 top-3 bg-white/95 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#252522]">On sale</span>}
+          </div>
         ))}
 
         <div className="order-first flex flex-col items-center text-center sm:col-span-2 lg:order-none lg:col-span-1 lg:items-end lg:pt-0 lg:text-right">
