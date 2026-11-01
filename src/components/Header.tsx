@@ -38,7 +38,8 @@ export default function Header() {
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data?.settings?.brandName) setBrandName(data.settings.brandName);
-        if (typeof data?.settings?.logoUrl === "string") setLogoUrl(data.settings.logoUrl);
+        if (typeof data?.settings?.logoUrl === "string" && data.settings.logoUrl.trim()) setLogoUrl(data.settings.logoUrl.trim());
+        else setLogoUrl("/images/aura-aether-logo.svg");
         const colors = data?.settings || {};
         if (/^#[0-9a-f]{6}$/i.test(colors.primaryColor || "")) {
           document.documentElement.style.setProperty("--primary", colors.primaryColor);
