@@ -1,14 +1,26 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Product } from "@/types";
+import { prisma } from "@/lib/db";
 
-function getProductImage(product: Product) {
-  return product.images?.find((url) => typeof url === "string" && url.trim() && !url.startsWith("/images/products/")) ||
-    (product.image?.trim() && !product.image.startsWith("/images/products/") ? product.image : "");
-}
+const defaultFragrances = [
+  { name: "Esencia de la Forêt", image: "/images/botanical-edit/esencia-foret.jpeg" },
+  { name: "Néctar de la Terre", image: "/images/botanical-edit/nectar-terre.jpeg" },
+  { name: "Bleue Rivage", image: "/images/botanical-edit/bleue-rivage.jpeg" },
+  { name: "Esencia de la Forêt", image: "/images/botanical-edit/esencia-foret.jpeg" },
+  { name: "Néctar de la Terre", image: "/images/botanical-edit/nectar-terre.jpeg" },
+  { name: "Bleue Rivage", image: "/images/botanical-edit/bleue-rivage.jpeg" },
+];
 
-export default function SpringDealsSpotlight({ products }: { products: Product[] }) {
-  const fragrances = products.slice(0, 6);
+export default async function SpringDealsSpotlight() {
+  const imageKeys = ["homeBotanicalImage1", "homeBotanicalImage2", "homeBotanicalImage3"] as const;
+  const imageSettings = new Map<string, string>();
+  try {
+    const rows = await prisma.siteSetting.findMany({ where: { key: { in: [...imageKeys] } }, select: { key: true, value: true } });
+    for (const row of rows) imageSettings.set(row.key, row.value);
+  } catch (error) {
+    console.error("Homepage botanical images could not be loaded:", error);
+  }
+  const fragrances = defaultFragrances.map((fragrance, index) => ({ ...fragrance, image: imageSettings.get(imageKeys[index % imageKeys.length]) || fragrance.image }));
 
   return (
     <section id="botanical-edit" className="bg-white px-6 py-20 text-black sm:px-10 sm:py-24 lg:px-[3.5vw] lg:py-28">
@@ -27,21 +39,31 @@ export default function SpringDealsSpotlight({ products }: { products: Product[]
       </div>
 
       <div className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {fragrances.map((fragrance) => (
-          <article key={fragrance.id} className="w-[82vw] max-w-[444px] shrink-0 snap-start">
+        {fragrances.map((fragrance, index) => (
+          <article key={`${fragrance.name}-${index}`} className="w-[82vw] max-w-[444px] shrink-0 snap-start">
             <div className="relative aspect-square w-full overflow-hidden bg-[#f7f5f4]">
-              {getProductImage(fragrance) ? <Image src={getProductImage(fragrance)} alt={fragrance.name} fill sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw" className="object-cover" /> : <div className="flex h-full items-center justify-center text-sm text-[#625A54]">Product image not added yet</div>}
+              <Image
+                src={fragrance.image}
+                alt={fragrance.name}
+                fill
+                sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+                className="object-cover"
+              />
             </div>
 
             <div className="mt-8 flex flex-col gap-4">
               <div className="flex flex-col items-start gap-2">
                 <h3 className="font-sans-clean text-lg font-medium leading-tight">{fragrance.name}</h3>
-                <div aria-hidden="true" className="text-sm tracking-[0.2em] text-[var(--accent-copper)]">✦ ✦ ✦ ✦</div>
+                <div className="flex" aria-hidden="true">
+                  {[1, 2, 3, 4].map((star) => (
+                    <Image key={star} src="/images/bestsellers/star-rate.svg" alt="" width={18} height={18} />
+                  ))}
+                </div>
               </div>
 
               <div className="flex items-end justify-between gap-4">
                 <p className="font-sans-clean text-lg font-medium leading-[1.4] tracking-[0.1px] sm:text-xl">Eau de Parfum</p>
-                <Link href={`/shop/${fragrance.slug}`} className="flex h-[50px] shrink-0 items-center justify-center rounded border border-black px-6 font-sans-clean text-sm transition-colors hover:bg-[var(--primary)] hover:text-white sm:px-8 sm:text-base">
+                <Link href="/shop" className="flex h-[50px] shrink-0 items-center justify-center rounded border border-black px-6 font-sans-clean text-sm transition-colors hover:bg-[#222a37] hover:text-white sm:px-8 sm:text-base">
                   Quick shop
                 </Link>
               </div>
