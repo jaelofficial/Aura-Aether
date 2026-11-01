@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { prisma } from "@/lib/db";
 
 const fragrances = [
   { name: "Esencia de la Forêt", image: "/images/botanical-edit/esencia-foret.jpeg" },
@@ -10,7 +11,20 @@ const fragrances = [
   { name: "Bleue Rivage", image: "/images/botanical-edit/bleue-rivage.jpeg" },
 ];
 
-export default function SpringDealsSpotlight() {
+export default async function SpringDealsSpotlight() {
+  const imageKeys = ["homeBotanicalImage1", "homeBotanicalImage2", "homeBotanicalImage3"];
+  let savedImages: Record<string, string> = {};
+  try {
+    const rows = await prisma.siteSetting.findMany({ where: { key: { in: imageKeys } } });
+    savedImages = Object.fromEntries(rows.map((row) => [row.key, row.value]));
+  } catch (error) {
+    console.error("Could not load botanical images:", error);
+  }
+  const editableFragrances = fragrances.map((fragrance, index) => ({
+    ...fragrance,
+    image: savedImages[imageKeys[index % imageKeys.length]] || fragrance.image,
+  }));
+
   return (
     <section id="botanical-edit" className="bg-white px-6 py-20 text-black sm:px-10 sm:py-24 lg:px-[3.5vw] lg:py-28">
       <div className="mb-12 flex items-end justify-between gap-8 sm:mb-14">
@@ -28,7 +42,7 @@ export default function SpringDealsSpotlight() {
       </div>
 
       <div className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {fragrances.map((fragrance, index) => (
+        {editableFragrances.map((fragrance, index) => (
           <article key={`${fragrance.name}-${index}`} className="w-[82vw] max-w-[444px] shrink-0 snap-start">
             <div className="relative aspect-square w-full overflow-hidden bg-[#f7f5f4]">
               <Image
