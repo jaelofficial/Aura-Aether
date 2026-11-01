@@ -97,7 +97,7 @@ const groups: Record<string, EditorGroup[]> = {
       { key: "homePromoDescription", label: "Promotion description", multiline: true },
       { key: "homePromoImageUrl", label: "Promotion image", image: true },
     ]},
-    { title: "Homepage photography", description: "Replace the original photographs used throughout the homepage. The original images remain as defaults until you upload replacements.", fields: [
+    { title: "Homepage photography", description: "Replace the Collection and Bestsellers photos shown on both the homepage and Shop page, plus the other homepage photography. Product prices and sale status are managed in the Product Catalogue.", fields: [
       { key: "homeBestsellerImage1", label: "Fragrances everyone remembers — image 1", image: true },
       { key: "homeBestsellerImage2", label: "Fragrances everyone remembers — image 2", image: true },
       { key: "homeBestsellerImage3", label: "Fragrances everyone remembers — image 3", image: true },
@@ -289,7 +289,7 @@ export default function StorefrontContentPage() {
       {activeSection === "home" && (
         <section className="rounded-2xl border border-[#E5E7EB] bg-white p-5 sm:p-7">
           <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
-            <div><h2 className="text-lg font-bold text-[#20242B]">Homepage image gallery</h2><p className="mt-1 text-xs leading-5 text-[#858B96]">These are the original rotating hero images. Upload a replacement whenever you want to change a slide.</p></div>
+            <div><h2 className="text-lg font-bold text-[#20242B]">Homepage image gallery</h2><p className="mt-1 text-xs leading-5 text-[#858B96]">The Collection and Bestsellers photos are shared with the Shop page. Their product prices and sale status come from the matching product record.</p><Link href="/admin?tab=products" className="mt-2 inline-flex text-xs font-bold text-[#8B5D45] underline underline-offset-4">Edit product prices and sale status ↗</Link></div>
             <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8B5D45]">4 hero slides</span>
           </div>
           <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
