@@ -83,7 +83,7 @@ export default function Header() {
             {user?.role === "ADMIN" && <Link href="/admin" aria-label="Admin dashboard" className={linkClass}><Shield className="h-5 w-5" /></Link>}
             <button type="button" onClick={openCart} aria-label={`Cart${itemCount ? `, ${itemCount} items` : ""}`} className={`${linkClass} relative flex items-center`}>
               <Image src="/images/naya-icons/shopping-basket.svg" alt="" width={23} height={23} className={`${iconClass} ${isColorHeader ? "brightness-0 invert" : ""}`} />
-              {itemCount > 0 && <span className={`absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[9px] ${isColorHeader ? "bg-white text-[var(--primary)]" : "bg-[#222a37] text-white"}`}>{itemCount}</span>}
+              {itemCount > 0 && <span className={`absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[9px] ${isColorHeader ? "bg-white text-[var(--primary)]" : "bg-[var(--primary)] text-white"}`}>{itemCount}</span>}
             </button>
           </nav>
 
@@ -92,7 +92,7 @@ export default function Header() {
               {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
             {isMobileMenuOpen && (
-              <div className={`absolute left-0 top-full mt-3 flex min-w-44 flex-col gap-4 rounded-xl p-4 text-sm shadow-lg ${isColorHeader ? "bg-[#222a37] text-white" : "bg-white text-[#1e1e1e]"}`}>
+              <div className={`absolute left-0 top-full mt-3 flex min-w-44 flex-col gap-4 rounded-xl p-4 text-sm shadow-lg ${isColorHeader ? "bg-[var(--primary)] text-white" : "bg-white text-[#1e1e1e]"}`}>
                 {navLinks.map((link) => <Link key={link.href} href={link.href} onClick={() => setIsMobileMenuOpen(false)}>{link.name}</Link>)}
                 <Link href={user ? "/account" : "/login"} onClick={() => setIsMobileMenuOpen(false)}>{user ? `Account (${user.name})` : "Sign in / Register"}</Link>
                 {user?.role === "ADMIN" && <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)}>Admin</Link>}
@@ -107,7 +107,7 @@ export default function Header() {
             className={`${mobilePillClass} relative justify-center lg:hidden`}
           >
             <Image src="/images/naya-icons/shopping-basket.svg" alt="" width={20} height={20} className={isColorHeader ? "brightness-0 invert" : ""} />
-            {itemCount > 0 && <span className={`absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[9px] ${isColorHeader ? "bg-white text-[#222a37]" : "bg-[#222a37] text-white"}`}>{itemCount}</span>}
+            {itemCount > 0 && <span className={`absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[9px] ${isColorHeader ? "bg-white text-[var(--primary)]" : "bg-[var(--primary)] text-white"}`}>{itemCount}</span>}
           </button>
         </div>
       </header>
