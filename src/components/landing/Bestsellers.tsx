@@ -72,7 +72,7 @@ export default async function Bestsellers() {
                   alt={product.alt}
                   fill
                   sizes="(min-width: 1024px) 30vw, (min-width: 640px) 30vw, 82vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                  className="object-contain p-3 transition-transform duration-700 group-hover:scale-[1.02]"
                 />
                 {saleNames.has(product.name.toLowerCase()) && <span className="absolute left-3 top-3 bg-white/95 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#252522]">On sale</span>}
               </div>
