@@ -54,7 +54,7 @@ export async function POST() {
         categoryId: category.id,
       };
       if (existing) {
-        await prisma.product.update({ where: { id: existing.id }, data });
+        // Keep existing catalogue edits intact when the setup button is run again.
         createdOrUpdated.push(item.name);
       } else {
         let slug = item.slug;
