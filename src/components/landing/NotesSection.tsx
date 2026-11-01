@@ -20,8 +20,8 @@ export default function NotesSection() {
     }).catch(() => { if (active) setNoteImages(defaultNoteImages); });
     return () => { active = false; };
   }, []);
-  const topLine = (<><span>Your scent</span><Image src={noteImages[0]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" /><span>Our priority</span><Image src={noteImages[1]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" /></>);
-  const bottomLine = (<><span>Find your signature</span><Image src={noteImages[2]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" /><span>make every entrance unforgettable</span><Image src={noteImages[3]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" /> </>);
+  const topLine = (<><span>YOUR SCENT. YOUR SIGNATURE.</span><Image src={noteImages[0]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.55em] w-[1.25em] rounded-full object-cover align-[0.03em] sm:mx-5" /></>);
+  const bottomLine = (<><span>YOUR SCENT. YOUR SIGNATURE.</span><Image src={noteImages[2]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.55em] w-[1.25em] rounded-full object-cover align-[0.03em] sm:mx-5" /></>);
   const topTrackRef = useRef<HTMLDivElement>(null);
   const bottomTrackRef = useRef<HTMLDivElement>(null);
   const offsets = useRef({ top: 0, bottom: 0 });
@@ -103,15 +103,15 @@ export default function NotesSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} aria-label="A note on fragrance" className="overflow-hidden bg-white py-24 text-[#171513] sm:py-32 lg:py-40">
-      <div className="space-y-3 sm:space-y-5 lg:space-y-20">
-        <div role="group" className="overflow-hidden whitespace-nowrap" aria-label="Leave a little mystery, carry the golden hour wherever you go.">
-          <div ref={topTrackRef} className="flex w-max items-center font-serif-luxury text-[clamp(2.8rem,8vw,8.5rem)] leading-[1.05] tracking-[-0.055em] will-change-transform">
+    <section ref={sectionRef} aria-label="A note on fragrance" className="overflow-hidden bg-white py-16 text-[#171513] sm:py-20 lg:py-24">
+      <div className="space-y-2 sm:space-y-3 lg:space-y-8">
+        <div role="group" className="overflow-hidden whitespace-nowrap" aria-label="Your scent. Your signature.">
+          <div ref={topTrackRef} className="flex w-max items-center font-serif-luxury text-[clamp(2rem,5vw,5rem)] leading-[1.08] tracking-[-0.055em] will-change-transform">
             <div className="flex shrink-0 items-center">{topLine}</div>
             <div aria-hidden="true" className="flex shrink-0 items-center">{topLine}</div>
           </div>
         </div>
-        <div role="group" className="overflow-hidden whitespace-nowrap" aria-label="Find your signature, make every entrance unforgettable, leave a little of you behind.">
+        <div role="group" className="overflow-hidden whitespace-nowrap" aria-label="Your scent. Your signature.">
           <div ref={bottomTrackRef} className="flex w-max items-center font-serif-luxury text-[clamp(2.8rem,8vw,8.5rem)] leading-[1.05] tracking-[-0.055em] will-change-transform">
             <div className="flex shrink-0 items-center">{bottomLine}</div>
             <div aria-hidden="true" className="flex shrink-0 items-center">{bottomLine}</div>
