@@ -34,7 +34,7 @@ export default function HeroSection() {
         {slides.map((src, index) => (
           <Image key={src} src={src} alt={`Aura & Aether fragrance campaign ${index + 1}`} fill priority={index === 0} sizes="100vw" className={`object-cover object-center transition-all duration-[1400ms] ease-in-out ${activeSlide === index ? "scale-100 opacity-50" : "scale-[1.035] opacity-0"}`} />
         ))}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,12,8,0.42)_0%,rgba(18,12,8,0.18)_33%,rgba(18,12,8,0.38)_57%,rgba(18,12,8,0.76)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(23,17,15,0.42)_0%,rgba(23,17,15,0.18)_33%,rgba(23,17,15,0.38)_57%,rgba(23,17,15,0.76)_100%)]" />
       </div>
 
       <div className="relative z-10 flex h-screen min-h-[100svh] flex-col justify-end px-6 pb-24 pt-32 sm:px-10 sm:pb-28 lg:px-[4vw] lg:pb-[7vh]">
