@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { prisma, getProducts } from "@/lib/db";
-import HomepageAddButton from "@/components/landing/HomepageAddButton";
 
 const defaultFragrances = [
   { name: "Esencia de la Forêt", image: "/images/botanical-edit/esencia-foret.jpeg", alt: "Esencia de la Forêt botanical fragrance", imageKey: "homeBotanicalImage1" },
@@ -74,7 +73,6 @@ export default async function SpringDealsSpotlight() {
                   Quick shop
                 </Link>
               </div>
-              {fragrance.product && <HomepageAddButton product={fragrance.product} />}
             </div>
           </article>
         ))}
