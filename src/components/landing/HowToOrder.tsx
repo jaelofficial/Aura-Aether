@@ -7,25 +7,25 @@ const steps = [
   {
     title: "Find your fragrance.",
     description: "Explore the collection and choose the scent that feels like you.",
-    image: "/images/how-to-order/step-01.jpeg",
+    imageKey: "homeStepImage1",
     alt: "A fragrance specialist helping a customer explore scents, with a Step 01 card",
   },
   {
     title: "Make it yours.",
     description: "Select your preferred size and add your fragrance to the bag.",
-    image: "/images/how-to-order/step-02.jpeg",
+    imageKey: "homeStepImage2",
     alt: "A customer choosing a perfume to add to a gift bag, with a Step 02 card",
   },
   {
     title: "Place your order.",
     description: "Enter your delivery details and complete checkout securely.",
-    image: "/images/how-to-order/step-03.jpeg",
+    imageKey: "homeStepImage3",
     alt: "A customer completing a fragrance checkout on a phone, with a Step 03 card",
   },
   {
     title: "A little something arrives.",
     description: "We prepare your order with care and deliver it to your door.",
-    image: "/images/how-to-order/step-04.jpeg",
+    imageKey: "homeStepImage4",
     alt: "A fragrance order being delivered to a customer, with a Step 04 card",
   },
 ];
@@ -33,6 +33,14 @@ const steps = [
 export default function HowToOrder() {
   const sectionRef = useRef<HTMLElement>(null);
   const [activeStep, setActiveStep] = useState(0);
+  const [stepImages, setStepImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetch("/api/site-settings").then((res) => res.ok ? res.json() : null).then((data) => {
+      const settings = data?.settings || {};
+      setStepImages([settings.homeStepImage1, settings.homeStepImage2, settings.homeStepImage3, settings.homeStepImage4]);
+    }).catch(() => setStepImages([]));
+  }, []);
 
   useEffect(() => {
     let frame = 0;
@@ -101,16 +109,7 @@ export default function HowToOrder() {
 
           <div className="relative min-h-0 overflow-hidden bg-white/5">
             {steps.map((step, index) => (
-              <Image
-                key={step.image + index}
-                src={step.image}
-                alt={step.alt}
-                fill
-                sizes="(min-width: 1024px) 38vw, 90vw"
-                priority={index === 0}
-                aria-hidden={index !== activeStep}
-                className={`object-cover transition-opacity duration-700 ${index === activeStep ? "opacity-100" : "opacity-0"}`}
-              />
+              {stepImages[index] ? <Image key={step.title} src={stepImages[index]} alt={step.alt} fill sizes="(min-width: 1024px) 38vw, 90vw" priority={index === 0} aria-hidden={index !== activeStep} className={`object-cover transition-opacity duration-700 ${index === activeStep ? "opacity-100" : "opacity-0"}`} /> : null}
             ))}
           </div>
         </div>
