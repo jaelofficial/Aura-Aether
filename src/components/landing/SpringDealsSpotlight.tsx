@@ -23,7 +23,7 @@ export default async function SpringDealsSpotlight() {
   } catch (error) {
     console.error("Homepage botanical images could not be loaded:", error);
   }
-  const normalizeName = (value: string) => value.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "");
+  const normalizeName = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "");
   const fragrances = defaultFragrances.map((fragrance, index) => ({ ...fragrance, image: imageSettings.get(imageKeys[index]) || fragrance.image, product: catalogProducts.find((item) => normalizeName(item.name) === normalizeName(fragrance.name)) }));
 
   return (
