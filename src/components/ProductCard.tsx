@@ -24,13 +24,13 @@ export default function ProductCard({ product }: ProductCardProps) {
     <article className="group min-w-0">
       <Link
         href={`/shop/${product.slug}`}
-        className="relative mb-4 block aspect-[4/5] overflow-hidden bg-[#F2F0ED]"
+        className="relative mb-4 block aspect-square overflow-hidden bg-[#F2F0ED]"
       >
         <Image
           src={product.image}
           alt={product.name}
           fill
-          className="object-contain p-3 transition-transform duration-700 group-hover:scale-[1.02]"
+          className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
           sizes="(max-width: 640px) 48vw, (max-width: 1024px) 48vw, 31vw"
         />
         {(discount || product.isSale) && (
