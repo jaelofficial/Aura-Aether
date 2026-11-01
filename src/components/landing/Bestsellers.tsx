@@ -28,6 +28,7 @@ export default async function Bestsellers() {
   const imageKeys = ["homeBestsellerImage1", "homeBestsellerImage2", "homeBestsellerImage3"] as const;
   const imageSettings = new Map<string, string>();
   let catalogProducts: Awaited<ReturnType<typeof getProducts>> = [];
+  const saleNames = new Set<string>();
   try {
     const [rows, products] = await Promise.all([
       prisma.siteSetting.findMany({ where: { key: { in: [...imageKeys] } }, select: { key: true, value: true } }),
@@ -35,6 +36,7 @@ export default async function Bestsellers() {
     ]);
     for (const row of rows) imageSettings.set(row.key, row.value);
     catalogProducts = products;
+    for (const item of products) if (item.isSale || (item.originalPrice != null && item.originalPrice > item.price)) saleNames.add(item.name.toLowerCase());
   } catch (error) {
     console.error("Homepage bestseller images could not be loaded:", error);
   }
@@ -63,7 +65,7 @@ export default async function Bestsellers() {
       <div className="mt-12 flex snap-x snap-mandatory items-end gap-6 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:grid sm:grid-cols-3 sm:gap-5 sm:overflow-visible sm:snap-none lg:mt-16 lg:gap-8">
         {bestsellers.map((product, index) => (
           <article key={product.name} className="w-[82vw] max-w-[430px] shrink-0 snap-start sm:mx-auto sm:w-full sm:max-w-none">
-            <Link href="/shop" className="group block">
+            <Link href={product.catalogProduct ? `/shop/${product.catalogProduct.slug}` : "/shop"} className="group block">
               <div className="relative aspect-[4/5] w-full overflow-hidden bg-black/10">
                 <Image
                   src={product.image}
