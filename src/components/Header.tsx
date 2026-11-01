@@ -31,17 +31,23 @@ export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [brandName, setBrandName] = useState("Aura & Aether Parfums");
+  const [logoUrl, setLogoUrl] = useState("/images/aura-aether-logo.svg");
 
   useEffect(() => {
     fetch("/api/site-settings")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data?.settings?.brandName) setBrandName(data.settings.brandName);
+        if (typeof data?.settings?.logoUrl === "string") setLogoUrl(data.settings.logoUrl);
+        const colors = data?.settings || {};
+        if (/^#[0-9a-f]{6}$/i.test(colors.primaryColor || "")) document.documentElement.style.setProperty("--primary", colors.primaryColor);
+        if (/^#[0-9a-f]{6}$/i.test(colors.accentColor || "")) document.documentElement.style.setProperty("--accent-copper", colors.accentColor);
+        if (/^#[0-9a-f]{6}$/i.test(colors.backgroundColor || "")) document.documentElement.style.setProperty("--background", colors.backgroundColor);
       })
       .catch(() => undefined);
   }, []);
 
-  const pillClass = `flex items-center rounded-[20px] px-5 py-3.5 text-sm font-medium shadow-sm ${isColorHeader ? "bg-[#222a37] text-white" : "bg-white text-[#1e1e1e]"}`;
+  const pillClass = `flex items-center rounded-[20px] px-5 py-3.5 text-sm font-medium shadow-sm ${isColorHeader ? "bg-[var(--primary)] text-white" : "bg-white text-[#1e1e1e]"}`;
   const mobilePillClass = `flex items-center gap-2 rounded-[14px] px-3 py-2 text-sm font-medium shadow-sm ${isColorHeader ? "bg-[#222a37] text-white" : "bg-white text-[#1e1e1e]"}`;
   const linkClass = "transition-opacity hover:opacity-60";
 
@@ -50,9 +56,8 @@ export default function Header() {
       <header className={`${overlaysHero ? "absolute" : "sticky"} left-0 right-0 top-0 z-40 w-full ${overlaysHero ? "bg-transparent" : "border-b border-[#EEE9E4] bg-[#FFFEFC]/95 backdrop-blur-md"}`}>
         <div className="relative flex w-full items-center justify-between px-4 py-5 sm:px-6 lg:px-[4vw] lg:py-7">
           <nav aria-label="Main navigation" className={`${pillClass} hidden gap-6 lg:flex`}>
-            <Link href="/shop" className={`${linkClass} flex items-center gap-1.5`}>
-              Shop
-            </Link>
+            <Link href="/" className={linkClass}>Home</Link>
+            <Link href="/shop" className={`${linkClass} flex items-center gap-1.5`}>Shop</Link>
             <Link href="/gift-sets" className={linkClass}>Gifts</Link>
             <span aria-hidden="true" className={`h-6 w-px ${isColorHeader ? "bg-white/25" : "bg-[#E6E6E6]"}`} />
             <button type="button" aria-label="Search products" onClick={() => setIsSearchOpen(true)} className={linkClass}>
@@ -61,10 +66,11 @@ export default function Header() {
           </nav>
 
           <Link href="/" aria-label={brandName} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-opacity hover:opacity-80">
-            <span className={`font-alhambra whitespace-nowrap text-[2rem] leading-none tracking-[-0.08em] sm:text-[2.5rem] ${isColorHeader ? "text-[#222a37]" : "text-white"}`}>
-              <span className="lg:hidden">A &amp; A</span>
-              <span className="hidden lg:inline">AURA &amp; AETHER</span>
-            </span>
+            {logoUrl ? (
+              <Image src={logoUrl} alt={`${brandName} logo`} width={260} height={110} priority className="h-12 w-auto max-w-[150px] object-contain sm:h-14 sm:max-w-[210px]" onError={() => setLogoUrl("")} />
+            ) : (
+              <span className="whitespace-nowrap font-serif-luxury text-lg font-semibold tracking-[0.12em] text-[var(--primary)] sm:text-2xl">AURA &amp; AETHER</span>
+            )}
           </Link>
 
           <nav aria-label="Account and shopping" className={`${pillClass} ml-auto hidden gap-5 lg:flex`}>
