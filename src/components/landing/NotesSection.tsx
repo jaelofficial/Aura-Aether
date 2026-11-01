@@ -1,35 +1,27 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
-import type { Product } from "@/types";
+import { useEffect, useRef, useState } from "react";
 
+const defaultNoteImages = ["/images/hero/orange-amere.jpeg", "/images/botanical-edit/bleue-rivage.jpeg", "/images/hero/cassis-sauvage.jpeg", "/images/botanical-edit/esencia-foret.jpeg"];
 
-
-function getProductImage(product: Product) {
-  return product.images?.find((url) => typeof url === "string" && url.trim() && !url.startsWith("/images/products/")) ||
-    (product.image?.trim() && !product.image.startsWith("/images/products/") ? product.image : "");
-}
-
-export default function NotesSection({ products }: { products: Product[] }) {
-  const images = products.map(getProductImage).filter(Boolean);
-  const topLine = (
-    <>
-      <span>Your scent</span>
-      {images[0] && <Image src={images[0]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />}
-      <span>Our priority</span>
-      {images[1] && <Image src={images[1]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />}
-    </>
-  );
-  const bottomLine = (
-    <>
-      <span>Find your signature</span>
-      {images[2] && <Image src={images[2]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />}
-      <span>make every entrance unforgettable</span>
-      {images[3] && <Image src={images[3]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />}
-    </>
-  );
+export default function NotesSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [noteImages, setNoteImages] = useState(defaultNoteImages);
+  useEffect(() => {
+    let active = true;
+    fetch("/api/site-settings").then((response) => response.ok ? response.json() : null).then((data) => {
+      if (!active) return;
+      const settings = data?.settings || {};
+      setNoteImages(defaultNoteImages.map((image, index) => {
+        const savedImage = settings[`homeNotesImage${index + 1}`];
+        return typeof savedImage === "string" && savedImage.trim() ? savedImage : image;
+      }));
+    }).catch(() => { if (active) setNoteImages(defaultNoteImages); });
+    return () => { active = false; };
+  }, []);
+  const topLine = (<><span>Your scent</span><Image src={noteImages[0]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" /><span>Our priority</span><Image src={noteImages[1]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" /></>);
+  const bottomLine = (<><span>Find your signature</span><Image src={noteImages[2]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" /><span>make every entrance unforgettable</span><Image src={noteImages[3]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" /> </>);
   const topTrackRef = useRef<HTMLDivElement>(null);
   const bottomTrackRef = useRef<HTMLDivElement>(null);
   const offsets = useRef({ top: 0, bottom: 0 });
