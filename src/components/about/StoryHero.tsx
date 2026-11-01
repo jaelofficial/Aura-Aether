@@ -3,57 +3,35 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const storyImages = [
-  {
-    mobile: "/images/about-story/story-01-mobile.jpeg",
-    desktop: "/images/about-story/story-01-desktop.jpeg",
-    alt: "A customer holding an Aura & Aether fragrance in a lush garden",
-  },
-  {
-    mobile: "/images/about-story/story-02-mobile.jpeg",
-    desktop: "/images/about-story/story-02-desktop.jpeg",
-    alt: "A woman enjoying an Aura & Aether fragrance at home",
-  },
-  {
-    mobile: "/images/about-story/story-03-mobile.jpeg",
-    desktop: "/images/about-story/story-03-desktop.jpeg",
-    alt: "A customer discovering an Aura & Aether fragrance by the coast",
-  },
-  {
-    mobile: "/images/about-story/story-04-mobile.jpeg",
-    desktop: "/images/about-story/story-04-desktop.jpeg",
-    alt: "A woman with her Aura & Aether fragrance in a desert landscape",
-  },
-];
+
 
 export default function StoryHero() {
   const [activeImage, setActiveImage] = useState(0);
+  const [storyImages, setStoryImages] = useState<string[]>([]);
 
   useEffect(() => {
-    const timer = window.setInterval(() => {
-      setActiveImage((current) => (current + 1) % storyImages.length);
-    }, 6000);
-    return () => window.clearInterval(timer);
+    fetch("/api/site-settings").then((res) => res.ok ? res.json() : null).then((data) => {
+      const settings = data?.settings || {};
+      setStoryImages([settings.aboutStoryImage1, settings.aboutStoryImage2, settings.aboutStoryImage3, settings.aboutStoryImage4].filter((url): url is string => typeof url === "string" && url.trim().length > 0));
+    }).catch(() => setStoryImages([]));
   }, []);
+
+  useEffect(() => {
+    if (storyImages.length < 2) return;
+    const timer = window.setInterval(() => setActiveImage((current) => (current + 1) % storyImages.length), 6000);
+    return () => window.clearInterval(timer);
+  }, [storyImages.length]);
 
   return (
     <section className="relative flex w-full flex-col overflow-hidden bg-white text-[#17110F] sm:block sm:h-[100svh] sm:min-h-[560px]">
       <div className="relative order-2 h-[58svh] min-h-[360px] bg-[#eee8e1] sm:absolute sm:inset-x-0 sm:bottom-0 sm:h-[60%] sm:min-h-0">
-        {storyImages.map((image, index) => (
-          <picture key={image.mobile} className={`absolute inset-0 transition-opacity duration-[1400ms] ${activeImage === index ? "opacity-100" : "pointer-events-none opacity-0"}`}>
-            <source media="(min-width: 640px)" srcSet={image.desktop} />
-            <Image
-              src={image.mobile}
-              alt={image.alt}
-              fill
-              priority={index === 0}
-              sizes="100vw"
-              className="object-cover object-center"
-            />
-          </picture>
+        {storyImages.map((src, index) => (
+          <div key={src} className={`absolute inset-0 transition-opacity duration-[1400ms] ${activeImage === index ? "opacity-100" : "pointer-events-none opacity-0"}`}>
+            <Image src={src} alt={`Aura & Aether brand story image ${index + 1}`} fill priority={index === 0} sizes="100vw" className="object-cover object-center" />
+          </div>
         ))}
         <div className="absolute bottom-4 right-4 z-10 flex items-center gap-2 sm:bottom-6 sm:right-6" aria-label="Story images">
-          {storyImages.map((image, index) => (
+          {storyImages.length > 1 && storyImages.map((image, index) => (
             <button
               key={image.mobile}
               type="button"
