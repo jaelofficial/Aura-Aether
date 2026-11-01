@@ -72,8 +72,8 @@ export default async function Bestsellers() {
           <article
             key={product.name}
             className={index === 1
-              ? "relative z-10 w-[36%] max-w-[460px] shrink-0 sm:w-[36%]"
-              : "relative z-0 w-[30%] max-w-[390px] shrink-0 sm:w-[30%]"}
+              ? "relative z-10 w-[38%] max-w-[500px] shrink-0 sm:w-[38%]"
+              : "relative z-0 w-[31%] max-w-[420px] shrink-0 sm:w-[31%]"}
           >
             <Link href={product.product ? `/shop/${product.product.slug}` : "/shop"} className="group block">
               <div className={index === 1
@@ -83,7 +83,7 @@ export default async function Bestsellers() {
                   src={product.image}
                   alt={product.alt}
                   fill
-                  sizes={index === 1 ? "(min-width: 1024px) 36vw, 36vw" : "(min-width: 1024px) 30vw, 30vw"}
+                  sizes={index === 1 ? "(min-width: 1024px) 38vw, 38vw" : "(min-width: 1024px) 31vw, 31vw"}
                   className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                 />
               </div>
