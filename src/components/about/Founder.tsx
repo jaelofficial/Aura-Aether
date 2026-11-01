@@ -20,7 +20,7 @@ export default function Founder() {
   }, []);
 
   return (
-    <section className="relative isolate min-h-[100svh] w-full overflow-hidden bg-[#222a37] px-5 py-16 text-white sm:px-8 lg:h-[100svh] lg:px-[4vw] lg:py-0">
+    <section className="relative isolate min-h-[100svh] w-full overflow-hidden bg-[var(--primary)] px-5 py-16 text-white sm:px-8 lg:h-[100svh] lg:px-[4vw] lg:py-0">
       <div className="absolute inset-0 -z-10 opacity-[0.08] [background-image:radial-gradient(#fff_0.6px,transparent_0.6px)] [background-size:7px_7px]" />
 
       <div className="relative mx-auto grid max-w-4xl grid-cols-1 gap-y-8 lg:absolute lg:inset-0 lg:block lg:max-w-none">
