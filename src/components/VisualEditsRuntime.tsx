@@ -20,7 +20,11 @@ function applyEdits(data: SavedEdits) {
   if (data.order?.length) {
     const children = Array.from(main.children);
     const byId = new Map<string, Element>();
-    children.forEach((child) => { const id = child.getAttribute("data-aa-section-id"); if (id !== null) byId.set(id, child); });
+    children.forEach((child, index) => {
+      if (!child.hasAttribute("data-aa-section-id")) child.setAttribute("data-aa-section-id", String(index));
+      const id = child.getAttribute("data-aa-section-id");
+      if (id !== null) byId.set(id, child);
+    });
     const ordered = data.order.map((id) => byId.get(id)).filter((node): node is Element => !!node);
     if (ordered.length === children.length) ordered.forEach((node) => main.appendChild(node));
   }
