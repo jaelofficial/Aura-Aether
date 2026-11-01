@@ -1,54 +1,52 @@
-import Image from "next/image";
 import Link from "next/link";
-import type { Product } from "@/types";
+import ProductCard from "@/components/ProductCard";
+import { getProducts } from "@/lib/db";
 
-function getProductImage(product: Product) {
-  return product.images?.find((url) => typeof url === "string" && url.trim() && !url.startsWith("/images/products/")) ||
-    (product.image?.trim() && !product.image.startsWith("/images/products/") ? product.image : "");
-}
-
-export default function Bestsellers({ products }: { products: Product[] }) {
-  const featured = products.filter((product) => product.isFeatured);
-  const bestsellers = (featured.length ? featured : products).slice(0, 3);
+export default async function Bestsellers() {
+  const products = await getProducts({
+    giftSets: false,
+    sort: "newest",
+  });
 
   return (
-    <section id="bestsellers" className="bg-[var(--primary)] px-6 py-20 text-white sm:px-10 sm:py-24 lg:px-[3.5vw] lg:py-28">
-      <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-8 lg:max-w-[1147px]">
-          <h2 className="text-3xl font-medium leading-tight sm:w-[500px] sm:shrink-0 sm:text-4xl lg:text-[2.5rem]">
+    <section
+      id="bestsellers"
+      className="bg-[#222a37] px-4 py-16 text-white sm:px-6 sm:py-20 lg:px-[4vw] lg:py-24"
+    >
+      <div className="mb-9 flex flex-col gap-5 sm:mb-12 sm:flex-row sm:items-end sm:justify-between">
+        <div className="max-w-2xl">
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.25em] text-white/65">
+            Aura &amp; Aether Parfums
+          </p>
+          <h2 className="text-3xl font-medium leading-tight sm:text-4xl lg:text-[2.5rem]">
             The fragrances everyone remembers.
           </h2>
-          <p className="max-w-[500px] text-sm leading-relaxed sm:text-base">
-            Discover the signature scents our community returns to, each composed to leave a lasting impression.
+          <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/80 sm:text-base">
+            Explore our fragrance collection and find the scent that becomes part of your signature.
           </p>
         </div>
-        <Link href="/shop" className="flex shrink-0 items-center gap-5 self-start text-base font-medium underline underline-offset-4 sm:text-lg lg:flex-col lg:items-end lg:gap-6">
-          Shop all fragrances
+        <Link
+          href="/shop"
+          className="flex shrink-0 items-center gap-3 self-start text-sm font-medium underline underline-offset-4 transition-opacity hover:opacity-75 sm:self-auto"
+        >
+          View all fragrances
           <svg aria-hidden="true" viewBox="0 0 56 24" className="h-6 w-14" fill="none">
             <path d="M1 12h52m0 0L42 2m11 10L42 22" stroke="currentColor" strokeWidth="1.5" />
           </svg>
         </Link>
       </div>
 
-      <div className="mt-12 flex snap-x snap-mandatory items-end gap-6 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:grid sm:grid-cols-3 sm:gap-5 sm:overflow-visible sm:snap-none lg:mt-16 lg:gap-8">
-        {bestsellers.map((product, index) => (
-          <article key={product.name} className="w-[82vw] max-w-[430px] shrink-0 snap-start sm:mx-auto sm:w-full sm:max-w-none">
-            <Link href={`/shop/${product.slug}`} className="group block">
-              <div className="relative aspect-[4/5] w-full overflow-hidden bg-black/10">
-                {getProductImage(product) ? <Image src={getProductImage(product)} alt={product.name} fill sizes="(min-width: 1024px) 30vw, (min-width: 640px) 30vw, 82vw" className="object-cover transition-transform duration-700 group-hover:scale-[1.03]" /> : <div className="flex h-full items-center justify-center text-sm text-white/70">Product image not added yet</div>}
-              </div>
-              <div className="mt-6 flex items-center justify-between gap-4">
-                <span className="text-xs tracking-[0.12em]">0{index + 1}</span>
-                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-6 w-6 transition-transform group-hover:translate-x-1" fill="none">
-                  <path d="M3 12h17m0 0-7-7m7 7-7 7" stroke="currentColor" strokeWidth="1.5" />
-                </svg>
-              </div>
-              <h3 className="mt-4 text-xl font-medium">{product.name}</h3>
-              <p className="mt-2 max-w-sm text-sm leading-relaxed text-white/85">{product.description}</p>
-            </Link>
-          </article>
-        ))}
-      </div>
+      {products.length === 0 ? (
+        <p className="py-12 text-center text-sm text-white/75">
+          Our fragrance collection is being updated. Please check back soon.
+        </p>
+      ) : (
+        <div className="grid grid-cols-2 gap-x-3 gap-y-9 sm:grid-cols-3 sm:gap-x-5 lg:grid-cols-6 lg:gap-x-5 lg:gap-y-10">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      )}
     </section>
   );
 }
