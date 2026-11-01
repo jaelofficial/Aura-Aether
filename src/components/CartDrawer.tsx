@@ -48,10 +48,10 @@ export default function CartDrawer() {
       />
 
       <aside className="absolute inset-y-0 right-0 flex w-screen max-w-[480px] flex-col border-l border-black/10 bg-white shadow-2xl">
-        <div className="h-1.5 shrink-0 bg-[#222a37]" />
+        <div className="h-1.5 shrink-0 bg-[var(--primary)]" />
         <header className="flex items-center justify-between border-b border-black/10 px-6 py-5 sm:px-8">
           <div>
-            <p className="text-[9px] font-medium uppercase tracking-[0.25em] text-[#222a37]">Aura &amp; Aether</p>
+            <p className="text-[9px] font-medium uppercase tracking-[0.25em] text-[var(--primary)]">Aura &amp; Aether</p>
             <div className="mt-1 flex items-baseline gap-2.5">
               <h2 id="cart-title" className="font-serif-luxury text-2xl text-black">Your bag</h2>
               <span className="text-[11px] text-black/55">{itemCount} {itemCount === 1 ? "item" : "items"}</span>
@@ -61,7 +61,7 @@ export default function CartDrawer() {
             type="button"
             onClick={closeCart}
             aria-label="Close cart drawer"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-black/15 text-black transition-colors hover:border-[#222a37] hover:bg-[#222a37] hover:text-white"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-black/15 text-black transition-colors hover:border-[var(--primary)] hover:bg-[var(--primary)] hover:text-white"
           >
             <X className="h-4 w-4" strokeWidth={1.6} />
           </button>
@@ -70,7 +70,7 @@ export default function CartDrawer() {
         <div className="flex-1 overflow-y-auto px-6 sm:px-8">
           {items.length === 0 ? (
             <div className="flex h-full min-h-[380px] flex-col items-center justify-center py-16 text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#222a37]/10 text-[#222a37]">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--primary)]/10 text-[var(--primary)]">
                 <ShoppingCart className="h-7 w-7" strokeWidth={1.3} />
               </div>
               <h3 className="mt-6 font-serif-luxury text-xl text-black">Your bag is waiting</h3>
@@ -83,7 +83,7 @@ export default function CartDrawer() {
                   closeCart();
                   router.push("/shop");
                 }}
-                className="mt-6 inline-flex items-center gap-2 bg-[#222a37] px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#773B44]"
+                className="mt-6 inline-flex items-center gap-2 bg-[var(--primary)] px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#773B44]"
               >
                 Explore fragrances <ArrowRight className="h-3.5 w-3.5" />
               </button>
@@ -96,7 +96,7 @@ export default function CartDrawer() {
                     href={`/shop/${item.slug}`}
                     onClick={closeCart}
                     aria-label={`View ${item.name}`}
-                    className="relative h-[112px] w-[92px] shrink-0 overflow-hidden bg-[#222a37] sm:h-[128px] sm:w-[104px]"
+                    className="relative h-[112px] w-[92px] shrink-0 overflow-hidden bg-[var(--primary)] sm:h-[128px] sm:w-[104px]"
                   >
                     <Image src={item.image} alt={item.name} fill className="object-contain p-2" sizes="104px" />
                   </Link>
@@ -107,7 +107,7 @@ export default function CartDrawer() {
                         <Link
                           href={`/shop/${item.slug}`}
                           onClick={closeCart}
-                          className="font-serif-luxury text-lg leading-tight text-[#222a37] transition-colors hover:text-[#773B44]"
+                          className="font-serif-luxury text-lg leading-tight text-[var(--primary)] transition-colors hover:text-[#773B44]"
                         >
                           {item.name}
                         </Link>
@@ -115,7 +115,7 @@ export default function CartDrawer() {
                           type="button"
                           onClick={() => removeItem(item.productId)}
                           aria-label={`Remove ${item.name} from cart`}
-                          className="-mr-1 -mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-black/45 transition-colors hover:bg-[#222a37]/10 hover:text-[#222a37]"
+                          className="-mr-1 -mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-black/45 transition-colors hover:bg-[var(--primary)]/10 hover:text-[var(--primary)]"
                         >
                           <Trash2 className="h-4 w-4" strokeWidth={1.5} />
                         </button>
@@ -133,7 +133,7 @@ export default function CartDrawer() {
                           onClick={() => updateQuantity(item.productId, item.quantity - 1)}
                           disabled={item.quantity <= 1}
                           aria-label={`Decrease quantity of ${item.name}`}
-                          className="flex h-full w-8 items-center justify-center text-black transition-colors hover:text-[#222a37] disabled:opacity-30"
+                          className="flex h-full w-8 items-center justify-center text-black transition-colors hover:text-[var(--primary)] disabled:opacity-30"
                         ><Minus className="h-3 w-3" /></button>
                         <span className="w-7 text-center text-[11px] text-black">{item.quantity}</span>
                         <button
@@ -141,7 +141,7 @@ export default function CartDrawer() {
                           onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                           disabled={item.quantity >= item.stock}
                           aria-label={`Increase quantity of ${item.name}`}
-                          className="flex h-full w-8 items-center justify-center text-black transition-colors hover:text-[#222a37] disabled:opacity-30"
+                          className="flex h-full w-8 items-center justify-center text-black transition-colors hover:text-[var(--primary)] disabled:opacity-30"
                         ><Plus className="h-3 w-3" /></button>
                       </div>
                       <span className="text-[10px] text-black/60">{formatGhs(item.price * item.quantity)}</span>
@@ -177,7 +177,7 @@ export default function CartDrawer() {
                   closeCart();
                   router.push("/checkout");
                 }}
-                className="flex w-full items-center justify-center gap-2 bg-[#222a37] px-6 py-3.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#773B44]"
+                className="flex w-full items-center justify-center gap-2 bg-[var(--primary)] px-6 py-3.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#773B44]"
               >
                 Continue to checkout <ArrowRight className="h-3.5 w-3.5" />
               </button>
@@ -187,7 +187,7 @@ export default function CartDrawer() {
                   closeCart();
                   router.push("/cart");
                 }}
-                className="w-full border border-black/20 px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-black transition-colors hover:border-[#222a37] hover:text-[#222a37]"
+                className="w-full border border-black/20 px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-black transition-colors hover:border-[var(--primary)] hover:text-[var(--primary)]"
               >
                 View full bag
               </button>
