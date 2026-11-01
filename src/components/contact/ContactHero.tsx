@@ -1,39 +1,25 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 const fragranceImages = [
-  {
-    src: "/images/hero/coastal-aqua.jpeg",
-    alt: "Aqua perfume on a sunlit coastal terrace",
-    number: "01",
-    position: "left-[3%] w-[13%] h-[24svh] lg:h-[29svh]",
-  },
-  {
-    src: "/images/hero/emerald-noir.jpeg",
-    alt: "Emerald perfume in a dark floral interior",
-    number: "02",
-    position: "left-[18%] w-[16%] h-[35svh] lg:h-[39svh]",
-  },
-  {
-    src: "/images/hero/city-sillage.jpeg",
-    alt: "Golden perfume beside a city cafe",
-    number: "03",
-    position: "left-[36%] w-[28%] h-[43svh] lg:h-[49svh]",
-  },
-  {
-    src: "/images/hero/desert-amber.jpeg",
-    alt: "Amber perfume in a warm garden courtyard",
-    number: "04",
-    position: "left-[67%] w-[16%] h-[35svh] lg:h-[39svh]",
-  },
-  {
-    src: "/images/botanical-edit/nectar-terre.jpeg",
-    alt: "Nectar perfume surrounded by autumn botanicals",
-    number: "05",
-    position: "left-[85%] w-[12%] h-[24svh] lg:h-[29svh]",
-  },
+  { key: "contactImage1", alt: "Aura & Aether fragrance photograph", number: "01", position: "left-[3%] w-[13%] h-[24svh] lg:h-[29svh]" },
+  { key: "contactImage2", alt: "Aura & Aether fragrance photograph", number: "02", position: "left-[18%] w-[16%] h-[35svh] lg:h-[39svh]" },
+  { key: "contactImage3", alt: "Aura & Aether fragrance photograph", number: "03", position: "left-[36%] w-[28%] h-[43svh] lg:h-[49svh]" },
+  { key: "contactImage4", alt: "Aura & Aether fragrance photograph", number: "04", position: "left-[67%] w-[16%] h-[35svh] lg:h-[39svh]" },
+  { key: "contactImage5", alt: "Aura & Aether fragrance photograph", number: "05", position: "left-[85%] w-[12%] h-[24svh] lg:h-[29svh]" },
 ];
 
 export default function ContactHero() {
+  const [images, setImages] = useState<Record<string, string>>({});
+  useEffect(() => {
+    fetch("/api/site-settings").then((res) => res.ok ? res.json() : null).then((data) => {
+      const settings = data?.settings || {};
+      setImages(Object.fromEntries(fragranceImages.map((image) => [image.key, settings[image.key] || ""])));
+    }).catch(() => setImages({}));
+  }, []);
+
   return (
     <section
       aria-labelledby="contact-hero-title"
@@ -66,13 +52,7 @@ export default function ContactHero() {
               {image.number}
             </figcaption>
             <div className="relative h-[calc(100%-24px)] w-full overflow-hidden bg-[#e9e8e6]">
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                sizes="(max-width: 639px) 28vw, (max-width: 1023px) 16vw, 28vw"
-                className="object-cover grayscale transition-all duration-700 hover:grayscale-0"
-              />
+              {images[image.key] ? <Image src={images[image.key]} alt={image.alt} fill sizes="(max-width: 639px) 28vw, (max-width: 1023px) 16vw, 28vw" className="object-cover grayscale transition-all duration-700 hover:grayscale-0" /> : null}
             </div>
           </figure>
         ))}
