@@ -105,7 +105,7 @@ export default function CheckoutPage() {
         <div className="mb-8">
           <Link
             href="/cart"
-            className="inline-flex items-center gap-1.5 text-xs text-black/60 transition-colors hover:text-[#222a37]"
+            className="inline-flex items-center gap-1.5 text-xs text-black/60 transition-colors hover:text-[var(--primary)]"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Return to Cart</span>
@@ -116,7 +116,7 @@ export default function CheckoutPage() {
           {/* Left: Checkout Form */}
           <div className="border border-black/10 bg-white p-6 sm:p-10 lg:col-span-7">
             <div className="mb-8">
-              <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.25em] text-[#222a37]">
+              <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.25em] text-[var(--primary)]">
                 EXPRESS DISPATCH
               </span>
               <h1 className="font-serif-luxury text-2xl font-medium text-black sm:text-3xl">
@@ -125,7 +125,7 @@ export default function CheckoutPage() {
               {!user && (
                 <p className="mt-2 text-xs leading-5 text-black/60">
                   Checking out as Guest.{" "}
-                  <Link href="/login" className="font-semibold text-[#222a37] underline underline-offset-4">
+                  <Link href="/login" className="font-semibold text-[var(--primary)] underline underline-offset-4">
                     Log in
                   </Link>{" "}
                   to link this order to your account.
@@ -153,7 +153,7 @@ export default function CheckoutPage() {
                   placeholder="e.g. Amara Mensah"
                   value={formData.customerName}
                   onChange={handleChange}
-                  className="w-full border border-black/15 bg-white px-4 py-3 text-sm text-black placeholder:text-black/35 transition-colors focus:border-[#222a37] focus:outline-none"
+                  className="w-full border border-black/15 bg-white px-4 py-3 text-sm text-black placeholder:text-black/35 transition-colors focus:border-[var(--primary)] focus:outline-none"
                 />
               </div>
 
@@ -170,7 +170,7 @@ export default function CheckoutPage() {
                     placeholder="amara@example.com"
                     value={formData.customerEmail}
                     onChange={handleChange}
-                    className="w-full border border-black/15 bg-white px-4 py-3 text-sm text-black placeholder:text-black/35 transition-colors focus:border-[#222a37] focus:outline-none"
+                    className="w-full border border-black/15 bg-white px-4 py-3 text-sm text-black placeholder:text-black/35 transition-colors focus:border-[var(--primary)] focus:outline-none"
                   />
                   <p className="mt-1 text-[10px] text-black/50">Receipt &amp; tracking will be sent here.</p>
                 </div>
@@ -186,13 +186,13 @@ export default function CheckoutPage() {
                     placeholder="+233 24 123 4567"
                     value={formData.customerPhone}
                     onChange={handleChange}
-                    className="w-full border border-black/15 bg-white px-4 py-3 text-sm text-black placeholder:text-black/35 transition-colors focus:border-[#222a37] focus:outline-none"
+                    className="w-full border border-black/15 bg-white px-4 py-3 text-sm text-black placeholder:text-black/35 transition-colors focus:border-[var(--primary)] focus:outline-none"
                   />
                   <p className="mt-1 text-[10px] text-black/50">For delivery driver contact.</p>
                 </div>
               </div>
 
-              <div className="border-l-2 border-[#222a37] bg-[#222a37]/[0.06] p-4 text-sm leading-6 text-black/70">
+              <div className="border-l-2 border-[var(--primary)] bg-[var(--primary)]/[0.06] p-4 text-sm leading-6 text-black/70">
                 <strong className="block text-black">Delivery will be confirmed after your order.</strong>
                 We will call you to confirm your exact location and arrange an Uber delivery. The delivery cost will be discussed with you before dispatch, so no delivery fee is added to this payment.
               </div>
@@ -208,7 +208,7 @@ export default function CheckoutPage() {
                   placeholder="Any notes about your order..."
                   value={formData.notes}
                   onChange={handleChange}
-                  className="w-full resize-y border border-black/15 bg-white px-4 py-3 text-sm text-black placeholder:text-black/35 transition-colors focus:border-[#222a37] focus:outline-none"
+                  className="w-full resize-y border border-black/15 bg-white px-4 py-3 text-sm text-black placeholder:text-black/35 transition-colors focus:border-[var(--primary)] focus:outline-none"
                 />
               </div>
 
@@ -217,7 +217,7 @@ export default function CheckoutPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="flex w-full items-center justify-center gap-2 bg-[#222a37] px-6 py-4 text-xs font-semibold uppercase tracking-widest text-white transition-colors hover:bg-[#773B44] disabled:opacity-60"
+                  className="flex w-full items-center justify-center gap-2 bg-[var(--primary)] px-6 py-4 text-xs font-semibold uppercase tracking-widest text-white transition-colors hover:bg-[#773B44] disabled:opacity-60"
                 >
                   {isLoading ? (
                     <>
@@ -233,7 +233,7 @@ export default function CheckoutPage() {
                 </button>
 
                 <p className="flex items-center justify-center gap-1.5 text-center text-[11px] text-black/55">
-                  <ShieldCheck className="h-4 w-4 text-[#222a37]" />
+                  <ShieldCheck className="h-4 w-4 text-[var(--primary)]" />
                   <span>Supports Ghana Mobile Money (MTN, Telecel, AT) and Debit/Credit Cards</span>
                 </p>
               </div>
@@ -242,7 +242,7 @@ export default function CheckoutPage() {
 
           {/* Right: Order Overview */}
           <div className="space-y-6 border border-black/10 bg-white p-6 sm:p-8 lg:sticky lg:top-28 lg:col-span-5">
-            <h2 className="font-serif-luxury border-b border-black/10 pb-4 text-xl font-semibold text-[#222a37]">
+            <h2 className="font-serif-luxury border-b border-black/10 pb-4 text-xl font-semibold text-[var(--primary)]">
               Order Items ({items.reduce((acc, i) => acc + i.quantity, 0)})
             </h2>
 
@@ -250,7 +250,7 @@ export default function CheckoutPage() {
             <div className="max-h-80 space-y-3 divide-y divide-black/10 overflow-y-auto pr-2">
               {items.map((item) => (
                 <div key={item.productId} className="pt-3 first:pt-0 flex items-center gap-4">
-                  <div className="relative h-[4.5rem] w-16 shrink-0 overflow-hidden bg-[#222a37]">
+                  <div className="relative h-[4.5rem] w-16 shrink-0 overflow-hidden bg-[var(--primary)]">
                     <Image
                       src={item.image}
                       alt={item.name}
@@ -259,7 +259,7 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div className="flex-1 text-xs">
-                    <h4 className="font-serif-luxury text-sm font-semibold text-[#222a37]">
+                    <h4 className="font-serif-luxury text-sm font-semibold text-[var(--primary)]">
                       {item.name}
                     </h4>
                     <p className="text-[10px] uppercase text-black/50">
