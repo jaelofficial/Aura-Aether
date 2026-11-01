@@ -705,7 +705,7 @@ export default function AdminDashboardPage() {
             <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-[#E7D8BC] bg-[#FCFAF6] p-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h3 className="font-serif-luxury text-lg font-semibold text-[#1C1917]">Homepage Fragrances</h3>
-                <p className="mt-1 text-xs text-[#78716C]">Add the four fragrances used in Our Collection and Bestsellers to the product catalogue. Starter prices and stock can be changed below.</p>
+                <p className="mt-1 text-xs text-[#78716C]">Add all seven fragrances featured across Our Collection, Bestsellers and Find Your Signature Fragrance to the product catalogue. Starter prices and stock can be changed below.</p>
               </div>
               <button type="button" onClick={handlePrepareHomepageFragrances} disabled={isPreparingHomepageFragrances} className="shrink-0 rounded-full bg-[#1C1917] px-5 py-3 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#38332E] disabled:opacity-50">
                 {isPreparingHomepageFragrances ? "Preparing..." : "Add Homepage Fragrances"}
