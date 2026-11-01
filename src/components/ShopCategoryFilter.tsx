@@ -22,13 +22,13 @@ export default function ShopCategoryFilter({ categories, currentCategory, sort }
         aria-expanded={isOpen}
         aria-controls="mobile-fragrance-categories"
         onClick={() => setIsOpen((open) => !open)}
-        className="flex min-h-12 w-full items-center justify-between gap-3 border border-[#222a37] bg-white px-4 text-left text-sm text-[#222a37]"
+        className="flex min-h-12 w-full items-center justify-between gap-3 border border-[var(--primary)] bg-white px-4 text-left text-sm text-[var(--primary)]"
       >
         <span className="truncate">{label}</span>
         <Image src="/images/naya-icons/arrow-down.svg" alt="" width={20} height={20} className={`shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
       {isOpen && (
-        <div id="mobile-fragrance-categories" className="absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden border border-[#222a37] bg-[#222a37] text-white shadow-lg">
+        <div id="mobile-fragrance-categories" className="absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden border border-[var(--primary)] bg-[var(--primary)] text-white shadow-lg">
           <Link
             href={`/shop?sort=${sort}`}
             aria-current={!currentCategory ? "page" : undefined}
