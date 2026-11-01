@@ -69,7 +69,7 @@ export default function Header() {
             {logoUrl ? (
               <Image src={logoUrl} alt={`${brandName} logo`} width={260} height={110} priority className="h-12 w-auto max-w-[150px] object-contain sm:h-14 sm:max-w-[210px]" onError={() => setLogoUrl("")} />
             ) : (
-              <span className="whitespace-nowrap font-serif-luxury text-lg font-semibold tracking-[0.12em] ${isColorHeader ? "text-white" : "text-[var(--primary)]"} sm:text-2xl">AURA &amp; AETHER</span>
+              <span className={`whitespace-nowrap font-serif-luxury text-lg font-semibold tracking-[0.12em] ${isColorHeader ? "text-white" : "text-[var(--primary)]"} sm:text-2xl`}>AURA &amp; AETHER</span>
             )}
           </Link>
 
