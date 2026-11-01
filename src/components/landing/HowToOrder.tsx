@@ -56,11 +56,12 @@ export default function HowToOrder() {
         const section = sectionRef.current;
         if (!section) return;
 
-        const scrollableDistance = section.offsetHeight - window.innerHeight;
-        if (scrollableDistance <= 0) return;
-
-        const progress = Math.min(1, Math.max(0, -section.getBoundingClientRect().top / scrollableDistance));
-        setActiveStep(Math.min(defaultSteps.length - 1, Math.floor(progress * defaultSteps.length)));
+        const scrollableDistance = Math.max(1, section.offsetHeight - window.innerHeight);
+        const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+        const rawProgress = (window.scrollY - sectionTop) / scrollableDistance;
+        const progress = Math.min(1, Math.max(0, rawProgress));
+        const nextStep = Math.round(progress * (defaultSteps.length - 1));
+        setActiveStep((current) => current === nextStep ? current : nextStep);
       });
     };
 
