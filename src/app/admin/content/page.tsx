@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { CheckCircle2, Save, Upload, House, Palette, ShoppingBag, Gift, Mail, Sparkles, Truck } from "lucide-react";
 import ProductImageLibrary from "@/components/admin/ProductImageLibrary";
 
@@ -270,7 +271,7 @@ export default function StorefrontContentPage() {
           <h1 className="mt-2 text-3xl font-bold tracking-tight text-[#20242B] sm:text-4xl">Website editor</h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-[#747B87]">Choose a page, update its content, preview every editable image and save your changes.</p>
         </div>
-        
+        <Link href="/admin/visual-editor" className="inline-flex items-center justify-center gap-2 bg-[#20242B] px-5 py-3 text-xs font-bold text-white transition hover:bg-[#424852]">Open visual editor <span aria-hidden="true">↗</span></Link>
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
