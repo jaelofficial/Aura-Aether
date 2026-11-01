@@ -1,28 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Product } from "@/types";
 
-const bestsellers = [
-  {
-    name: "Forêt",
-    description: "A vivid green fragrance inspired by the stillness of the desert.",
-    image: "/images/bestsellers/foret.jpeg",
-    alt: "Green Forêt perfume bottle set against a desert landscape",
-  },
-  {
-    name: "Ambre Boisé",
-    description: "Warm amber and woods, captured in a softly golden scent.",
-    image: "/images/bestsellers/ambre-boise.jpeg",
-    alt: "Ambre Boisé perfume bottle resting on a woodland branch",
-  },
-  {
-    name: "Noir Ambre",
-    description: "A deep, magnetic amber fragrance with a sun-warmed finish.",
-    image: "/images/bestsellers/noir-ambre.jpeg",
-    alt: "Noir Ambre perfume bottle by the coast",
-  },
-];
+function getProductImage(product: Product) {
+  return product.images?.find((url) => typeof url === "string" && url.trim() && !url.startsWith("/images/products/")) ||
+    (product.image?.trim() && !product.image.startsWith("/images/products/") ? product.image : "");
+}
 
-export default function Bestsellers() {
+export default function Bestsellers({ products }: { products: Product[] }) {
+  const featured = products.filter((product) => product.isFeatured);
+  const bestsellers = (featured.length ? featured : products).slice(0, 3);
+
   return (
     <section id="bestsellers" className="bg-[#222a37] px-6 py-20 text-white sm:px-10 sm:py-24 lg:px-[3.5vw] lg:py-28">
       <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
@@ -45,15 +33,9 @@ export default function Bestsellers() {
       <div className="mt-12 flex snap-x snap-mandatory items-end gap-6 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:grid sm:grid-cols-3 sm:gap-5 sm:overflow-visible sm:snap-none lg:mt-16 lg:gap-8">
         {bestsellers.map((product, index) => (
           <article key={product.name} className="w-[82vw] max-w-[430px] shrink-0 snap-start sm:mx-auto sm:w-full sm:max-w-none">
-            <Link href="/shop" className="group block">
+            <Link href={`/shop/${product.slug}`} className="group block">
               <div className="relative aspect-[4/5] w-full overflow-hidden bg-black/10">
-                <Image
-                  src={product.image}
-                  alt={product.alt}
-                  fill
-                  sizes="(min-width: 1024px) 30vw, (min-width: 640px) 30vw, 82vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                />
+                {getProductImage(product) ? <Image src={getProductImage(product)} alt={product.name} fill sizes="(min-width: 1024px) 30vw, (min-width: 640px) 30vw, 82vw" className="object-cover transition-transform duration-700 group-hover:scale-[1.03]" /> : <div className="flex h-full items-center justify-center text-sm text-white/70">Product image not added yet</div>}
               </div>
               <div className="mt-6 flex items-center justify-between gap-4">
                 <span className="text-xs tracking-[0.12em]">0{index + 1}</span>
