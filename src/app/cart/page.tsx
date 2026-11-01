@@ -14,10 +14,10 @@ export default function CartPage() {
     return (
       <div className="flex min-h-[70vh] items-center justify-center bg-white px-4 pb-16 pt-28 sm:px-6 sm:pt-32 lg:px-[4vw] lg:pt-36">
         <div className="max-w-md border border-black/10 bg-white p-8 text-center sm:p-12">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#222a37]/10 text-[#222a37]">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--primary)]/10 text-[var(--primary)]">
             <ShoppingCart className="h-8 w-8" />
           </div>
-          <h1 className="font-serif-luxury mb-2 text-2xl font-medium text-[#222a37] sm:text-3xl">
+          <h1 className="font-serif-luxury mb-2 text-2xl font-medium text-[var(--primary)] sm:text-3xl">
             Your cart is empty
           </h1>
           <p className="mb-8 text-sm font-light leading-relaxed text-black/65">
@@ -26,7 +26,7 @@ export default function CartPage() {
           </p>
           <Link
             href="/shop"
-            className="inline-flex items-center gap-2 bg-[#222a37] px-8 py-4 text-xs font-semibold uppercase tracking-widest text-white transition-colors hover:bg-[#773B44]"
+            className="inline-flex items-center gap-2 bg-[var(--primary)] px-8 py-4 text-xs font-semibold uppercase tracking-widest text-white transition-colors hover:bg-[#773B44]"
           >
             <span>Explore Fragrance Catalog</span>
             <ArrowRight className="w-4 h-4" />
@@ -42,16 +42,16 @@ export default function CartPage() {
         {/* Header */}
         <div className="mb-8 flex items-center justify-between border-b border-black/10 pb-8">
           <div>
-            <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.22em] text-[#222a37]">
+            <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">
               CURRENT SELECTIONS
             </span>
-            <h1 className="font-serif-luxury text-3xl font-normal text-[#222a37] sm:text-4xl">
+            <h1 className="font-serif-luxury text-3xl font-normal text-[var(--primary)] sm:text-4xl">
               Shopping <span className="italic font-serif-luxury">bag.</span>
             </h1>
           </div>
           <Link
             href="/shop"
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-black/60 transition-colors hover:text-[#222a37]"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-black/60 transition-colors hover:text-[var(--primary)]"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Continue Shopping</span>
@@ -69,7 +69,7 @@ export default function CartPage() {
               >
                 {/* Product Thumbnail & Details */}
                 <div className="flex items-center gap-5">
-                  <div className="relative h-24 w-20 shrink-0 overflow-hidden bg-[#222a37] sm:h-28 sm:w-24">
+                  <div className="relative h-24 w-20 shrink-0 overflow-hidden bg-[var(--primary)] sm:h-28 sm:w-24">
                     <Image
                       src={item.image}
                       alt={item.name}
@@ -81,7 +81,7 @@ export default function CartPage() {
                   <div className="space-y-1">
                     <Link
                       href={`/shop/${item.slug}`}
-                      className="font-serif-luxury text-lg font-semibold text-[#222a37] transition-colors hover:text-[#773B44] sm:text-xl"
+                      className="font-serif-luxury text-lg font-semibold text-[var(--primary)] transition-colors hover:text-[#773B44] sm:text-xl"
                     >
                       {item.name}
                     </Link>
@@ -100,7 +100,7 @@ export default function CartPage() {
                     <button
                       onClick={() => updateQuantity(item.productId, item.quantity - 1)}
                       disabled={item.quantity <= 1}
-                      className="p-1 text-black transition-colors hover:text-[#222a37] disabled:opacity-30"
+                      className="p-1 text-black transition-colors hover:text-[var(--primary)] disabled:opacity-30"
                       aria-label="Decrease quantity"
                     >
                       <Minus className="w-3.5 h-3.5" />
@@ -111,7 +111,7 @@ export default function CartPage() {
                     <button
                       onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                       disabled={item.quantity >= item.stock}
-                      className="p-1 text-black transition-colors hover:text-[#222a37] disabled:opacity-30"
+                      className="p-1 text-black transition-colors hover:text-[var(--primary)] disabled:opacity-30"
                       aria-label="Increase quantity"
                     >
                       <Plus className="w-3.5 h-3.5" />
@@ -127,7 +127,7 @@ export default function CartPage() {
                   <button
                     onClick={() => removeItem(item.productId)}
                     aria-label={`Remove ${item.name}`}
-                    className="p-2 text-black/45 transition-colors hover:text-[#222a37]"
+                    className="p-2 text-black/45 transition-colors hover:text-[var(--primary)]"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -138,7 +138,7 @@ export default function CartPage() {
 
           {/* Order Summary Card */}
           <div className="sticky top-28 space-y-6 border border-black/10 bg-white p-6 sm:p-8 lg:col-span-4">
-            <h2 className="font-serif-luxury border-b border-black/10 pb-4 text-xl font-semibold text-[#222a37]">
+            <h2 className="font-serif-luxury border-b border-black/10 pb-4 text-xl font-semibold text-[var(--primary)]">
               Order Summary
             </h2>
 
@@ -147,7 +147,7 @@ export default function CartPage() {
                 <span>Items Subtotal</span>
                 <span className="font-semibold text-black">{formatGhs(subtotal)}</span>
               </div>
-              <div className="border-l-2 border-[#222a37] bg-[#222a37]/[0.06] p-3 text-[11px] leading-5 text-black/70">
+              <div className="border-l-2 border-[var(--primary)] bg-[var(--primary)]/[0.06] p-3 text-[11px] leading-5 text-black/70">
                 We will call to confirm your delivery location and Uber delivery cost after your order. No delivery fee is added here.
               </div>
               <div className="flex justify-between border-t border-black/10 pt-3 text-base font-bold text-black">
@@ -159,7 +159,7 @@ export default function CartPage() {
             <div className="space-y-3 pt-2">
               <Link
                 href="/checkout"
-                className="flex w-full items-center justify-center gap-2 bg-[#222a37] px-6 py-4 text-xs font-semibold uppercase tracking-widest text-white transition-colors hover:bg-[#773B44]"
+                className="flex w-full items-center justify-center gap-2 bg-[var(--primary)] px-6 py-4 text-xs font-semibold uppercase tracking-widest text-white transition-colors hover:bg-[#773B44]"
               >
                 <span>Proceed to Checkout</span>
                 <ArrowRight className="w-4 h-4" />
@@ -167,7 +167,7 @@ export default function CartPage() {
 
               <Link
                 href="/shop"
-                className="block py-2 text-center text-xs text-black/60 transition-colors hover:text-[#222a37]"
+                className="block py-2 text-center text-xs text-black/60 transition-colors hover:text-[var(--primary)]"
               >
                 Add more items
               </Link>
