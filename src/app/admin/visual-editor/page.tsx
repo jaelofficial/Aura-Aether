@@ -93,19 +93,18 @@ export default function VisualEditorPage() {
     children.forEach((child, index) => {
       (child as HTMLElement).draggable = true;
       child.setAttribute("data-aa-section-id", String(index));
-      child.addEventListener("dragstart", (event) => event.dataTransfer?.setData("text/plain", String(index)));
+      child.addEventListener("dragstart", (event) => event.dataTransfer?.setData("text/plain", child.getAttribute("data-aa-section-id") || String(index)));
       child.addEventListener("dragover", (event) => event.preventDefault());
       child.addEventListener("drop", (event) => {
         event.preventDefault();
-        const from = Number(event.dataTransfer?.getData("text/plain"));
-        const to = index;
-        if (!Number.isInteger(from) || from === to) return;
+        const fromId = event.dataTransfer?.getData("text/plain");
         const nodes = Array.from(main.children);
-        const moving = nodes[from];
-        const anchor = nodes[to];
-        if (!moving || !anchor) return;
-        if (from < to) main.insertBefore(moving, anchor.nextSibling);
-        else main.insertBefore(moving, anchor);
+        const moving = nodes.find((node) => node.getAttribute("data-aa-section-id") === fromId);
+        const from = moving ? nodes.indexOf(moving) : -1;
+        const to = nodes.indexOf(child);
+        if (!moving || from < 0 || from === to) return;
+        if (from < to) main.insertBefore(moving, child.nextSibling);
+        else main.insertBefore(moving, child);
         setOrder(Array.from(main.children).map((node) => node.getAttribute("data-aa-section-id") || ""));
         setMessage("Section order changed. Save to keep it.");
       });
