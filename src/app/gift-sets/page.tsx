@@ -22,11 +22,11 @@ export default async function GiftSetsPage() {
       <div className="px-4 sm:px-6 lg:px-[4vw]">
         <header className="mb-10 flex flex-col gap-5 border-b border-black/10 pb-8 sm:mb-12 sm:pb-10 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <p className="mb-3 inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#222a37]">
+            <p className="mb-3 inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">
               <Gift className="h-3.5 w-3.5" />
               {settings.giftSetsEyebrow || "Gifts, thoughtfully composed"}
             </p>
-            <h1 className="font-serif-luxury text-4xl font-normal leading-tight text-[#222a37] sm:text-5xl lg:text-6xl">
+            <h1 className="font-serif-luxury text-4xl font-normal leading-tight text-[var(--primary)] sm:text-5xl lg:text-6xl">
               {settings.giftSetsTitle || "A gift that lingers."}
             </h1>
           </div>
@@ -34,7 +34,7 @@ export default async function GiftSetsPage() {
             <p className="text-sm leading-6 text-black sm:text-base sm:leading-7">
               {settings.giftSetsDescription || "Discover considered fragrance gifts for celebrations, everyday moments, and the people you love."}
             </p>
-            <Link href="/shop" className="mt-4 inline-flex items-center gap-2 text-xs font-medium text-[#222a37] transition-colors hover:text-[#773B44]">
+            <Link href="/shop" className="mt-4 inline-flex items-center gap-2 text-xs font-medium text-[var(--primary)] transition-colors hover:text-[#773B44]">
               Explore all fragrances <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
@@ -51,17 +51,17 @@ export default async function GiftSetsPage() {
           </div>
         ) : (
           <div className="border-y border-black/10 py-16 text-center sm:py-20">
-            <h2 className="font-serif-luxury text-2xl text-[#222a37]">A considered gift is on its way.</h2>
+            <h2 className="font-serif-luxury text-2xl text-[var(--primary)]">A considered gift is on its way.</h2>
             <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-black/65">
               Our curated coffrets are being prepared. In the meantime, explore the fragrances that make each gift personal.
             </p>
-            <Link href="/shop" className="mt-6 inline-flex items-center gap-2 bg-[#222a37] px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.15em] text-white transition-colors hover:bg-[#773B44]">
+            <Link href="/shop" className="mt-6 inline-flex items-center gap-2 bg-[var(--primary)] px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.15em] text-white transition-colors hover:bg-[#773B44]">
               Shop fragrances <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
         )}
 
-        <section aria-label="Gift service details" className="mt-16 bg-[#222a37] px-5 py-8 text-white sm:mt-20 sm:px-8 sm:py-10 lg:px-10">
+        <section aria-label="Gift service details" className="mt-16 bg-[var(--primary)] px-5 py-8 text-white sm:mt-20 sm:px-8 sm:py-10 lg:px-10">
           <div className="grid grid-cols-1 divide-y divide-white/20 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             <article className="py-5 first:pt-0 sm:px-5 sm:py-2 sm:first:pl-0 sm:first:pt-2">
               <Sparkles className="mb-4 h-5 w-5 text-white/80" strokeWidth={1.5} />
