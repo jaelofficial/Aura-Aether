@@ -33,7 +33,15 @@ const DEFAULTS: Record<string, string> = {
   // About page
   aboutTitle: "Our story",
   aboutIntro: "Aura & Aether was created for the moments, moods, and memories that make you who you are.",
-  aboutImageUrl: "/images/hero-placeholder-1.svg",
+  aboutImageUrl: "",
+  aboutStoryImage1: "",
+  aboutStoryImage2: "",
+  aboutStoryImage3: "",
+  aboutStoryImage4: "",
+  aboutFounderImage1: "",
+  aboutFounderImage2: "",
+  aboutFounderImage3: "",
+  aboutFounderImage4: "",
   // Shop page
   shopEyebrow: "THE COLLECTION",
   shopTitle: "Find your fragrance.",
@@ -49,6 +57,11 @@ const DEFAULTS: Record<string, string> = {
   contactEmail: "concierge@aura-aether.com",
   contactPhone: "+233 (0) 24 892 4110",
   contactAddress: "Suite 4B, The Meridian Galleria, Airport Residential Area, Accra, Ghana",
+  contactImage1: "",
+  contactImage2: "",
+  contactImage3: "",
+  contactImage4: "",
+  contactImage5: "",
   // Delivery settings; fees are configured by the store owner in the admin editor.
   deliveryOrigin: "Adenta, Accra, Ghana",
   deliveryFreePromo: "false",
