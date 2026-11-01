@@ -71,7 +71,7 @@ export default function Header() {
 
           <Link href="/" aria-label={brandName} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-opacity hover:opacity-80">
             {logoUrl ? (
-              <Image src={logoUrl} alt={`${brandName} logo`} width={260} height={110} priority className="h-12 w-auto max-w-[150px] object-contain sm:h-14 sm:max-w-[210px]" onError={() => setLogoUrl("")} />
+              <Image src={logoUrl} alt={`${brandName} logo`} width={280} height={174} priority className="h-14 w-auto max-w-[180px] object-contain sm:h-16 sm:max-w-[220px]" onError={() => setLogoUrl("")} />
             ) : (
               <span className={`whitespace-nowrap font-serif-luxury text-lg font-semibold tracking-[0.12em] ${isColorHeader ? "text-white" : "text-[var(--primary)]"} sm:text-2xl`}>AURA &amp; AETHER</span>
             )}
