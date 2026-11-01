@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, Shield, User as UserIcon, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
