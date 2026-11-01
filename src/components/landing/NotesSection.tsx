@@ -2,26 +2,33 @@
 
 import Image from "next/image";
 import { useEffect, useRef } from "react";
+import type { Product } from "@/types";
 
-const topLine = (
-  <>
-    <span>Your scent</span>
-    <Image src="/images/hero/orange-amere.jpeg" alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />
-    <span>Our priority</span>
-    <Image src="/images/botanical-edit/bleue-rivage.jpeg" alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />
-  </>
-);
 
-const bottomLine = (
-  <>
-    <span>Find your signature</span>
-    <Image src="/images/hero/cassis-sauvage.jpeg" alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />
-    <span>make every entrance unforgettable</span>
-    <Image src="/images/botanical-edit/esencia-foret.jpeg" alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />
-  </>
-);
 
-export default function NotesSection() {
+function getProductImage(product: Product) {
+  return product.images?.find((url) => typeof url === "string" && url.trim() && !url.startsWith("/images/products/")) ||
+    (product.image?.trim() && !product.image.startsWith("/images/products/") ? product.image : "");
+}
+
+export default function NotesSection({ products }: { products: Product[] }) {
+  const images = products.map(getProductImage).filter(Boolean);
+  const topLine = (
+    <>
+      <span>Your scent</span>
+      {images[0] && <Image src={images[0]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />}
+      <span>Our priority</span>
+      {images[1] && <Image src={images[1]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />}
+    </>
+  );
+  const bottomLine = (
+    <>
+      <span>Find your signature</span>
+      {images[2] && <Image src={images[2]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />}
+      <span>make every entrance unforgettable</span>
+      {images[3] && <Image src={images[3]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />}
+    </>
+  );
   const sectionRef = useRef<HTMLElement>(null);
   const topTrackRef = useRef<HTMLDivElement>(null);
   const bottomTrackRef = useRef<HTMLDivElement>(null);
