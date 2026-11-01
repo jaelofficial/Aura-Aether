@@ -26,9 +26,7 @@ export default function NotesSection() {
   const bottomTrackRef = useRef<HTMLDivElement>(null);
   const offsets = useRef({ top: 0, bottom: 0 });
   const widths = useRef({ top: 0, bottom: 0 });
-  const lastScrollY = useRef(0);
   const frame = useRef(0);
-  const scrollBoost = useRef(0);
 
   useEffect(() => {
     const measure = () => {
@@ -53,8 +51,7 @@ export default function NotesSection() {
 
       const elapsed = lastFrameTime ? Math.min((time - lastFrameTime) / 1000, 0.05) : 0;
       lastFrameTime = time;
-      const speed = 34 + scrollBoost.current;
-      scrollBoost.current *= Math.exp(-elapsed * 2.8);
+      const speed = 28;
       offsets.current.top = (offsets.current.top + speed * elapsed) % (widths.current.top || 1);
       offsets.current.bottom = (offsets.current.bottom + speed * elapsed) % (widths.current.bottom || 1);
       if (topTrackRef.current) topTrackRef.current.style.transform = `translate3d(${-offsets.current.top}px, 0, 0)`;
@@ -82,23 +79,10 @@ export default function NotesSection() {
     });
     if (sectionRef.current) visibilityObserver.observe(sectionRef.current);
 
-    const updateOnScroll = () => {
-      const currentY = window.scrollY;
-      const delta = currentY - lastScrollY.current;
-      lastScrollY.current = currentY;
-      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        scrollBoost.current = Math.min(scrollBoost.current + Math.abs(delta) * 1.4, 360);
-        if (isVisible) startAnimation();
-      }
-    };
-
-    lastScrollY.current = window.scrollY;
-    window.addEventListener("scroll", updateOnScroll, { passive: true });
     return () => {
       resizeObserver.disconnect();
       visibilityObserver.disconnect();
       cancelAnimationFrame(frame.current);
-      window.removeEventListener("scroll", updateOnScroll);
     };
   }, []);
 
@@ -112,7 +96,7 @@ export default function NotesSection() {
           </div>
         </div>
         <div role="group" className="overflow-hidden whitespace-nowrap" aria-label="Your scent. Your signature.">
-          <div ref={bottomTrackRef} className="flex w-max items-center font-serif-luxury text-[clamp(2.8rem,8vw,8.5rem)] leading-[1.05] tracking-[-0.055em] will-change-transform">
+          <div ref={bottomTrackRef} className="flex w-max items-center font-serif-luxury text-[clamp(2rem,5vw,5rem)] leading-[1.08] tracking-[-0.055em] will-change-transform">
             <div className="flex shrink-0 items-center">{bottomLine}</div>
             <div aria-hidden="true" className="flex shrink-0 items-center">{bottomLine}</div>
           </div>
