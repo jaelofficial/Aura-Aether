@@ -71,7 +71,7 @@ export default function VisualEditorPage() {
       if (element.closest("form,input,select,textarea")) return;
       event.preventDefault();
       event.stopPropagation();
-      const type: Edit["type"] = element instanceof HTMLImageElement ? "image" : element instanceof HTMLAnchorElement || element instanceof HTMLButtonElement ? "link" : "text";
+      const type: Edit["type"] = element instanceof HTMLImageElement ? "image" : element instanceof HTMLAnchorElement ? "link" : "text";
       const selector = selectorFor(main, element);
       const value = readValue(element, type);
       setSelection({ selector, type, value, label: element.tagName.toLowerCase() });
@@ -92,7 +92,7 @@ export default function VisualEditorPage() {
     const children = Array.from(main.children);
     children.forEach((child, index) => {
       (child as HTMLElement).draggable = true;
-      child.setAttribute("data-aa-section-index", String(index));
+      child.setAttribute("data-aa-section-id", String(index));
       child.addEventListener("dragstart", (event) => event.dataTransfer?.setData("text/plain", String(index)));
       child.addEventListener("dragover", (event) => event.preventDefault());
       child.addEventListener("drop", (event) => {
@@ -106,7 +106,7 @@ export default function VisualEditorPage() {
         if (!moving || !anchor) return;
         if (from < to) main.insertBefore(moving, anchor.nextSibling);
         else main.insertBefore(moving, anchor);
-        setOrder(Array.from(main.children).map((_, i) => `:scope > :nth-child(${i + 1})`));
+        setOrder(Array.from(main.children).map((node) => node.getAttribute("data-aa-section-id") || ""));
         setMessage("Section order changed. Save to keep it.");
       });
     });
