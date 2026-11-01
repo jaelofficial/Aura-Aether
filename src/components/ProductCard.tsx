@@ -24,14 +24,14 @@ export default function ProductCard({ product }: ProductCardProps) {
     <article className="group min-w-0">
       <Link
         href={`/shop/${product.slug}`}
-        className="relative mb-3 block aspect-square overflow-hidden bg-[var(--primary)]"
+        className="relative mb-4 block aspect-[4/5] overflow-hidden bg-[#F2F0ED]"
       >
         <Image
           src={product.image}
           alt={product.name}
           fill
-          className="object-contain p-3 transition-transform duration-500 group-hover:scale-[1.04] sm:p-5"
-          sizes="(max-width: 640px) 46vw, (max-width: 1024px) 30vw, 16vw"
+          className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+          sizes="(max-width: 640px) 48vw, (max-width: 1024px) 48vw, 31vw"
         />
         {(discount || product.isSale) && (
           <span className="absolute left-2 top-2 rounded-full bg-white/95 px-2.5 py-1 text-[9px] font-medium text-[#252522] sm:left-3 sm:top-3 sm:text-[10px]">
@@ -46,21 +46,21 @@ export default function ProductCard({ product }: ProductCardProps) {
       </Link>
 
       <Link href={`/shop/${product.slug}`} className="block min-w-0">
-        <h3 className="truncate text-[12px] font-medium uppercase leading-snug tracking-[0.025em] text-[#242421] sm:text-[13px]">
+        <h3 className="text-base font-medium leading-snug tracking-[0.025em] text-[#242421] sm:text-lg">
           {product.name} <span className="font-normal text-[#74746D]">[{product.size}]</span>
         </h3>
       </Link>
-      <p className="mt-1 truncate text-[9px] uppercase tracking-[0.12em] text-[#77776F] sm:text-[10px]">
+      <p className="mt-2 text-xs uppercase tracking-[0.12em] text-[#77776F]">
         {product.scentNotes}
       </p>
 
-      <div className="mt-2 flex items-center justify-between gap-1">
+      <div className="mt-3 flex items-center justify-between gap-2">
         <div className="flex min-w-0 flex-wrap items-baseline gap-x-1.5">
-          <span className="text-[11px] font-medium text-[#242421] sm:text-xs">
+          <span className="text-sm font-medium text-[#242421]">
             {formatGhs(product.price)}
           </span>
           {hasDiscount && (
-            <span className="text-[9px] text-[#83837C] line-through sm:text-[10px]">
+            <span className="text-xs text-[#83837C] line-through">
               {formatGhs(product.originalPrice!)}
             </span>
           )}
@@ -70,7 +70,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           onClick={() => addItem(product, 1)}
           disabled={!product.inStock}
           aria-label={`${isInCart ? "Add another" : "Add"} ${product.name} to cart`}
-          className="shrink-0 rounded-full border border-[#252522] px-3 py-1 text-[10px] font-medium text-[#252522] transition-colors hover:border-[var(--primary)] hover:bg-[var(--primary)] hover:text-white disabled:cursor-not-allowed disabled:border-[#C9C9C1] disabled:text-[#989891] sm:px-3.5 sm:text-[11px]"
+          className="shrink-0 rounded-full border border-[#252522] px-4 py-2 text-[11px] font-medium text-[#252522] transition-colors hover:border-[var(--primary)] hover:bg-[var(--primary)] hover:text-white disabled:cursor-not-allowed disabled:border-[#C9C9C1] disabled:text-[#989891] sm:px-3.5 sm:text-[11px]"
         >
           {isInCart ? <span className="flex items-center gap-1"><Check size={12} /> Added</span> : "Add"}
         </button>
