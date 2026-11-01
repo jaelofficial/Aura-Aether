@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { prisma, getProducts } from "@/lib/db";
-import HomepageFragranceCard from "@/components/landing/HomepageFragranceCard";
+import HomepageAddButton from "@/components/landing/HomepageAddButton";
 
 const defaultBestsellers = [
   {
@@ -85,6 +85,7 @@ export default async function Bestsellers() {
               <h3 className="mt-4 text-xl font-medium">{product.name}</h3>
               <p className="mt-2 max-w-sm text-sm leading-relaxed text-white/85">{product.description}</p>
             </Link>
+            {product.catalogProduct && <HomepageAddButton product={product.catalogProduct} dark />}
           </article>
         ))}
       </div>
