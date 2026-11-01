@@ -2,7 +2,6 @@ import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import ShopSort from "@/components/ShopSort";
 import ShopCategoryFilter from "@/components/ShopCategoryFilter";
-import ShopEditorialShowcase from "@/components/ShopEditorialShowcase";
 import { getProducts, getCategories } from "@/lib/db";
 
 
@@ -64,8 +63,6 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
           <ShopSort category={currentCategory} search={searchQuery} sort={currentSort} />
         </div>
 
-        <ShopEditorialShowcase />
-
         {/* Results Counter */}
         <div className="mb-5 flex justify-between items-center text-xs text-[#77776F]">
           <p>
@@ -94,7 +91,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-x-3 gap-y-9 sm:grid-cols-3 sm:gap-x-5 lg:grid-cols-6 lg:gap-x-5 lg:gap-y-10">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-12">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
