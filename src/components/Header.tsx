@@ -48,7 +48,7 @@ export default function Header() {
   }, []);
 
   const pillClass = `flex items-center rounded-[20px] px-5 py-3.5 text-sm font-medium shadow-sm ${isColorHeader ? "bg-[var(--primary)] text-white" : "bg-white text-[#1e1e1e]"}`;
-  const mobilePillClass = `flex items-center gap-2 rounded-[14px] px-3 py-2 text-sm font-medium shadow-sm ${isColorHeader ? "bg-[#222a37] text-white" : "bg-white text-[#1e1e1e]"}`;
+  const mobilePillClass = `flex items-center gap-2 rounded-[14px] px-3 py-2 text-sm font-medium shadow-sm ${isColorHeader ? "bg-[var(--primary)] text-white" : "bg-white text-[#1e1e1e]"}`;
   const linkClass = "transition-opacity hover:opacity-60";
 
   return (
@@ -69,7 +69,7 @@ export default function Header() {
             {logoUrl ? (
               <Image src={logoUrl} alt={`${brandName} logo`} width={260} height={110} priority className="h-12 w-auto max-w-[150px] object-contain sm:h-14 sm:max-w-[210px]" onError={() => setLogoUrl("")} />
             ) : (
-              <span className="whitespace-nowrap font-serif-luxury text-lg font-semibold tracking-[0.12em] text-[var(--primary)] sm:text-2xl">AURA &amp; AETHER</span>
+              <span className="whitespace-nowrap font-serif-luxury text-lg font-semibold tracking-[0.12em] ${isColorHeader ? "text-white" : "text-[var(--primary)]"} sm:text-2xl">AURA &amp; AETHER</span>
             )}
           </Link>
 
@@ -83,7 +83,7 @@ export default function Header() {
             {user?.role === "ADMIN" && <Link href="/admin" aria-label="Admin dashboard" className={linkClass}><Shield className="h-5 w-5" /></Link>}
             <button type="button" onClick={openCart} aria-label={`Cart${itemCount ? `, ${itemCount} items` : ""}`} className={`${linkClass} relative flex items-center`}>
               <Image src="/images/naya-icons/shopping-basket.svg" alt="" width={23} height={23} className={`${iconClass} ${isColorHeader ? "brightness-0 invert" : ""}`} />
-              {itemCount > 0 && <span className={`absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[9px] ${isColorHeader ? "bg-white text-[#222a37]" : "bg-[#222a37] text-white"}`}>{itemCount}</span>}
+              {itemCount > 0 && <span className={`absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[9px] ${isColorHeader ? "bg-white text-[var(--primary)]" : "bg-[#222a37] text-white"}`}>{itemCount}</span>}
             </button>
           </nav>
 
