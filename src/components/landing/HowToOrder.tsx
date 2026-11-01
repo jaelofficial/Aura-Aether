@@ -109,7 +109,7 @@ export default function HowToOrder() {
 
           <div className="relative min-h-0 overflow-hidden bg-white/5">
             {steps.map((step, index) => (
-              {stepImages[index] ? <Image key={step.title} src={stepImages[index]} alt={step.alt} fill sizes="(min-width: 1024px) 38vw, 90vw" priority={index === 0} aria-hidden={index !== activeStep} className={`object-cover transition-opacity duration-700 ${index === activeStep ? "opacity-100" : "opacity-0"}`} /> : null}
+              stepImages[index] ? <Image key={step.title} src={stepImages[index]} alt={step.alt} fill sizes="(min-width: 1024px) 38vw, 90vw" priority={index === 0} aria-hidden={index !== activeStep} className={`object-cover transition-opacity duration-700 ${index === activeStep ? "opacity-100" : "opacity-0"}`} /> : null
             ))}
           </div>
         </div>
