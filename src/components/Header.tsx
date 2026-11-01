@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, Shield, User as UserIcon, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
@@ -31,15 +30,12 @@ export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [brandName, setBrandName] = useState("Aura & Aether Parfums");
-  const [logoUrl, setLogoUrl] = useState("/images/aura-aether-logo.svg");
 
   useEffect(() => {
     fetch("/api/site-settings")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data?.settings?.brandName) setBrandName(data.settings.brandName);
-        if (typeof data?.settings?.logoUrl === "string" && data.settings.logoUrl.trim()) setLogoUrl(data.settings.logoUrl.trim());
-        else setLogoUrl("/images/aura-aether-logo.svg");
         const colors = data?.settings || {};
         if (/^#[0-9a-f]{6}$/i.test(colors.primaryColor || "")) {
           document.documentElement.style.setProperty("--primary", colors.primaryColor);
@@ -69,15 +65,9 @@ export default function Header() {
             </button>
           </nav>
 
-          <Link href="/" aria-label={brandName} className="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center transition-opacity hover:opacity-80">
-            {logoUrl ? (
-              <Image src={logoUrl} alt={`${brandName} logo`} width={900} height={560} priority className="h-[76px] w-[122px] object-contain drop-shadow-sm sm:h-[88px] sm:w-[142px]" onError={() => setLogoUrl("")} />
-            ) : (
-              <span className={`flex flex-col items-center whitespace-nowrap ${isColorHeader ? "text-white" : "text-[var(--primary)]"}`}>
-                <span className="font-serif-luxury text-lg font-semibold tracking-[0.12em] sm:text-xl">AURA &amp; AETHER</span>
-                <span className="mt-0.5 text-[8px] font-semibold tracking-[0.35em] sm:text-[9px]">PARFUMS</span>
-              </span>
-            )}
+          <Link href="/" aria-label={brandName} className={`absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center whitespace-nowrap transition-opacity hover:opacity-80 ${isColorHeader ? "text-white" : "text-[var(--primary)]"}`}>
+            <span className="font-serif-luxury text-lg font-semibold tracking-[0.12em] sm:text-xl">AURA &amp; AETHER</span>
+            <span className="mt-0.5 text-[8px] font-semibold tracking-[0.35em] sm:text-[9px]">PARFUMS</span>
           </Link>
 
           <nav aria-label="Account and shopping" className={`${pillClass} ml-auto hidden gap-5 lg:flex`}>
