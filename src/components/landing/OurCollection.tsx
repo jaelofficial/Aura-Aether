@@ -30,21 +30,25 @@ const defaultCollectionImages = [
   {
     src: "/images/collection/forest-green.jpeg",
     alt: "Deep green Forêt fragrance bottle in a botanical still life",
+    name: "Forêt",
     className: "lg:col-start-1 lg:row-start-1",
   },
   {
     src: "/images/collection/rose-lamour.jpeg",
     alt: "Rose L'Amour perfume in a softly lit still life",
+    name: "Rose L’Amour",
     className: "lg:col-start-2 lg:row-start-1",
   },
   {
     src: "/images/collection/noir-ambre.jpeg",
     alt: "Noir Ambre fragrance bottle against a dark, elegant backdrop",
+    name: "Noir Ambre",
     className: "lg:col-start-2 lg:row-start-3",
   },
   {
     src: "/images/collection/ambre-boise.jpeg",
     alt: "Warm Ambre Boisé perfume in a sunlit still life",
+    name: "Ambre Boisé",
     className: "lg:col-start-3 lg:row-start-3",
   },
 ];
@@ -77,20 +81,26 @@ function CollectionNote({
 export default async function OurCollection() {
   const imageKeys = ["homeCollectionImage1", "homeCollectionImage2", "homeCollectionImage3", "homeCollectionImage4"] as const;
   const imageSettings = new Map<string, string>();
+  const saleNames = new Set<string>();
   try {
-    const rows = await prisma.siteSetting.findMany({ where: { key: { in: [...imageKeys] } }, select: { key: true, value: true } });
+    const [rows, products] = await Promise.all([
+      prisma.siteSetting.findMany({ where: { key: { in: [...imageKeys] } }, select: { key: true, value: true } }),
+      prisma.product.findMany({ where: { isGiftSet: false }, select: { name: true, isSale: true, price: true, originalPrice: true } }),
+    ]);
     for (const row of rows) imageSettings.set(row.key, row.value);
+    for (const product of products) {
+      if (product.isSale || (product.originalPrice != null && product.originalPrice > product.price)) saleNames.add(product.name.toLowerCase());
+    }
   } catch (error) {
     console.error("Homepage collection images could not be loaded:", error);
   }
-  const collectionImages = defaultCollectionImages.map((image, index) => ({ ...image, src: imageSettings.get(imageKeys[index]) || image.src }));
+  const collectionImages = defaultCollectionImages.map((image, index) => ({ ...image, src: imageSettings.get(imageKeys[index]) || image.src, onSale: saleNames.has(image.name.toLowerCase()) }));
 
   return (
     <section aria-labelledby="collection-title" className="bg-white px-4 pb-20 pt-16 sm:px-6 sm:pb-24 sm:pt-20 lg:px-[4vw] lg:pb-28 lg:pt-[6.8vw]">
       <div className="mx-auto grid grid-cols-1 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-[8.5vw] lg:gap-y-0">
         {collectionImages.slice(0, 2).map((image, index) => (
           <Image
-            key={image.src}
             src={image.src}
             alt={image.alt}
             width={1361}
@@ -128,6 +138,7 @@ export default async function OurCollection() {
         />
 
         {collectionImages.slice(2).map((image) => (
+          <div key={image.src} className={`relative hidden aspect-square w-full order-8 overflow-hidden sm:block sm:order-none lg:mt-[2.5vw] ${image.className}`}>
           <Image
             key={image.src}
             src={image.src}
@@ -135,8 +146,10 @@ export default async function OurCollection() {
             width={1361}
             height={1824}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 30vw"
-            className={`hidden aspect-square w-full order-8 object-cover sm:block sm:order-none lg:mt-[2.5vw] ${image.className}`}
+            className="h-full w-full object-cover"
           />
+          {image.onSale && <span className="absolute left-3 top-3 bg-white/95 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#252522]">On sale</span>}
+          </div>
         ))}
       </div>
     </section>
