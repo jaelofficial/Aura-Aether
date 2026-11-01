@@ -1,7 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { prisma, getProducts } from "@/lib/db";
-import HomepageAddButton from "@/components/landing/HomepageAddButton";
 
 const notes = [
   {
@@ -100,7 +100,7 @@ export default async function OurCollection() {
     <section aria-labelledby="collection-title" className="bg-white px-4 pb-20 pt-16 sm:px-6 sm:pb-24 sm:pt-20 lg:px-[4vw] lg:pb-28 lg:pt-[6.8vw]">
       <div className="mx-auto grid grid-cols-1 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-[8.5vw] lg:gap-y-0">
         {collectionImages.slice(0, 2).map((image, index) => (
-          <div key={image.src} className={`relative block aspect-square w-full overflow-visible ${index === 0 ? "order-2" : "order-3"} sm:block sm:order-none ${image.className}`}>
+          <Link key={image.src} href={image.product ? `/shop/${image.product.slug}` : "/shop"} aria-label={`View ${image.name}`} className={`relative block aspect-square w-full overflow-hidden ${index === 0 ? "order-2" : "order-3"} sm:block sm:order-none ${image.className}`}>
             <Image
               src={image.src}
               alt={image.alt}
@@ -109,8 +109,7 @@ export default async function OurCollection() {
               className="object-cover"
             />
             {image.onSale && <span className="absolute left-3 top-3 bg-white/95 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#252522]">On sale</span>}
-            {image.product && <HomepageAddButton product={image.product} />}
-          </div>
+          </Link>
         ))}
 
         <div className="order-first flex flex-col items-center text-center sm:col-span-2 lg:order-none lg:col-span-1 lg:items-end lg:pt-0 lg:text-right">
@@ -141,7 +140,7 @@ export default async function OurCollection() {
         />
 
         {collectionImages.slice(2).map((image) => (
-          <div key={image.src} className={`relative block aspect-square w-full order-8 overflow-visible sm:block sm:order-none lg:mt-[2.5vw] ${image.className}`}>
+          <Link key={image.src} href={image.product ? `/shop/${image.product.slug}` : "/shop"} aria-label={`View ${image.name}`} className={`relative block aspect-square w-full order-8 overflow-hidden sm:block sm:order-none lg:mt-[2.5vw] ${image.className}`}>
           <Image
             key={image.src}
             src={image.src}
@@ -152,8 +151,7 @@ export default async function OurCollection() {
             className="h-full w-full object-cover"
           />
           {image.onSale && <span className="absolute left-3 top-3 bg-white/95 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#252522]">On sale</span>}
-            {image.product && <HomepageAddButton product={image.product} />}
-          </div>
+          </Link>
         ))}
       </div>
     </section>
