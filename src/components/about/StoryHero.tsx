@@ -33,7 +33,7 @@ export default function StoryHero() {
         <div className="absolute bottom-4 right-4 z-10 flex items-center gap-2 sm:bottom-6 sm:right-6" aria-label="Story images">
           {storyImages.length > 1 && storyImages.map((image, index) => (
             <button
-              key={image.mobile}
+              key={image}
               type="button"
               onClick={() => setActiveImage(index)}
               aria-label={`Show story image ${index + 1}`}
