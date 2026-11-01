@@ -19,7 +19,6 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 const vogue = localFont({ src: "../../public/fonts/Vogue-Regular.otf", variable: "--font-vogue", display: "swap" });
-const alhambra = localFont({ src: "../../public/fonts/alhambra.ttf", variable: "--font-alhambra", display: "swap" });
 
 export const metadata: Metadata = {
   title: "Aura & Aether Parfums | Artisanal Luxury Fragrances",
@@ -49,7 +48,7 @@ export default function RootLayout({
   modal: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${jakarta.variable} ${vogue.variable} ${alhambra.variable} h-full`}>
+    <html lang="en" className={`${playfair.variable} ${jakarta.variable} ${vogue.variable} h-full`}>
       <body className="min-h-full flex flex-col font-sans-clean bg-[var(--background)] text-[var(--foreground)] selection:bg-[#EADBC8] selection:text-[#1C1917]">
         <AuthProvider>
           <CartProvider>
