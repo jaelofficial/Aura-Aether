@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import type { Product } from "@/types";
+import { prisma } from "@/lib/db";
 
 const notes = [
   {
@@ -26,10 +26,28 @@ const notes = [
   },
 ];
 
-function getProductImage(product: Product) {
-  return product.images?.find((url) => typeof url === "string" && url.trim() && !url.startsWith("/images/products/")) ||
-    (product.image?.trim() && !product.image.startsWith("/images/products/") ? product.image : "");
-}
+const defaultCollectionImages = [
+  {
+    src: "/images/collection/forest-green.jpeg",
+    alt: "Deep green Forêt fragrance bottle in a botanical still life",
+    className: "lg:col-start-1 lg:row-start-1",
+  },
+  {
+    src: "/images/collection/rose-lamour.jpeg",
+    alt: "Rose L'Amour perfume in a softly lit still life",
+    className: "lg:col-start-2 lg:row-start-1",
+  },
+  {
+    src: "/images/collection/noir-ambre.jpeg",
+    alt: "Noir Ambre fragrance bottle against a dark, elegant backdrop",
+    className: "lg:col-start-2 lg:row-start-3",
+  },
+  {
+    src: "/images/collection/ambre-boise.jpeg",
+    alt: "Warm Ambre Boisé perfume in a sunlit still life",
+    className: "lg:col-start-3 lg:row-start-3",
+  },
+];
 
 type CollectionNoteProps = {
   number: string;
@@ -56,19 +74,31 @@ function CollectionNote({
   );
 }
 
-export default function OurCollection({ products }: { products: Product[] }) {
-  const collectionImages = products.slice(0, 4).map((product) => ({
-    src: getProductImage(product),
-    alt: `${product.name} fragrance`,
-    slug: product.slug,
-  }));
+export default async function OurCollection() {
+  const imageKeys = ["homeCollectionImage1", "homeCollectionImage2", "homeCollectionImage3", "homeCollectionImage4"] as const;
+  const imageSettings = new Map<string, string>();
+  try {
+    const rows = await prisma.siteSetting.findMany({ where: { key: { in: [...imageKeys] } }, select: { key: true, value: true } });
+    for (const row of rows) imageSettings.set(row.key, row.value);
+  } catch (error) {
+    console.error("Homepage collection images could not be loaded:", error);
+  }
+  const collectionImages = defaultCollectionImages.map((image, index) => ({ ...image, src: imageSettings.get(imageKeys[index]) || image.src }));
 
   return (
     <section aria-labelledby="collection-title" className="bg-white px-4 pb-20 pt-16 sm:px-6 sm:pb-24 sm:pt-20 lg:px-[4vw] lg:pb-28 lg:pt-[6.8vw]">
       <div className="mx-auto grid grid-cols-1 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-[8.5vw] lg:gap-y-0">
-        {collectionImages.slice(0, 2).map((image, index) => image.src ? (
-          <Image key={image.slug} src={image.src} alt={image.alt} width={1361} height={1824} sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 30vw" className={`hidden aspect-square w-full object-cover ${index === 0 ? "order-2" : "order-3"} sm:block sm:order-none`} />
-        ) : <div key={image.slug} className="hidden aspect-square w-full bg-[#F1EAE4] sm:block" />)}
+        {collectionImages.slice(0, 2).map((image, index) => (
+          <Image
+            key={image.src}
+            src={image.src}
+            alt={image.alt}
+            width={1361}
+            height={1824}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 30vw"
+            className={`hidden aspect-square w-full object-cover ${index === 0 ? "order-2" : "order-3"} sm:block sm:order-none ${image.className}`}
+          />
+        ))}
 
         <div className="order-first flex flex-col items-center text-center sm:col-span-2 lg:order-none lg:col-span-1 lg:items-end lg:pt-0 lg:text-right">
           <span className="mb-5 inline-flex items-center rounded-full border border-[#D8D4CE] px-4 py-2 text-sm text-[#201A17]">
@@ -97,9 +127,17 @@ export default function OurCollection({ products }: { products: Product[] }) {
           className="order-3 sm:order-none lg:col-start-1 lg:row-start-3 lg:mt-[2.5vw] lg:pt-[15vw]"
         />
 
-        {collectionImages.slice(2).map((image) => image.src ? (
-          <Image key={image.slug} src={image.src} alt={image.alt} width={1361} height={1824} sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 30vw" className="hidden aspect-square w-full order-8 object-cover sm:block sm:order-none lg:mt-[2.5vw]" />
-        ) : <div key={image.slug} className="hidden aspect-square w-full bg-[#F1EAE4] sm:block" />)}
+        {collectionImages.slice(2).map((image) => (
+          <Image
+            key={image.src}
+            src={image.src}
+            alt={image.alt}
+            width={1361}
+            height={1824}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 30vw"
+            className={`hidden aspect-square w-full order-8 object-cover sm:block sm:order-none lg:mt-[2.5vw] ${image.className}`}
+          />
+        ))}
       </div>
     </section>
   );
