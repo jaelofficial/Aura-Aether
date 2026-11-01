@@ -24,7 +24,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     <article className="group min-w-0">
       <Link
         href={`/shop/${product.slug}`}
-        className="relative mb-3 block aspect-square overflow-hidden bg-[#222a37]"
+        className="relative mb-3 block aspect-square overflow-hidden bg-[var(--primary)]"
       >
         <Image
           src={product.image}
@@ -70,7 +70,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           onClick={() => addItem(product, 1)}
           disabled={!product.inStock}
           aria-label={`${isInCart ? "Add another" : "Add"} ${product.name} to cart`}
-          className="shrink-0 rounded-full border border-[#252522] px-3 py-1 text-[10px] font-medium text-[#252522] transition-colors hover:border-[#222a37] hover:bg-[#222a37] hover:text-white disabled:cursor-not-allowed disabled:border-[#C9C9C1] disabled:text-[#989891] sm:px-3.5 sm:text-[11px]"
+          className="shrink-0 rounded-full border border-[#252522] px-3 py-1 text-[10px] font-medium text-[#252522] transition-colors hover:border-[var(--primary)] hover:bg-[var(--primary)] hover:text-white disabled:cursor-not-allowed disabled:border-[#C9C9C1] disabled:text-[#989891] sm:px-3.5 sm:text-[11px]"
         >
           {isInCart ? <span className="flex items-center gap-1"><Check size={12} /> Added</span> : "Add"}
         </button>
