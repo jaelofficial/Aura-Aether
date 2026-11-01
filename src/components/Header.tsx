@@ -69,11 +69,14 @@ export default function Header() {
             </button>
           </nav>
 
-          <Link href="/" aria-label={brandName} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-opacity hover:opacity-80">
+          <Link href="/" aria-label={brandName} className="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center transition-opacity hover:opacity-80">
             {logoUrl ? (
-              <Image src={logoUrl} alt={`${brandName} logo`} width={280} height={174} priority className="h-14 w-auto max-w-[180px] object-contain sm:h-16 sm:max-w-[220px]" onError={() => setLogoUrl("")} />
+              <Image src={logoUrl} alt={`${brandName} logo`} width={900} height={560} priority className="h-[76px] w-[122px] object-contain drop-shadow-sm sm:h-[88px] sm:w-[142px]" onError={() => setLogoUrl("")} />
             ) : (
-              <span className={`whitespace-nowrap font-serif-luxury text-lg font-semibold tracking-[0.12em] ${isColorHeader ? "text-white" : "text-[var(--primary)]"} sm:text-2xl`}>AURA &amp; AETHER</span>
+              <span className={`flex flex-col items-center whitespace-nowrap ${isColorHeader ? "text-white" : "text-[var(--primary)]"}`}>
+                <span className="font-serif-luxury text-lg font-semibold tracking-[0.12em] sm:text-xl">AURA &amp; AETHER</span>
+                <span className="mt-0.5 text-[8px] font-semibold tracking-[0.35em] sm:text-[9px]">PARFUMS</span>
+              </span>
             )}
           </Link>
 
