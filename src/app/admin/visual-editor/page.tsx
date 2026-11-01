@@ -92,7 +92,7 @@ export default function VisualEditorPage() {
     const children = Array.from(main.children);
     children.forEach((child, index) => {
       (child as HTMLElement).draggable = true;
-      child.setAttribute("data-aa-section-id", String(index));
+      if (!child.hasAttribute("data-aa-section-id")) child.setAttribute("data-aa-section-id", String(index));
       child.addEventListener("dragstart", (event) => event.dataTransfer?.setData("text/plain", child.getAttribute("data-aa-section-id") || String(index)));
       child.addEventListener("dragover", (event) => event.preventDefault());
       child.addEventListener("drop", (event) => {
