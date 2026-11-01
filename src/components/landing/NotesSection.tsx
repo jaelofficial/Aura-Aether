@@ -1,27 +1,33 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const topLine = (
   <>
     <span>Your scent</span>
-    <Image src="/images/hero/orange-amere.jpeg" alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />
+    <Image src={images[0]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />
     <span>Our priority</span>
-    <Image src="/images/botanical-edit/bleue-rivage.jpeg" alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />
+    <Image src={images[1]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />
   </>
 );
 
 const bottomLine = (
   <>
     <span>Find your signature</span>
-    <Image src="/images/hero/cassis-sauvage.jpeg" alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />
+    <Image src={images[2]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />
     <span>make every entrance unforgettable</span>
-    <Image src="/images/botanical-edit/esencia-foret.jpeg" alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />
+    <Image src={images[3]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />
   </>
 );
 
 export default function NotesSection() {
+  const [images, setImages] = useState([
+    "/images/hero/orange-amere.jpeg",
+    "/images/botanical-edit/bleue-rivage.jpeg",
+    "/images/hero/cassis-sauvage.jpeg",
+    "/images/botanical-edit/esencia-foret.jpeg",
+  ]);
   const sectionRef = useRef<HTMLElement>(null);
   const topTrackRef = useRef<HTMLDivElement>(null);
   const bottomTrackRef = useRef<HTMLDivElement>(null);
@@ -30,6 +36,18 @@ export default function NotesSection() {
   const lastScrollY = useRef(0);
   const frame = useRef(0);
   const scrollBoost = useRef(0);
+
+  useEffect(() => {
+    fetch("/api/site-settings")
+      .then((response) => response.json())
+      .then(({ settings }) => {
+        if (!settings) return;
+        setImages((current) => current.map((image, index) =>
+          settings[["homeNotesImage1", "homeNotesImage2", "homeNotesImage3", "homeNotesImage4"][index]] || image
+        ));
+      })
+      .catch((error) => console.error("Could not load notes images:", error));
+  }, []);
 
   useEffect(() => {
     const measure = () => {
