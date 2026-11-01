@@ -5,6 +5,7 @@ import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import SiteChrome, { StorefrontFooter } from "@/components/SiteChrome";
+import VisualEditsRuntime from "@/components/VisualEditsRuntime";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -55,6 +56,7 @@ export default function RootLayout({
             <SiteChrome />
             <main className="flex-1">{children}</main>
             <StorefrontFooter />
+            <VisualEditsRuntime />
             {modal}
           </CartProvider>
         </AuthProvider>
