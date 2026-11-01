@@ -65,7 +65,7 @@ export default function ContactPage() {
   return (
     <>
       <ContactHero />
-      <section className="relative isolate flex min-h-[70svh] flex-col justify-center overflow-hidden bg-[#222a37] px-4 py-12 text-white sm:px-6 sm:py-14 lg:px-[4vw] lg:py-16">
+      <section className="relative isolate flex min-h-[70svh] flex-col justify-center overflow-hidden bg-[var(--primary)] px-4 py-12 text-white sm:px-6 sm:py-14 lg:px-[4vw] lg:py-16">
         <p aria-hidden="true" className="pointer-events-none absolute -left-[5vw] top-[12%] select-none whitespace-nowrap text-[28vw] font-black leading-none tracking-[-0.09em] text-white/[0.055]">
           AETHER
         </p>
@@ -111,7 +111,7 @@ export default function ContactPage() {
                   <button
                     type="button"
                     onClick={() => setSubmitted(false)}
-                    className="mt-4 border border-white/60 px-6 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-white hover:text-[#222a37]"
+                    className="mt-4 border border-white/60 px-6 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-white hover:text-[var(--primary)]"
                   >
                     Send another inquiry
                   </button>
