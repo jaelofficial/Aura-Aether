@@ -34,7 +34,7 @@ export default async function Bestsellers() {
     ]);
     for (const row of rows) imageSettings.set(row.key, row.value);
     for (const product of products) {
-      if (product.isSale || (product.originalPrice != null && product.originalPrice > product.price)) saleNames.add(product.name.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase());
+      if (product.isSale || (product.originalPrice != null && product.originalPrice > product.price)) saleNames.add(product.name.toLowerCase());
     }
   } catch (error) {
     console.error("Homepage bestseller images could not be loaded:", error);
@@ -72,7 +72,7 @@ export default async function Bestsellers() {
                   sizes="(min-width: 1024px) 30vw, (min-width: 640px) 30vw, 82vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                 />
-                {saleNames.has(product.name.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase()) && <span className="absolute left-3 top-3 bg-white/95 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#252522]">On sale</span>}
+                {saleNames.has(product.name.toLowerCase()) && <span className="absolute left-3 top-3 bg-white/95 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#252522]">On sale</span>}
               </div>
               <div className="mt-6 flex items-center justify-between gap-4">
                 <span className="text-xs tracking-[0.12em]">0{index + 1}</span>
