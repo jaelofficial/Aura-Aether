@@ -30,7 +30,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           src={product.image}
           alt={product.name}
           fill
-          className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+          className="object-contain p-3 transition-transform duration-700 group-hover:scale-[1.02]"
           sizes="(max-width: 640px) 48vw, (max-width: 1024px) 48vw, 31vw"
         />
         {(discount || product.isSale) && (
