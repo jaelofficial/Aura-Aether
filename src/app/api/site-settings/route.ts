@@ -30,6 +30,9 @@ const DEFAULTS: Record<string, string> = {
   homePromoTitle: "Find your next signature",
   homePromoDescription: "Explore fragrances for every mood, moment, and version of you.",
   homePromoImageUrl: "/images/spring-peonies.svg",
+  homeBestsellerImage1: "/images/bestsellers/foret.jpeg",
+  homeBestsellerImage2: "/images/bestsellers/ambre-boise.jpeg",
+  homeBestsellerImage3: "/images/bestsellers/noir-ambre.jpeg",
   // About page
   aboutTitle: "Our story",
   aboutIntro: "Aura & Aether was created for the moments, moods, and memories that make you who you are.",
