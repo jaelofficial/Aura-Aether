@@ -58,6 +58,7 @@ export default function AdminDashboardPage() {
   const [discountPercent, setDiscountPercent] = useState("10");
   const [discountScope, setDiscountScope] = useState<"selected" | "all">("selected");
   const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
+  const [isPreparingHomepageFragrances, setIsPreparingHomepageFragrances] = useState(false);
 
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [editProduct, setEditProduct] = useState({
@@ -350,6 +351,22 @@ export default function AdminDashboardPage() {
       setTimeout(() => setStatusMessage(""), 3000);
     } catch (error) {
       setStatusMessage(error instanceof Error ? error.message : "Could not update product.");
+    }
+  };
+
+  const handlePrepareHomepageFragrances = async () => {
+    setIsPreparingHomepageFragrances(true);
+    setStatusMessage("");
+    try {
+      const response = await fetch("/api/admin/homepage-fragrances", { method: "POST" });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || "Could not prepare the homepage fragrances.");
+      setStatusMessage("Homepage fragrances are now in your catalogue. You can edit their prices, stock and details below.");
+      await fetchData();
+    } catch (error) {
+      setStatusMessage(error instanceof Error ? error.message : "Could not prepare homepage fragrances.");
+    } finally {
+      setIsPreparingHomepageFragrances(false);
     }
   };
 
@@ -684,6 +701,16 @@ export default function AdminDashboardPage() {
             <h2 className="font-serif-luxury text-xl font-semibold text-[#1C1917] mb-6">
               Product &amp; Inventory Management
             </h2>
+
+            <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-[#E7D8BC] bg-[#FCFAF6] p-5 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h3 className="font-serif-luxury text-lg font-semibold text-[#1C1917]">Homepage Fragrances</h3>
+                <p className="mt-1 text-xs text-[#78716C]">Add the four fragrances used in Our Collection and Bestsellers to the product catalogue. Starter prices and stock can be changed below.</p>
+              </div>
+              <button type="button" onClick={handlePrepareHomepageFragrances} disabled={isPreparingHomepageFragrances} className="shrink-0 rounded-full bg-[#1C1917] px-5 py-3 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#38332E] disabled:opacity-50">
+                {isPreparingHomepageFragrances ? "Preparing..." : "Add Homepage Fragrances"}
+              </button>
+            </div>
 
             <form onSubmit={handleBulkDiscount} className="mb-6 rounded-2xl border border-[#E7D8BC] bg-[#FCFAF6] p-5">
               <div className="mb-4">
