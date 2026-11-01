@@ -3,29 +3,29 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-const steps = [
+const defaultSteps = [
   {
     title: "Find your fragrance.",
     description: "Explore the collection and choose the scent that feels like you.",
-    imageKey: "homeStepImage1",
+    image: "/images/how-to-order/step-01.jpeg",
     alt: "A fragrance specialist helping a customer explore scents, with a Step 01 card",
   },
   {
     title: "Make it yours.",
     description: "Select your preferred size and add your fragrance to the bag.",
-    imageKey: "homeStepImage2",
+    image: "/images/how-to-order/step-02.jpeg",
     alt: "A customer choosing a perfume to add to a gift bag, with a Step 02 card",
   },
   {
     title: "Place your order.",
     description: "Enter your delivery details and complete checkout securely.",
-    imageKey: "homeStepImage3",
+    image: "/images/how-to-order/step-03.jpeg",
     alt: "A customer completing a fragrance checkout on a phone, with a Step 03 card",
   },
   {
     title: "A little something arrives.",
     description: "We prepare your order with care and deliver it to your door.",
-    imageKey: "homeStepImage4",
+    image: "/images/how-to-order/step-04.jpeg",
     alt: "A fragrance order being delivered to a customer, with a Step 04 card",
   },
 ];
@@ -33,13 +33,19 @@ const steps = [
 export default function HowToOrder() {
   const sectionRef = useRef<HTMLElement>(null);
   const [activeStep, setActiveStep] = useState(0);
-  const [stepImages, setStepImages] = useState<string[]>([]);
+  const [steps, setSteps] = useState(defaultSteps);
 
   useEffect(() => {
-    fetch("/api/site-settings").then((res) => res.ok ? res.json() : null).then((data) => {
+    let active = true;
+    fetch("/api/site-settings").then((response) => response.ok ? response.json() : null).then((data) => {
+      if (!active) return;
       const settings = data?.settings || {};
-      setStepImages([settings.homeStepImage1, settings.homeStepImage2, settings.homeStepImage3, settings.homeStepImage4]);
-    }).catch(() => setStepImages([]));
+      setSteps(defaultSteps.map((step, index) => {
+        const savedImage = settings[`homeStepImage${index + 1}`];
+        return { ...step, image: typeof savedImage === "string" && savedImage.trim() ? savedImage : step.image };
+      }));
+    }).catch(() => { if (active) setSteps(defaultSteps); });
+    return () => { active = false; };
   }, []);
 
   useEffect(() => {
@@ -54,7 +60,7 @@ export default function HowToOrder() {
         if (scrollableDistance <= 0) return;
 
         const progress = Math.min(1, Math.max(0, -section.getBoundingClientRect().top / scrollableDistance));
-        setActiveStep(Math.min(steps.length - 1, Math.floor(progress * steps.length)));
+        setActiveStep(Math.min(defaultSteps.length - 1, Math.floor(progress * defaultSteps.length)));
       });
     };
 
@@ -73,7 +79,7 @@ export default function HowToOrder() {
       ref={sectionRef}
       id="how-to-order"
       aria-label="How to order"
-      className="relative h-[400svh] bg-[var(--primary)] text-white"
+      className="relative h-[400svh] bg-[#222a37] text-white"
     >
       <div className="sticky top-0 flex h-[100svh] flex-col overflow-hidden px-6 py-6 sm:px-10 sm:py-8 lg:px-[3.5vw] lg:py-20">
         <header className="mb-5 flex shrink-0 items-center justify-between gap-6 sm:mb-8">
@@ -109,7 +115,16 @@ export default function HowToOrder() {
 
           <div className="relative min-h-0 overflow-hidden bg-white/5">
             {steps.map((step, index) => (
-              stepImages[index] ? <Image key={step.title} src={stepImages[index]} alt={step.alt} fill sizes="(min-width: 1024px) 38vw, 90vw" priority={index === 0} aria-hidden={index !== activeStep} className={`object-cover transition-opacity duration-700 ${index === activeStep ? "opacity-100" : "opacity-0"}`} /> : null
+              <Image
+                key={step.image + index}
+                src={step.image}
+                alt={step.alt}
+                fill
+                sizes="(min-width: 1024px) 38vw, 90vw"
+                priority={index === 0}
+                aria-hidden={index !== activeStep}
+                className={`object-cover transition-opacity duration-700 ${index === activeStep ? "opacity-100" : "opacity-0"}`}
+              />
             ))}
           </div>
         </div>
