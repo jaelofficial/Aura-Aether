@@ -100,7 +100,7 @@ export default async function OurCollection() {
     <section aria-labelledby="collection-title" className="bg-white px-4 pb-20 pt-16 sm:px-6 sm:pb-24 sm:pt-20 lg:px-[4vw] lg:pb-28 lg:pt-[6.8vw]">
       <div className="mx-auto grid grid-cols-1 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-[8.5vw] lg:gap-y-0">
         {collectionImages.slice(0, 2).map((image, index) => (
-          <div key={image.src} className={`relative hidden aspect-square w-full overflow-visible ${index === 0 ? "order-2" : "order-3"} sm:block sm:order-none ${image.className}`}>
+          <div key={image.src} className={`relative block aspect-square w-full overflow-visible ${index === 0 ? "order-2" : "order-3"} sm:block sm:order-none ${image.className}`}>
             <Image
               src={image.src}
               alt={image.alt}
@@ -141,7 +141,7 @@ export default async function OurCollection() {
         />
 
         {collectionImages.slice(2).map((image) => (
-          <div key={image.src} className={`relative hidden aspect-square w-full order-8 overflow-visible sm:block sm:order-none lg:mt-[2.5vw] ${image.className}`}>
+          <div key={image.src} className={`relative block aspect-square w-full order-8 overflow-visible sm:block sm:order-none lg:mt-[2.5vw] ${image.className}`}>
           <Image
             key={image.src}
             src={image.src}
