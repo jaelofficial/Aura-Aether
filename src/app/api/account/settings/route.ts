@@ -8,7 +8,7 @@ export async function PUT(req: Request) {
     const cookieStore = await cookies();
     const token = cookieStore.get("aura_auth_token")?.value;
     const payload = token ? await verifyToken(token) : null;
-    if (!payload) return NextResponse.json({ error: "Please sign in again." }, { status: 401 });
+    if (!payload || payload.role !== "CUSTOMER") return NextResponse.json({ error: "Customer account access required." }, { status: 403 });
 
     const body = await req.json();
     const name = typeof body.name === "string" ? body.name.trim() : "";

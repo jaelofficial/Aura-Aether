@@ -1,10 +1,10 @@
 import React from "react";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
 import { getProductBySlug, getProducts } from "@/lib/db";
 import { formatGhs } from "@/lib/paystack";
 import ProductDetailClient from "./ProductDetailClient";
+import ProductImageGallery from "./ProductImageGallery";
 import ProductCard from "@/components/ProductCard";
 import { Sparkles, ArrowLeft } from "lucide-react";
 
@@ -60,26 +60,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           {/* Left: Product Image & Badges */}
           <div className="lg:col-span-6 space-y-4">
-            <div className="relative aspect-4/5 w-full bg-white rounded-3xl border border-[#ECE5DD] overflow-hidden p-8 shadow-sm flex items-center justify-center">
-              <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                priority
-                className="object-contain p-8 hover:scale-105 transition-transform duration-700"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-
-              {product.originalPrice != null && product.originalPrice > product.price ? (
-                <span className="absolute top-6 left-6 bg-[#9B2C2C] text-white text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-xs">
-                  {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
-                </span>
-              ) : product.isSale ? (
-                <span className="absolute top-6 left-6 bg-[#DFC07D] text-[#1C1917] text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-xs">
-                  SPECIAL OFFER
-                </span>
-              ) : null}
-            </div>
+            <ProductImageGallery product={product} />
 
             <div className="flex items-center justify-between text-xs text-[#78716C] px-2">
               <span className="flex items-center gap-1">

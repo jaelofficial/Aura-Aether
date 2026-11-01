@@ -4,7 +4,7 @@ import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { CheckCircle2, AlertTriangle, ArrowRight, ShoppingCart, ShieldCheck, RefreshCw } from "lucide-react";
+import { CheckCircle2, AlertTriangle, ArrowRight, ShoppingCart, ShieldCheck, RefreshCw, PackageSearch } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { Order } from "@/types";
 import { formatGhs } from "@/lib/paystack";
@@ -94,7 +94,7 @@ function OrderSuccessContent() {
           <div className="pt-4 flex flex-col gap-2">
             <Link
               href="/checkout"
-              className="w-full py-3 px-6 rounded-full bg-[#1C1917] text-white text-xs font-bold uppercase tracking-widest hover:bg-[#38332E]"
+              className="aa-button w-full py-3 px-6 rounded-full bg-[#1C1917] text-white text-xs font-bold uppercase tracking-widest hover:bg-[#38332E]"
             >
               Retry Payment
             </Link>
@@ -225,12 +225,19 @@ function OrderSuccessContent() {
         <div className="text-center space-x-4">
           <Link
             href="/shop"
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#1C1917] text-white text-xs font-bold uppercase tracking-widest hover:bg-[#38332E] transition-all"
+            className="aa-button inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#1C1917] text-white text-xs font-bold uppercase tracking-widest hover:bg-[#38332E] transition-all"
           >
             <span>Continue Shopping</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
 
+          <Link
+            href="/track-order"
+            className="aa-button inline-flex items-center gap-2 px-8 py-3.5 rounded-full border border-[#D5CDC4] text-xs font-bold uppercase tracking-widest text-[#4A443F] hover:bg-white transition-all"
+          >
+            <PackageSearch className="w-4 h-4" />
+            <span>Track This Order</span>
+          </Link>
           <Link
             href="/account/orders"
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full border border-[#D5CDC4] text-xs font-bold uppercase tracking-widest text-[#4A443F] hover:bg-white transition-all"

@@ -93,3 +93,14 @@ html::-webkit-scrollbar {
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* Shared storefront button shape and minimum tap target. */
+.aa-button {
+  border-radius: 9999px;
+  min-height: 44px;
+  justify-content: center;
+}
+
+
+/* Keep the storefront's pill buttons scoped to .aa-button; admin controls use their own shapes. */

@@ -29,7 +29,7 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get("aura_auth_token")?.value;
+    const token = cookieStore.get("aura_admin_token")?.value;
     const payload = token ? await verifyToken(token) : null;
 
     if (!payload || payload.role !== "ADMIN") {
@@ -104,7 +104,8 @@ export async function POST(req: Request) {
       originalPrice,
       stock,
       inStock: stock > 0,
-      image: body.image || "/images/products/meadow.svg",
+      image: (Array.isArray(body.images) ? body.images.find((url: unknown) => typeof url === "string" && url.trim().length > 0) : undefined) || body.image || "",
+      images: Array.isArray(body.images) ? body.images.filter((url: unknown): url is string => typeof url === "string" && url.trim().length > 0) : [],
       categoryId: category.id,
       size: body.size.trim(),
       scentNotes: body.scentNotes || "ARTISANAL ACCORD",
@@ -126,7 +127,7 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get("aura_auth_token")?.value;
+    const token = cookieStore.get("aura_admin_token")?.value;
     const payload = token ? await verifyToken(token) : null;
 
     if (!payload || payload.role !== "ADMIN") {
@@ -198,6 +199,12 @@ export async function PUT(req: Request) {
         return NextResponse.json({ error: "Original price must be greater than the current selling price" }, { status: 400 });
       }
     }
+    if (updates.images !== undefined) {
+      if (!Array.isArray(updates.images) || !updates.images.every((url: unknown) => typeof url === "string")) {
+        return NextResponse.json({ error: "Product images must be a list of image URLs" }, { status: 400 });
+      }
+      updates.images = [...new Set(updates.images.map((url: string) => url.trim()).filter(Boolean))];
+    }
     if (updates.stock !== undefined) {
       updates.stock = parseInt(updates.stock, 10);
       updates.inStock = updates.stock > 0;
@@ -214,7 +221,7 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get("aura_auth_token")?.value;
+    const token = cookieStore.get("aura_admin_token")?.value;
     const payload = token ? await verifyToken(token) : null;
 
     if (!payload || payload.role !== "ADMIN") {

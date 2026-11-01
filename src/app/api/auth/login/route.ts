@@ -35,12 +35,14 @@ export async function POST(req: Request) {
         city: user.city,
       },
     });
-    response.cookies.set("aura_auth_token", token, {
+    // Keep customer and admin sessions independent. Signing in to one must not
+    // silently sign the other session out in a different tab.
+    response.cookies.set(user.role === "ADMIN" ? "aura_admin_token" : "aura_auth_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7,
+      maxAge: user.role === "ADMIN" ? 60 * 60 * 8 : 60 * 60 * 24 * 7,
     });
     return response;
   } catch (error) {

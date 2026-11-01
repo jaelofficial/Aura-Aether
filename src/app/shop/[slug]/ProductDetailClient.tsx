@@ -75,7 +75,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
           type="button"
           onClick={handleAddToCart}
           disabled={!product.inStock || product.stock <= 0}
-          className={`flex-1 py-4 px-8 rounded-full text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-md ${
+          className={`aa-button flex-1 py-4 px-8 rounded-full text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-md ${
             !product.inStock
               ? "bg-[#E5DDD4] text-[#A89F95] cursor-not-allowed"
               : added

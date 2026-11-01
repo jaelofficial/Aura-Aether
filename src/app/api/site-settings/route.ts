@@ -20,9 +20,13 @@ const DEFAULTS: Record<string, string> = {
   heroImageUrl2: "/images/hero-placeholder-2.svg",
   heroImageUrl3: "/images/hero-placeholder-3.svg",
   heroCtaLabel: "Explore the collection",
+  heroCtaUrl: "/shop",
+  heroCtaAlignment: "center",
   // Homepage sections
   homeFeaturedEyebrow: "OUR COLLECTION",
   homeFeaturedTitle: "Featured fragrances.",
+  homeFeaturedCtaLabel: "View All Fragrances",
+  homeFeaturedCtaUrl: "/shop",
   homePromoTitle: "Find your next signature",
   homePromoDescription: "Explore fragrances for every mood, moment, and version of you.",
   homePromoImageUrl: "/images/spring-peonies.svg",
@@ -45,11 +49,15 @@ const DEFAULTS: Record<string, string> = {
   contactEmail: "concierge@aura-aether.com",
   contactPhone: "+233 (0) 24 892 4110",
   contactAddress: "Suite 4B, The Meridian Galleria, Airport Residential Area, Accra, Ghana",
+  // Delivery settings; fees are configured by the store owner in the admin editor.
+  deliveryOrigin: "Adenta, Accra, Ghana",
+  deliveryFreePromo: "false",
+  deliveryRanges: "",
 };
 
 async function isAdmin() {
   const cookieStore = await cookies();
-  const token = cookieStore.get("aura_auth_token")?.value;
+  const token = cookieStore.get("aura_admin_token")?.value;
   const payload = token ? await verifyToken(token) : null;
   return !!payload && payload.role === "ADMIN";
 }
@@ -61,10 +69,10 @@ export async function GET() {
     for (const row of rows) {
       if (Object.prototype.hasOwnProperty.call(DEFAULTS, row.key)) settings[row.key] = row.value;
     }
-    return NextResponse.json({ settings });
+    return NextResponse.json({ settings }, { headers: { "Cache-Control": "private, max-age=10, must-revalidate" } });
   } catch (error) {
     console.error("Site settings GET error:", error);
-    return NextResponse.json({ settings: DEFAULTS });
+    return NextResponse.json({ settings: DEFAULTS }, { headers: { "Cache-Control": "private, max-age=5, must-revalidate" } });
   }
 }
 

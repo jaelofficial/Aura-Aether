@@ -111,7 +111,7 @@ export default function AccountPage() {
 
             <Link
               href="/account/orders"
-              className="mt-4 w-full py-3.5 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-bold uppercase tracking-widest hover:bg-[#38332E] transition-all flex items-center justify-center gap-2"
+              className="aa-button mt-4 w-full py-3.5 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-bold uppercase tracking-widest hover:bg-[#38332E] transition-all flex items-center justify-center gap-2"
             >
               <span>View Previous Orders</span>
               <ArrowRight className="w-4 h-4" />

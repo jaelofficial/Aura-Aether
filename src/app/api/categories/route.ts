@@ -35,7 +35,7 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get("aura_auth_token")?.value;
+    const token = cookieStore.get("aura_admin_token")?.value;
     const payload = token ? await verifyToken(token) : null;
 
     if (!payload || payload.role !== "ADMIN") {

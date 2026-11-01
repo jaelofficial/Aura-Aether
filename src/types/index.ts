@@ -23,6 +23,7 @@ export interface Product {
   heartNotes?: string | null;
   baseNotes?: string | null;
   image: string;
+  images?: string[];
   categoryId: string;
   category?: Category;
   createdAt?: string | Date;

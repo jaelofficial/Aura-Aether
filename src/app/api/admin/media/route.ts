@@ -16,7 +16,7 @@ const ALLOWED_TYPES: Record<string, string> = {
 
 export async function POST(req: Request) {
   const cookieStore = await cookies();
-  const token = cookieStore.get("aura_auth_token")?.value;
+  const token = cookieStore.get("aura_admin_token")?.value;
   const payload = token ? await verifyToken(token) : null;
 
   if (!payload || payload.role !== "ADMIN") {

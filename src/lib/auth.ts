@@ -1,9 +1,13 @@
 import bcrypt from "bcryptjs";
 import { SignJWT, jwtVerify } from "jose";
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.AUTH_SECRET || "aura_aether_super_secret_jwt_key_2026_luxury_perfumes"
-);
+function getJwtSecret() {
+  const secret = process.env.AUTH_SECRET;
+  if (!secret || secret.length < 32) {
+    throw new Error("AUTH_SECRET must be configured with at least 32 characters.");
+  }
+  return new TextEncoder().encode(secret);
+}
 
 export async function hashPassword(password: string): Promise<string> {
   const salt = await bcrypt.genSalt(10);
@@ -25,13 +29,13 @@ export async function signToken(payload: AuthTokenPayload): Promise<string> {
   return new SignJWT({ ...payload })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("7d")
-    .sign(JWT_SECRET);
+    .setExpirationTime(payload.role === "ADMIN" ? "8h" : "7d")
+    .sign(getJwtSecret());
 }
 
 export async function verifyToken(token: string): Promise<AuthTokenPayload | null> {
   try {
-    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const { payload } = await jwtVerify(token, getJwtSecret());
     return payload as unknown as AuthTokenPayload;
   } catch {
     return null;

@@ -31,6 +31,7 @@ export default function AdminDashboardPage() {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newCategoryDescription, setNewCategoryDescription] = useState("");
   const [isDataLoading, setIsDataLoading] = useState(true);
+  const [dataLoadError, setDataLoadError] = useState("");
 
   // New product form state
   const [newProduct, setNewProduct] = useState({
@@ -42,7 +43,8 @@ export default function AdminDashboardPage() {
     stock: "15",
     size: "",
     categoryId: "cat-fresh",
-    image: "/images/products/meadow.svg",
+    image: "",
+    images: [] as string[],
     isFeatured: false,
     isGiftSet: false,
     isSale: false,
@@ -74,6 +76,8 @@ export default function AdminDashboardPage() {
 
   const fetchData = async () => {
     setIsDataLoading(true);
+    setDataLoadError("");
+    const loadErrors: string[] = [];
     try {
       const [ordersRes, productsRes, categoriesRes] = await Promise.all([
         fetch("/api/orders"),
@@ -84,11 +88,17 @@ export default function AdminDashboardPage() {
       if (ordersRes.ok) {
         const data = await ordersRes.json();
         setOrders(data.orders || []);
+      } else {
+        const data = await ordersRes.json().catch(() => ({}));
+        loadErrors.push(data.error || "Saved orders could not be loaded.");
       }
 
       if (productsRes.ok) {
         const data = await productsRes.json();
         setProducts(data.products || []);
+      } else {
+        const data = await productsRes.json().catch(() => ({}));
+        loadErrors.push(data.error || "Saved products could not be loaded.");
       }
 
       if (categoriesRes.ok) {
@@ -101,9 +111,16 @@ export default function AdminDashboardPage() {
             ? current.categoryId
             : loadedCategories[0]?.id || "",
         }));
+      } else {
+        loadErrors.push("Product categories could not be loaded.");
       }
-    } catch {
-      // ignore
+
+      if (loadErrors.length) {
+        setDataLoadError(loadErrors.join(" "));
+      }
+    } catch (error) {
+      console.error("Admin dashboard data request failed:", error);
+      setDataLoadError("The admin dashboard could not contact the server. Check the development terminal for the database error, then try Refresh.");
     } finally {
       setIsDataLoading(false);
     }
@@ -111,7 +128,7 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     const requestedTab = new URLSearchParams(window.location.search).get("tab");
-    if (requestedTab === "products" || requestedTab === "categories" || requestedTab === "new-product") setActiveTab(requestedTab);
+    if (requestedTab === "orders" || requestedTab === "products" || requestedTab === "categories" || requestedTab === "new-product") setActiveTab(requestedTab);
     fetchData();
   }, []);
 
@@ -133,22 +150,64 @@ export default function AdminDashboardPage() {
     }
   };
 
-  const handleProductImageUpload = async (file?: File) => {
-    if (!file) return;
+  const handleProductImageUpload = async (files?: FileList | File[]) => {
+    const selectedFiles = files ? Array.from(files) : [];
+    if (!selectedFiles.length) return;
     setUploadingProductImage(true);
     setStatusMessage("");
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await fetch("/api/admin/media", { method: "POST", body: formData });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Image upload failed");
-      setNewProduct((current) => ({ ...current, image: data.url }));
-      setStatusMessage("Product image uploaded. Save the fragrance to use it.");
+      const uploadedUrls: string[] = [];
+      for (const file of selectedFiles) {
+        const formData = new FormData();
+        formData.append("file", file);
+        const res = await fetch("/api/admin/media", { method: "POST", body: formData });
+        const data = await res.json();
+        if (!res.ok || typeof data.url !== "string") throw new Error(data.error || `Could not upload ${file.name}`);
+        uploadedUrls.push(data.url);
+      }
+      setNewProduct((current) => ({
+        ...current,
+        image: current.images.length === 0 ? uploadedUrls[0] : current.image,
+        images: [...current.images, ...uploadedUrls],
+      }));
+      setStatusMessage(`${uploadedUrls.length} product photo${uploadedUrls.length === 1 ? "" : "s"} uploaded. Save the fragrance to keep them.`);
     } catch (error) {
       setStatusMessage(error instanceof Error ? error.message : "Image upload failed.");
     } finally {
       setUploadingProductImage(false);
+    }
+  };
+
+  const handleAddProductPhotos = async (product: Product, files?: FileList | File[]) => {
+    const selectedFiles = files ? Array.from(files) : [];
+    if (!selectedFiles.length) return;
+    setUploadingProductId(product.id);
+    setStatusMessage("");
+    try {
+      const uploadedUrls: string[] = [];
+      for (const file of selectedFiles) {
+        const formData = new FormData();
+        formData.append("file", file);
+        const response = await fetch("/api/admin/media", { method: "POST", body: formData });
+        const data = await response.json();
+        if (!response.ok || typeof data.url !== "string") throw new Error(data.error || `Could not upload ${file.name}`);
+        uploadedUrls.push(data.url);
+      }
+      const existingImages = product.images || [];
+      const allImages = [...new Set([...existingImages, product.image, ...uploadedUrls].filter((url) => Boolean(url) && !url.startsWith("/images/products/")))];
+      const response = await fetch("/api/products", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: product.id, images: allImages }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || "Photos uploaded, but the product could not be updated.");
+      setStatusMessage(`Added ${uploadedUrls.length} photo${uploadedUrls.length === 1 ? "" : "s"} to ${product.name}.`);
+      await fetchData();
+    } catch (error) {
+      setStatusMessage(error instanceof Error ? error.message : "Could not add product photos.");
+    } finally {
+      setUploadingProductId(null);
     }
   };
 
@@ -230,7 +289,8 @@ export default function AdminDashboardPage() {
           stock: "15",
           size: "",
           categoryId: categories[0]?.id || "",
-          image: "/images/products/meadow.svg",
+          image: "",
+          images: [],
           isFeatured: false,
           isGiftSet: false,
           isSale: false,
@@ -434,6 +494,14 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
+        {dataLoadError && (
+          <div role="alert" className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 text-sm">
+            <strong className="block mb-1">Some admin data could not be loaded.</strong>
+            <span>{dataLoadError}</span>
+            <button type="button" onClick={fetchData} className="ml-2 underline font-semibold">Try again</button>
+          </div>
+        )}
+
         {statusMessage && (
           <div className="mb-6 p-4 rounded-xl bg-[#ECFDF5] border border-[#6EE7B7] text-[#065F46] text-xs font-medium flex items-center gap-2 animate-fade-in">
             <CheckCircle className="w-4 h-4" />
@@ -487,7 +555,7 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Tab navigation */}
-        <div className="flex items-center gap-2 border-b border-[#EFE9E2] mb-8 pb-3">
+        <div id="admin-tabs" className="flex items-center gap-2 border-b border-[#EFE9E2] mb-8 pb-3">
           <button
             onClick={() => setActiveTab("orders")}
             className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-colors ${
@@ -667,12 +735,14 @@ export default function AdminDashboardPage() {
                       </td>
                       <td className="py-3 px-4 flex items-center gap-3">
                         <div className="w-10 h-12 bg-[#FAF7F4] rounded relative overflow-hidden shrink-0 border border-[#EDE7DF]">
-                          <Image
-                            src={p.image}
-                            alt={p.name}
-                            fill
-                            className="object-contain p-0.5"
-                          />
+                          {(p.images?.find((url) => typeof url === "string" && url.trim() && !url.startsWith("/images/products/")) || (p.image?.trim() && !p.image.startsWith("/images/products/") ? p.image : "")) ? (
+                            <Image
+                              src={p.images?.find((url) => typeof url === "string" && url.trim() && !url.startsWith("/images/products/")) || (p.image?.trim() && !p.image.startsWith("/images/products/") ? p.image : "")}
+                              alt={p.name}
+                              fill
+                              className="object-contain p-0.5"
+                            />
+                          ) : null}
                         </div>
                         <div>
                           <span className="font-bold text-[#1C1917]">{p.name}</span>
@@ -748,6 +818,11 @@ export default function AdminDashboardPage() {
                                 e.currentTarget.value = "";
                               }}
                             />
+                          </label>
+                          <label className={`inline-flex items-center gap-1.5 rounded-full border border-[#DDD6CD] px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-[#5C554F] hover:bg-[#FAF7F4] cursor-pointer transition-colors ${uploadingProductId === p.id ? "opacity-50 pointer-events-none" : ""}`} title={`Add photos for ${p.name}`}>
+                            <Plus className="w-3.5 h-3.5" />
+                            <span>{uploadingProductId === p.id ? "Uploading…" : "Add photos"}</span>
+                            <input type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif,image/avif" disabled={uploadingProductId !== null} className="hidden" onChange={(e) => { void handleAddProductPhotos(p, e.currentTarget.files || undefined); e.currentTarget.value = ""; }} />
                           </label>
                           <button
                             onClick={() => startEditingProduct(p)}
@@ -884,11 +959,12 @@ export default function AdminDashboardPage() {
 
             <form onSubmit={handleCreateProduct} className="space-y-4">
               <div className="border border-dashed border-[#DDD6CD] rounded-xl p-4 bg-[#FFFCFA]">
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#4A443F] mb-2">Product image</label>
-                <p className="text-xs text-[#78716C] mb-3">Upload JPG, PNG, WebP, GIF or AVIF (max 10 MB).</p>
-                <input type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" disabled={uploadingProductImage} onChange={(e) => { void handleProductImageUpload(e.target.files?.[0]); e.currentTarget.value = ""; }} className="block w-full text-xs file:mr-3 file:border-0 file:bg-[#1C1917] file:px-3 file:py-2 file:text-white" />
-                {uploadingProductImage && <p className="mt-2 text-xs text-[#8B6658]">Uploading image…</p>}
-                <p className="mt-2 break-all text-[11px] text-[#78716C]">Selected image: {newProduct.image}</p>
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#4A443F] mb-2">Product photos (optional)</label>
+                <p className="text-xs text-[#78716C] mb-3">Upload one or several JPG, PNG, WebP, GIF or AVIF photos (max 10 MB each). You can skip this and use the default image.</p>
+                <input type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif,image/avif" disabled={uploadingProductImage} onChange={(e) => { void handleProductImageUpload(e.currentTarget.files || undefined); e.currentTarget.value = ""; }} className="block w-full text-xs file:mr-3 file:border-0 file:bg-[#1C1917] file:px-3 file:py-2 file:text-white" />
+                {uploadingProductImage && <p className="mt-2 text-xs text-[#8B6658]">Uploading photos…</p>}
+                <p className="mt-2 break-all text-[11px] text-[#78716C]">Main photo: {newProduct.image}</p>
+                {newProduct.images.length > 0 && <div className="mt-3 grid grid-cols-3 sm:grid-cols-4 gap-2">{newProduct.images.map((url, index) => <div key={`${url}-${index}`} className="relative aspect-square overflow-hidden rounded-lg border border-[#EDE7DF] bg-white"><Image src={url} alt={`Product photo ${index + 1}`} fill className="object-contain p-1" /><button type="button" onClick={() => setNewProduct((current) => { const images = current.images.filter((_, i) => i !== index); return { ...current, images, image: images[0] || "" }; })} className="absolute right-1 top-1 rounded bg-white/90 px-1.5 py-1 text-[10px] font-bold text-[#9B2C2C]">Remove</button></div>)}</div>}
               </div>
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-[#4A443F] mb-1">

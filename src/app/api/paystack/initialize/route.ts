@@ -1,10 +1,23 @@
 import { NextResponse } from "next/server";
-import { getProductById, createOrder } from "@/lib/db";
+import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/auth";
+import { getProductById, createOrder, prisma } from "@/lib/db";
 import { initializePaystackTransaction } from "@/lib/paystack";
 import { OrderItem } from "@/types";
 
 export async function POST(req: Request) {
   try {
+    const cookieStore = await cookies();
+    const adminToken = cookieStore.get("aura_admin_token")?.value;
+    const adminPayload = adminToken ? await verifyToken(adminToken) : null;
+    if (adminPayload?.role === "ADMIN") {
+      return NextResponse.json({ error: "Administrator accounts cannot place customer orders." }, { status: 403 });
+    }
+    const customerToken = cookieStore.get("aura_auth_token")?.value;
+    const customerPayload = customerToken ? await verifyToken(customerToken) : null;
+    if (customerPayload?.role === "ADMIN") {
+      return NextResponse.json({ error: "Administrator accounts cannot place customer orders. Please sign in with a customer account." }, { status: 403 });
+    }
     const body = await req.json();
     const {
       customerName,
@@ -12,9 +25,9 @@ export async function POST(req: Request) {
       customerPhone,
       deliveryAddress,
       city,
+      deliveryRange,
       notes,
       items,
-      userId,
     } = body;
 
     // 1. Validation
@@ -22,6 +35,8 @@ export async function POST(req: Request) {
       !customerName ||
       !customerEmail ||
       !customerPhone ||
+      !deliveryAddress ||
+      !city ||
       !items ||
       !Array.isArray(items) ||
       items.length === 0
@@ -83,9 +98,26 @@ export async function POST(req: Request) {
       });
     }
 
-    // 3. Server-side delivery fee calculation (never trusted from frontend)
-    const deliveryFee = 0;
-    const finalTotal = calculatedSubtotal;
+    // 3. Resolve delivery price from admin-managed settings on the server.
+    // Never trust a fee supplied by the browser.
+    const settingRows = await prisma.siteSetting.findMany({
+      where: { key: { in: ["deliveryFreePromo", "deliveryRanges"] } },
+    });
+    const deliverySettings = Object.fromEntries(settingRows.map((row) => [row.key, row.value]));
+    const configuredRanges = String(deliverySettings.deliveryRanges || "")
+      .split("\n")
+      .map((line) => {
+        const [label, feeText] = line.split("|");
+        return { label: (label || "").trim(), fee: Number((feeText || "").trim()) };
+      })
+      .filter((range) => range.label && Number.isFinite(range.fee) && range.fee >= 0);
+    const selectedDeliveryRange = configuredRanges.find((range) => range.label === String(deliveryRange || "").trim());
+    const freeDeliveryPromo = deliverySettings.deliveryFreePromo === "true";
+    if (!freeDeliveryPromo && !selectedDeliveryRange) {
+      return NextResponse.json({ error: "Please select a valid delivery range. Refresh checkout and try again." }, { status: 400 });
+    }
+    const deliveryFee = freeDeliveryPromo ? 0 : selectedDeliveryRange!.fee;
+    const finalTotal = calculatedSubtotal + deliveryFee;
 
     // 4. Generate unique transaction reference & human-readable order number
     const timestamp = Date.now();
@@ -96,13 +128,13 @@ export async function POST(req: Request) {
     // 5. Create PENDING Order in Database
     const order = await createOrder({
       orderNumber,
-      userId: userId || null,
+      userId: customerPayload?.role === "CUSTOMER" ? customerPayload.userId : null,
       customerName: customerName.trim(),
       customerEmail: customerEmail.trim().toLowerCase(),
       customerPhone: customerPhone.trim(),
-      deliveryAddress: (deliveryAddress || "To be confirmed by phone").trim(),
-      city: (city || "To be confirmed").trim(),
-      notes: notes?.trim() || null,
+      deliveryAddress: deliveryAddress.trim(),
+      city: city.trim(),
+      notes: [notes?.trim(), `Delivery range selected: ${freeDeliveryPromo ? "Free delivery promotion" : selectedDeliveryRange!.label}`].filter(Boolean).join("\n") || null,
       subtotal: calculatedSubtotal,
       deliveryFee,
       totalAmount: finalTotal,
@@ -139,7 +171,7 @@ export async function POST(req: Request) {
           {
             display_name: "Delivery City",
             variable_name: "delivery_city",
-            value: (city || "To be confirmed").trim(),
+            value: city.trim(),
           },
         ],
       },

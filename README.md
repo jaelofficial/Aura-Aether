@@ -5,7 +5,7 @@ Luxury fragrance storefront built with Next.js, TypeScript, Tailwind CSS, Prisma
 ## Getting started
 
 1. Install dependencies: `npm install`
-2. Create a local `.env` file and configure `DATABASE_URL` for PostgreSQL and `AUTH_SECRET` with a long random secret.
+2. Create a local `.env` file and configure `DATABASE_URL` for PostgreSQL and `AUTH_SECRET` with a cryptographically random value of at least 32 characters. Do not use a public or hard-coded secret.
 3. Sync the Prisma schema and generate the client: `npx prisma db push` then `npx prisma generate`.
 4. Start the development server: `npm run dev`.
 5. Open [http://localhost:3000](http://localhost:3000).
@@ -17,6 +17,8 @@ Luxury fragrance storefront built with Next.js, TypeScript, Tailwind CSS, Prisma
 - Collection pages are `/for-her` and `/for-him`.
 - The separate administrator workspace is `/admin`; the visual website editor is `/admin/content`.
 - The website editor manages page copy, brand settings, rotating homepage hero slides and product images. Product images can also be changed from the image library in the editor.
+- The admin portal uses a separate HTTP-only `aura_admin_token` cookie; customer sessions use `aura_auth_token`.
+- The `src/proxy.ts` request guard protects admin pages and redirects an authenticated administrator away from customer storefront pages. Server-side API authorization remains mandatory.
 - The site settings API is admin-write-protected at `/api/site-settings`.
 
 The `SiteSetting` model is new; run `npx prisma db push` in each configured environment before using the content editor. Keep credentials in environment variables and never commit `.env`.

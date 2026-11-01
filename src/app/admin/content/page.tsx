@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CheckCircle2, Save, Upload, House, Palette, ShoppingBag, Gift, Mail, Sparkles, ExternalLink } from "lucide-react";
-import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
+import { CheckCircle2, Save, Upload, House, Palette, ShoppingBag, Gift, Mail, Sparkles, Truck } from "lucide-react";
 import ProductImageLibrary from "@/components/admin/ProductImageLibrary";
 
 type Settings = Record<string, string>;
-type Field = { key: string; label: string; help?: string; multiline?: boolean; type?: string; image?: boolean };
+type AdminUser = { id: string; name: string; email: string; role: "ADMIN" };
+type Field = { key: string; label: string; help?: string; multiline?: boolean; type?: string; image?: boolean; options?: { label: string; value: string }[] };
 type EditorGroup = { title: string; description: string; fields: Field[] };
 
 const initial: Settings = {
@@ -25,6 +24,10 @@ const initial: Settings = {
   heroImageUrl2: "/images/hero-placeholder-2.svg",
   heroImageUrl3: "/images/hero-placeholder-3.svg",
   heroCtaLabel: "Explore the collection",
+  heroCtaUrl: "/shop",
+  heroCtaAlignment: "center",
+  homeFeaturedCtaLabel: "View All Fragrances",
+  homeFeaturedCtaUrl: "/shop",
   homeFeaturedEyebrow: "OUR COLLECTION",
   homeFeaturedTitle: "Featured fragrances.",
   homeGiftTitle: "Curated Gift Sets.",
@@ -47,6 +50,9 @@ const initial: Settings = {
   contactEmail: "concierge@aura-aether.com",
   contactPhone: "+233 (0) 24 892 4110",
   contactAddress: "Accra, Ghana",
+  deliveryOrigin: "Adenta, Accra, Ghana",
+  deliveryFreePromo: "false",
+  deliveryRanges: "",
 };
 
 const groups: Record<string, EditorGroup[]> = {
@@ -56,10 +62,14 @@ const groups: Record<string, EditorGroup[]> = {
       { key: "heroDescription", label: "Description", multiline: true },
       { key: "motto", label: "Tagline" },
       { key: "heroCtaLabel", label: "Button label" },
+      { key: "heroCtaUrl", label: "Button destination", help: "Use a site path such as /shop or /gift-sets." },
+      { key: "heroCtaAlignment", label: "Button placement", options: [{ label: "Left", value: "left" }, { label: "Centre", value: "center" }, { label: "Right", value: "right" }] },
     ]},
     { title: "Homepage sections", description: "The copy shown around featured fragrances and promotions.", fields: [
       { key: "homeFeaturedEyebrow", label: "Featured eyebrow" },
       { key: "homeFeaturedTitle", label: "Featured heading" },
+      { key: "homeFeaturedCtaLabel", label: "Featured section button label" },
+      { key: "homeFeaturedCtaUrl", label: "Featured section button destination", help: "Use a site path such as /shop." },
       { key: "homePromoTitle", label: "Promotion heading" },
       { key: "homePromoDescription", label: "Promotion description", multiline: true },
       { key: "homePromoImageUrl", label: "Promotion image", image: true },
@@ -97,6 +107,11 @@ const groups: Record<string, EditorGroup[]> = {
     { key: "contactPhone", label: "Contact phone" },
     { key: "contactAddress", label: "Contact address", multiline: true },
   ]}],
+  delivery: [{ title: "Delivery pricing & promotions", description: "Set your delivery starting point, delivery fee ranges and an optional store-wide free-delivery promotion.", fields: [
+    { key: "deliveryOrigin", label: "Delivery starting point", help: "Current starting point: Adenta, Accra, Ghana." },
+    { key: "deliveryFreePromo", label: "Free delivery for all orders", options: [{ label: "Off — use normal delivery rates", value: "false" }, { label: "On — all orders have free delivery", value: "true" }] },
+    { key: "deliveryRanges", label: "Delivery ranges and fees", multiline: true, help: "One range per line, in this format: Range label|Fee in GH₵. Example: 0–5 km|20. Customers choose the range that applies to their location. Enter your own ranges and prices, then save." },
+  ]}],
 };
 
 const pages = [
@@ -106,16 +121,31 @@ const pages = [
   { id: "gifts", label: "Gift Sets", description: "Gift collection introduction", icon: Gift },
   { id: "about", label: "About", description: "Brand story introduction", icon: Sparkles },
   { id: "contact", label: "Contact", description: "Contact details and copy", icon: Mail },
+  { id: "delivery", label: "Delivery", description: "Delivery ranges, fees and free-delivery promotions", icon: Truck },
 ];
 
 export default function StorefrontContentPage() {
-  const { user, isLoading } = useAuth();
+  const [user, setUser] = useState<AdminUser | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [settings, setSettings] = useState<Settings>(initial);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [activeSection, setActiveSection] = useState("home");
   const [uploadingKey, setUploadingKey] = useState("");
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/auth/admin-me")
+      .then(async (res) => {
+        const data = await res.json().catch(() => ({}));
+        if (!active) return;
+        setUser(res.ok && data.user?.role === "ADMIN" ? data.user : null);
+      })
+      .catch(() => { if (active) setUser(null); })
+      .finally(() => { if (active) setIsLoading(false); });
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
     const section = new URLSearchParams(window.location.search).get("section");
@@ -173,7 +203,7 @@ export default function StorefrontContentPage() {
   }
 
   if (isLoading || loading) return <div className="mx-auto max-w-4xl p-10 text-sm text-[#747B87]">Loading editor…</div>;
-  if (!user || user.role !== "ADMIN") return <div className="mx-auto max-w-xl rounded-2xl border border-[#E5E7EB] bg-white p-8 text-center"><h1 className="text-2xl font-bold">Admin access required</h1><p className="mt-2 text-sm text-[#747B87]">Sign in with an administrator account to manage the store.</p><Link href="/login" className="mt-5 inline-flex rounded-lg bg-[#20242B] px-4 py-2 text-sm font-semibold text-white">Go to sign in</Link></div>;
+  if (!user || user.role !== "ADMIN") return <div className="mx-auto max-w-xl rounded-2xl border border-[#E5E7EB] bg-white p-8 text-center"><h1 className="text-2xl font-bold">Admin access required</h1><p className="mt-2 text-sm text-[#747B87]">Sign in with an administrator account to manage the store.</p><a href="/login" className="mt-5 inline-flex rounded-lg bg-[#20242B] px-4 py-2 text-sm font-semibold text-white">Go to sign in</a></div>;
 
   const selectedPage = pages.find((page) => page.id === activeSection) || pages[0];
   const SelectedIcon = selectedPage.icon;
@@ -186,7 +216,7 @@ export default function StorefrontContentPage() {
           <h1 className="mt-2 text-3xl font-bold tracking-tight text-[#20242B] sm:text-4xl">Website editor</h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-[#747B87]">Choose a page, update its content, preview every editable image and save your changes.</p>
         </div>
-        <Link href="/" target="_blank" className="inline-flex items-center justify-center gap-2 self-start rounded-xl border border-[#E1E4E9] bg-white px-4 py-3 text-xs font-bold text-[#555D69] transition-all hover:-translate-y-0.5 hover:border-[#C7A48F] hover:shadow-sm md:self-auto"><ExternalLink size={14} /> Preview live website</Link>
+        
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -246,7 +276,7 @@ export default function StorefrontContentPage() {
                   <label className="inline-flex w-fit cursor-pointer items-center gap-2 rounded-lg border border-[#DDE1E7] bg-white px-3 py-2 text-xs font-bold text-[#4F5662] transition hover:border-[#B77F60] hover:text-[#8B5D45]"><Upload size={14} /> {uploadingKey === field.key ? "Uploading…" : "Upload replacement"}<input type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" disabled={uploadingKey === field.key} className="hidden" onChange={(e) => { void uploadImage(field.key, e.target.files?.[0]); e.currentTarget.value = ""; }} /></label>
                   <p className="text-[10px] leading-4 text-[#858B96]">JPG, PNG, WebP, GIF or AVIF · max 10 MB</p>
                 </div>
-              </div> : field.multiline ? <textarea rows={4} value={settings[field.key] || ""} onChange={(e) => setSettings((current) => ({ ...current, [field.key]: e.target.value }))} className="mt-2 w-full rounded-xl border border-[#E0E3E8] bg-white px-3.5 py-3 text-sm leading-6 outline-none transition focus:border-[#B77F60] focus:ring-2 focus:ring-[#B77F60]/10" /> : <input type={field.type || "text"} value={settings[field.key] || ""} onChange={(e) => setSettings((current) => ({ ...current, [field.key]: e.target.value }))} className="mt-2 w-full rounded-xl border border-[#E0E3E8] bg-white px-3.5 py-3 text-sm outline-none transition focus:border-[#B77F60] focus:ring-2 focus:ring-[#B77F60]/10" />}
+              </div> : field.options ? <select value={settings[field.key] || ""} onChange={(e) => setSettings((current) => ({ ...current, [field.key]: e.target.value }))} className="mt-2 w-full rounded-xl border border-[#E0E3E8] bg-white px-3.5 py-3 text-sm outline-none transition focus:border-[#B77F60] focus:ring-2 focus:ring-[#B77F60]/10">{field.options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select> : field.multiline ? <textarea rows={4} value={settings[field.key] || ""} onChange={(e) => setSettings((current) => ({ ...current, [field.key]: e.target.value }))} className="mt-2 w-full rounded-xl border border-[#E0E3E8] bg-white px-3.5 py-3 text-sm leading-6 outline-none transition focus:border-[#B77F60] focus:ring-2 focus:ring-[#B77F60]/10" /> : <input type={field.type || "text"} value={settings[field.key] || ""} onChange={(e) => setSettings((current) => ({ ...current, [field.key]: e.target.value }))} className="mt-2 w-full rounded-xl border border-[#E0E3E8] bg-white px-3.5 py-3 text-sm outline-none transition focus:border-[#B77F60] focus:ring-2 focus:ring-[#B77F60]/10" />}
             </label>)}
           </div>
         </section>)}

@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { initialProducts, initialCategories } from "./data";
+import { initialCategories } from "./data";
 import { Product, Category, Order, User } from "@/types";
 
 declare global {
@@ -26,7 +26,7 @@ interface MemoryStore {
 }
 
 const memoryStore: MemoryStore = {
-  products: [...initialProducts],
+  products: [],
   categories: [...initialCategories],
   orders: [],
   users: [
@@ -59,16 +59,24 @@ let isPostgresAvailable: boolean | null = null;
 async function checkPostgres(): Promise<boolean> {
   if (isPostgresAvailable !== null) return isPostgresAvailable;
   try {
-    // Quick probe with timeout
+    // Supabase can take longer than one second to respond after idle periods.
+    let timeout: ReturnType<typeof setTimeout> | undefined;
     await Promise.race([
       prisma.$queryRaw`SELECT 1`,
-      new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 1000)),
-    ]);
+      new Promise((_, reject) => {
+        timeout = setTimeout(
+          () => reject(new Error("PostgreSQL connection check timed out after 5 seconds")),
+          5000
+        );
+      }),
+    ]).finally(() => {
+      if (timeout) clearTimeout(timeout);
+    });
     isPostgresAvailable = true;
     return true;
-  } catch {
-    // Do not cache a failed connection check forever. The database may become
-    // available after startup, so retry it on the next request.
+  } catch (error) {
+    console.error("PostgreSQL connection check failed:", error);
+    // Do not cache a failed connection check forever. Retry on the next request.
     isPostgresAvailable = null;
     return false;
   }
@@ -120,45 +128,14 @@ export async function getProducts(options?: {
         ...p,
         category: p.category ? { id: p.category.id, name: p.category.name, slug: p.category.slug } : undefined,
       }));
-    } catch (e) {
-      console.warn("Falling back to internal product catalog:", e);
+    } catch (error) {
+      console.error("Could not load products from PostgreSQL:", error);
+      throw new Error("Could not load saved products from PostgreSQL.");
     }
   }
 
-  // Memory fallback with filtering & sorting
-  let list = [...memoryStore.products];
-
-  if (options?.featured) {
-    list = list.filter((p) => p.isFeatured);
-  }
-  if (options?.giftSets !== undefined) {
-    list = list.filter((p) => p.isGiftSet === options.giftSets);
-  }
-  if (options?.category) {
-    const cat = memoryStore.categories.find((c) => c.slug === options.category);
-    if (cat) {
-      list = list.filter((p) => p.categoryId === cat.id);
-    }
-  }
-  if (options?.search) {
-    const query = options.search.toLowerCase();
-    list = list.filter(
-      (p) =>
-        p.name.toLowerCase().includes(query) ||
-        p.description.toLowerCase().includes(query) ||
-        p.scentNotes.toLowerCase().includes(query)
-    );
-  }
-
-  if (options?.sort === "price-asc") {
-    list.sort((a, b) => a.price - b.price);
-  } else if (options?.sort === "price-desc") {
-    list.sort((a, b) => b.price - a.price);
-  } else if (options?.sort === "name") {
-    list.sort((a, b) => a.name.localeCompare(b.name));
-  }
-
-  return list;
+  // Do not make a database connection failure look like a genuinely empty catalogue.
+  throw new Error("PostgreSQL is unavailable; saved products could not be loaded.");
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
@@ -181,7 +158,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     }
   }
 
-  return memoryStore.products.find((p) => p.slug === slug) || null;
+  return null;
 }
 
 export async function getProductById(id: string): Promise<Product | null> {
@@ -195,7 +172,7 @@ export async function getProductById(id: string): Promise<Product | null> {
       throw new Error("Could not load product from PostgreSQL.");
     }
   }
-  return memoryStore.products.find((p) => p.id === id) || null;
+  return null;
 }
 
 export async function getCategories(): Promise<Category[]> {
@@ -386,27 +363,29 @@ export async function getOrdersByUserId(userId: string): Promise<Order[]> {
 
 export async function getAllOrders(): Promise<Order[]> {
   const useDb = await checkPostgres();
-  if (useDb) {
-    try {
-      const orders = await prisma.order.findMany({
-        include: { items: true, payment: true },
-        orderBy: { createdAt: "desc" },
-      });
-      return orders.map((o) => ({
-        ...o,
-        status: o.status as Order["status"],
-        paymentStatus: o.paymentStatus as Order["paymentStatus"],
-        items: o.items,
-        payment: o.payment ? {
-          ...o.payment,
-          status: o.payment.status as "PENDING" | "SUCCESS" | "FAILED" | "REVERSED",
-        } : null,
-      }));
-    } catch {
-      // fallback
-    }
+  if (!useDb) {
+    throw new Error("PostgreSQL is unavailable; saved orders could not be loaded.");
   }
-  return memoryStore.orders;
+
+  try {
+    const orders = await prisma.order.findMany({
+      include: { items: true, payment: true },
+      orderBy: { createdAt: "desc" },
+    });
+    return orders.map((o) => ({
+      ...o,
+      status: o.status as Order["status"],
+      paymentStatus: o.paymentStatus as Order["paymentStatus"],
+      items: o.items,
+      payment: o.payment ? {
+        ...o.payment,
+        status: o.payment.status as "PENDING" | "SUCCESS" | "FAILED" | "REVERSED",
+      } : null,
+    }));
+  } catch (error) {
+    console.error("Could not load saved orders from PostgreSQL:", error);
+    throw new Error("Could not load saved orders from PostgreSQL.");
+  }
 }
 
 export async function updateOrderPaymentSuccess({
@@ -436,6 +415,9 @@ export async function updateOrderPaymentSuccess({
         data: {
           status: "PAID",
           paymentStatus: "SUCCESS",
+          // Use Paystack's verified transaction ID as the customer-facing order number.
+          // Keep the internal Order.id unchanged so OrderItem relations remain valid.
+          ...(paystackId ? { orderNumber: paystackId } : {}),
           payment: {
             upsert: {
               create: {
@@ -486,6 +468,7 @@ export async function updateOrderPaymentSuccess({
   // Memory update
   order.status = "PAID";
   order.paymentStatus = "SUCCESS";
+  if (paystackId) order.orderNumber = paystackId;
   order.payment = {
     id: `pay-${Date.now()}`,
     orderId: order.id,

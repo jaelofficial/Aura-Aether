@@ -6,6 +6,8 @@ import { prisma } from "@/lib/db";
 export async function GET() {
   try {
     const cookieStore = await cookies();
+    // This endpoint reports only the storefront/customer session.
+    // Admin authentication is intentionally handled separately.
     const token = cookieStore.get("aura_auth_token")?.value;
 
     if (!token) {
@@ -13,7 +15,7 @@ export async function GET() {
     }
 
     const payload = await verifyToken(token);
-    if (!payload) {
+    if (!payload || payload.role !== "CUSTOMER") {
       return NextResponse.json({ user: null }, { status: 401 });
     }
 
@@ -31,7 +33,7 @@ export async function GET() {
         },
       });
 
-      if (dbUser) {
+      if (dbUser && dbUser.role === "CUSTOMER") {
         return NextResponse.json({ user: dbUser });
       }
     } catch {
