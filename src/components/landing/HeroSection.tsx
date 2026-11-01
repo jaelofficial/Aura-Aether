@@ -4,27 +4,27 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const slides = [
-  {
-    src: "/images/hero/coastal-aqua.jpeg",
-    alt: "Aqua perfume on a sunlit coastal terrace",
-  },
-  {
-    src: "/images/hero/desert-amber.jpeg",
-    alt: "Amber perfume in a warm garden courtyard",
-  },
-  {
-    src: "/images/hero/emerald-noir.jpeg",
-    alt: "Emerald perfume in a dark floral interior",
-  },
-  {
-    src: "/images/hero/city-sillage.jpeg",
-    alt: "Golden perfume beside a city cafe",
-  },
-];
-
 export default function HeroSection() {
   const [activeSlide, setActiveSlide] = useState(0);
+  const [slides, setSlides] = useState([
+    { src: "/images/hero/coastal-aqua.jpeg", alt: "Aqua perfume on a sunlit coastal terrace" },
+    { src: "/images/hero/desert-amber.jpeg", alt: "Amber perfume in a warm garden courtyard" },
+    { src: "/images/hero/emerald-noir.jpeg", alt: "Emerald perfume in a dark floral interior" },
+    { src: "/images/hero/city-sillage.jpeg", alt: "Golden perfume beside a city cafe" },
+  ]);
+
+  useEffect(() => {
+    fetch("/api/site-settings")
+      .then((response) => response.json())
+      .then(({ settings }) => {
+        if (!settings) return;
+        setSlides((current) => current.map((slide, index) => ({
+          ...slide,
+          src: settings[["heroImageUrl", "heroImageUrl2", "heroImageUrl3", "heroImageUrl4"][index]] || slide.src,
+        })));
+      })
+      .catch((error) => console.error("Could not load hero images:", error));
+  }, []);
 
   useEffect(() => {
     const timer = window.setInterval(() => setActiveSlide((current) => (current + 1) % slides.length), 4000);
