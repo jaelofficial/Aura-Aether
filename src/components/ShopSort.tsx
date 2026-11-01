@@ -37,13 +37,13 @@ export default function ShopSort({ category, search, sort, className = "" }: Sho
         aria-expanded={isOpen}
         aria-controls="shop-sort-options"
         onClick={() => setIsOpen((open) => !open)}
-        className="flex min-h-12 w-full items-center justify-between gap-3 border border-[#222a37] bg-white px-4 text-left text-sm text-[#222a37] sm:w-auto sm:min-w-40"
+        className="flex min-h-12 w-full items-center justify-between gap-3 border border-[var(--primary)] bg-white px-4 text-left text-sm text-[var(--primary)] sm:w-auto sm:min-w-40"
       >
         <span className="truncate">{selectedSort.label}</span>
         <Image src="/images/naya-icons/arrow-down.svg" alt="" width={20} height={20} className={`shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
       {isOpen && (
-        <div id="shop-sort-options" className="absolute right-0 top-full z-30 mt-2 min-w-full overflow-hidden border border-[#222a37] bg-[#222a37] text-white shadow-lg sm:min-w-52">
+        <div id="shop-sort-options" className="absolute right-0 top-full z-30 mt-2 min-w-full overflow-hidden border border-[var(--primary)] bg-[var(--primary)] text-white shadow-lg sm:min-w-52">
           {sortOptions.map((option) => (
             <Link
               key={option.value}
