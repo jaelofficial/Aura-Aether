@@ -16,13 +16,28 @@ const DEFAULTS: Record<string, string> = {
   heroTitle: "Aura & Aether",
   heroDescription: "Fragrance that says something about you. Find the scent that feels like yours.",
   motto: "Your scent. Your signature.",
-  heroImageUrl: "/images/hero-placeholder-1.svg",
-  heroImageUrl2: "/images/hero-placeholder-2.svg",
-  heroImageUrl3: "/images/hero-placeholder-3.svg",
+  heroImageUrl: "/images/hero/coastal-aqua.jpeg",
+  heroImageUrl2: "/images/hero/desert-amber.jpeg",
+  heroImageUrl3: "/images/hero/emerald-noir.jpeg",
+  heroImageUrl4: "/images/hero/city-sillage.jpeg",
+  homeBestsellerImage1: "/images/bestsellers/foret.jpeg",
+  homeBestsellerImage2: "/images/bestsellers/ambre-boise.jpeg",
+  homeBestsellerImage3: "/images/bestsellers/noir-ambre.jpeg",
+  homeCollectionImage1: "/images/collection/forest-green.jpeg",
+  homeCollectionImage2: "/images/collection/rose-lamour.jpeg",
+  homeCollectionImage3: "/images/collection/noir-ambre.jpeg",
+  homeCollectionImage4: "/images/collection/ambre-boise.jpeg",
+  homeBotanicalImage1: "/images/botanical-edit/esencia-foret.jpeg",
+  homeBotanicalImage2: "/images/botanical-edit/nectar-terre.jpeg",
+  homeBotanicalImage3: "/images/botanical-edit/bleue-rivage.jpeg",
   homeStepImage1: "/images/how-to-order/step-01.jpeg",
   homeStepImage2: "/images/how-to-order/step-02.jpeg",
   homeStepImage3: "/images/how-to-order/step-03.jpeg",
   homeStepImage4: "/images/how-to-order/step-04.jpeg",
+  homeNotesImage1: "/images/hero/orange-amere.jpeg",
+  homeNotesImage2: "/images/botanical-edit/bleue-rivage.jpeg",
+  homeNotesImage3: "/images/hero/cassis-sauvage.jpeg",
+  homeNotesImage4: "/images/botanical-edit/esencia-foret.jpeg",
   heroCtaLabel: "Explore the collection",
   heroCtaUrl: "/shop",
   heroCtaAlignment: "center",
@@ -83,8 +98,15 @@ export async function GET() {
   try {
     const rows = await prisma.siteSetting.findMany();
     const settings = { ...DEFAULTS };
+    const legacyHeroPlaceholders: Record<string, string> = {
+      heroImageUrl: "/images/hero-placeholder-1.svg",
+      heroImageUrl2: "/images/hero-placeholder-2.svg",
+      heroImageUrl3: "/images/hero-placeholder-3.svg",
+    };
     for (const row of rows) {
-      if (Object.prototype.hasOwnProperty.call(DEFAULTS, row.key)) settings[row.key] = row.value;
+      if (!Object.prototype.hasOwnProperty.call(DEFAULTS, row.key)) continue;
+      if (legacyHeroPlaceholders[row.key] === row.value) continue;
+      settings[row.key] = row.value;
     }
     return NextResponse.json({ settings }, { headers: { "Cache-Control": "private, max-age=10, must-revalidate" } });
   } catch (error) {
