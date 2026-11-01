@@ -88,7 +88,7 @@ export default function Testimonials() {
           type="button"
           aria-label="Previous testimonial"
           onClick={() => scrollCards(-1)}
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-[#222a37] text-white transition-colors hover:bg-[#303b4d]"
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--primary)] text-white transition-colors hover:bg-[#303b4d]"
         >
           <ChevronLeft aria-hidden="true" className="h-5 w-5" />
         </button>
@@ -96,7 +96,7 @@ export default function Testimonials() {
           type="button"
           aria-label="Next testimonial"
           onClick={() => scrollCards(1)}
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-[#222a37] text-white transition-colors hover:bg-[#303b4d]"
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--primary)] text-white transition-colors hover:bg-[#303b4d]"
         >
           <ChevronRight aria-hidden="true" className="h-5 w-5" />
         </button>
