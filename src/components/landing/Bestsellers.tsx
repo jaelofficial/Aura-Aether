@@ -67,13 +67,13 @@ export default async function Bestsellers() {
         </Link>
       </div>
 
-      <div className="mt-12 flex items-end justify-center gap-2 sm:gap-5 lg:mt-16 lg:gap-7">
+      <div className="mt-12 flex items-end justify-between gap-0 lg:mt-16">
         {bestsellers.map((product, index) => (
           <article
             key={product.name}
             className={index === 1
-              ? "relative z-10 -mx-[2%] w-[36%] max-w-[430px] shrink-0 sm:w-[34%]"
-              : "relative z-0 w-[28%] max-w-[340px] shrink-0 sm:w-[25%]"}
+              ? "relative z-10 w-[36%] max-w-[460px] shrink-0 sm:w-[36%]"
+              : "relative z-0 w-[30%] max-w-[390px] shrink-0 sm:w-[30%]"}
           >
             <Link href={product.product ? `/shop/${product.product.slug}` : "/shop"} className="group block">
               <div className={index === 1
@@ -83,7 +83,7 @@ export default async function Bestsellers() {
                   src={product.image}
                   alt={product.alt}
                   fill
-                  sizes={index === 1 ? "(min-width: 1024px) 34vw, 36vw" : "(min-width: 1024px) 25vw, 28vw"}
+                  sizes={index === 1 ? "(min-width: 1024px) 36vw, 36vw" : "(min-width: 1024px) 30vw, 30vw"}
                   className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                 />
               </div>
