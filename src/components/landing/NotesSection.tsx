@@ -3,24 +3,6 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-const topLine = (
-  <>
-    <span>Your scent</span>
-    <Image src={images[0]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />
-    <span>Our priority</span>
-    <Image src={images[1]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />
-  </>
-);
-
-const bottomLine = (
-  <>
-    <span>Find your signature</span>
-    <Image src={images[2]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />
-    <span>make every entrance unforgettable</span>
-    <Image src={images[3]} alt="" width={132} height={62} className="mx-3 inline-block h-[0.62em] w-[1.45em] rounded-full object-cover align-[0.03em] sm:mx-5" />
-  </>
-);
-
 export default function NotesSection() {
   const [images, setImages] = useState([
     "/images/hero/orange-amere.jpeg",
