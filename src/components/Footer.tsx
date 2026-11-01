@@ -34,7 +34,7 @@ export default function Footer() {
       <div className="mx-auto">
         <div className="flex justify-center pb-12 sm:pb-16 lg:pb-20">
           <Link href="/" aria-label={brandName} className="inline-flex items-center transition-opacity hover:opacity-80">
-            {logoUrl ? <Image src={logoUrl} alt={`${brandName} logo`} width={280} height={120} className="h-14 w-auto max-w-[220px] object-contain" onError={() => setLogoUrl("")} /> : <span className="whitespace-nowrap font-serif-luxury text-2xl font-semibold tracking-[0.12em] text-white">AURA &amp; AETHER</span>}
+            {logoUrl ? <Image src={logoUrl} alt={`${brandName} logo`} width={300} height={186} className="h-20 w-auto max-w-[280px] object-contain" onError={() => setLogoUrl("")} /> : <span className="whitespace-nowrap font-serif-luxury text-2xl font-semibold tracking-[0.12em] text-white">AURA &amp; AETHER</span>}
           </Link>
         </div>
 
