@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { prisma } from "@/lib/db";
+import { prisma, getProducts } from "@/lib/db";
+import HomepageFragranceCard from "@/components/landing/HomepageFragranceCard";
 
 const notes = [
   {
@@ -81,20 +82,19 @@ function CollectionNote({
 export default async function OurCollection() {
   const imageKeys = ["homeCollectionImage1", "homeCollectionImage2", "homeCollectionImage3", "homeCollectionImage4"] as const;
   const imageSettings = new Map<string, string>();
-  const saleNames = new Set<string>();
+  let products: Awaited<ReturnType<typeof getProducts>> = [];
   try {
-    const [rows, products] = await Promise.all([
+    const [rows, catalog] = await Promise.all([
       prisma.siteSetting.findMany({ where: { key: { in: [...imageKeys] } }, select: { key: true, value: true } }),
-      prisma.product.findMany({ where: { isGiftSet: false }, select: { name: true, isSale: true, price: true, originalPrice: true } }),
+      getProducts({ giftSets: false }),
     ]);
     for (const row of rows) imageSettings.set(row.key, row.value);
-    for (const product of products) {
-      if (product.isSale || (product.originalPrice != null && product.originalPrice > product.price)) saleNames.add(product.name.toLowerCase());
-    }
+    products = catalog;
   } catch (error) {
     console.error("Homepage collection images could not be loaded:", error);
   }
-  const collectionImages = defaultCollectionImages.map((image, index) => ({ ...image, src: imageSettings.get(imageKeys[index]) || image.src, onSale: saleNames.has(image.name.toLowerCase()) }));
+  const normalizeName = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "");
+  const collectionImages = defaultCollectionImages.map((image, index) => ({ ...image, src: imageSettings.get(imageKeys[index]) || image.src, product: products.find((product) => normalizeName(product.name) === normalizeName(image.name)) }));
 
   return (
     <section aria-labelledby="collection-title" className="bg-white px-4 pb-20 pt-16 sm:px-6 sm:pb-24 sm:pt-20 lg:px-[4vw] lg:pb-28 lg:pt-[6.8vw]">
