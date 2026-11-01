@@ -19,9 +19,9 @@ function applyEdits(data: SavedEdits) {
   }
   if (data.order?.length) {
     const children = Array.from(main.children);
-    const bySelector = new Map<string, Element>();
-    children.forEach((child, index) => bySelector.set(`:scope > :nth-child(${index + 1})`, child));
-    const ordered = data.order.map((selector) => bySelector.get(selector)).filter((node): node is Element => !!node);
+    const byId = new Map<string, Element>();
+    children.forEach((child) => { const id = child.getAttribute("data-aa-section-id"); if (id !== null) byId.set(id, child); });
+    const ordered = data.order.map((id) => byId.get(id)).filter((node): node is Element => !!node);
     if (ordered.length === children.length) ordered.forEach((node) => main.appendChild(node));
   }
 }
