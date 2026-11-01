@@ -21,6 +21,14 @@ const defaultSlides = [
     src: "/images/hero/city-sillage.jpeg",
     alt: "Golden perfume beside a city cafe",
   },
+  {
+    src: "/images/hero/cassis-sauvage.jpeg",
+    alt: "Cassis Sauvage fragrance campaign",
+  },
+  {
+    src: "/images/hero/orange-amere.jpeg",
+    alt: "Orange Amère fragrance campaign",
+  },
 ];
 
 export default function HeroSection() {
