@@ -22,8 +22,8 @@ function selectorFor(main: HTMLElement, element: Element): string {
 }
 
 function readValue(element: Element, type: Edit["type"]) {
-  if (type === "image" && element instanceof HTMLImageElement) return element.currentSrc || element.src;
-  if (type === "link" && element instanceof HTMLAnchorElement) return element.getAttribute("href") || "";
+  if (type === "image" && element.tagName === "IMG") { const image = element as HTMLImageElement; return image.currentSrc || image.src; }
+  if (type === "link" && element.tagName === "A") return element.getAttribute("href") || "";
   return element.textContent?.trim() || "";
 }
 
@@ -65,13 +65,13 @@ export default function VisualEditorPage() {
 
     const onClick = (event: Event) => {
       const target = event.target;
-      if (!(target instanceof Element)) return;
-      const element = target.closest("img,a,h1,h2,h3,h4,p,span,button") as HTMLElement | null;
+      if (!target || typeof (target as Element).closest !== "function") return;
+      const element = (target as Element).closest("img,a,h1,h2,h3,h4,p,span,button") as HTMLElement | null;
       if (!element || !main.contains(element)) return;
       if (element.closest("form,input,select,textarea")) return;
       event.preventDefault();
       event.stopPropagation();
-      const type: Edit["type"] = element instanceof HTMLImageElement ? "image" : element instanceof HTMLAnchorElement ? "link" : "text";
+      const type: Edit["type"] = element.tagName === "IMG" ? "image" : element.tagName === "A" ? "link" : "text";
       const selector = selectorFor(main, element);
       const value = readValue(element, type);
       setSelection({ selector, type, value, label: element.tagName.toLowerCase() });
@@ -124,8 +124,8 @@ export default function VisualEditorPage() {
     const element = main?.querySelector(selection.selector);
     if (!element) return;
     if (selection.type === "text") element.textContent = value;
-    if (selection.type === "image" && element instanceof HTMLImageElement) element.src = value;
-    if (selection.type === "link" && element instanceof HTMLAnchorElement) element.href = value;
+    if (selection.type === "image" && element.tagName === "IMG") (element as HTMLImageElement).src = value;
+    if (selection.type === "link" && element.tagName === "A") (element as HTMLAnchorElement).href = value;
     setItems((current) => {
       const rest = current.filter((item) => !(item.selector === selection.selector && item.type === selection.type));
       return [...rest, { selector: selection.selector, type: selection.type, value }];
