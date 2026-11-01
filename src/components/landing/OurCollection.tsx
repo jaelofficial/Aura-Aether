@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { prisma, getProducts } from "@/lib/db";
-import HomepageFragranceCard from "@/components/landing/HomepageFragranceCard";
+import HomepageAddButton from "@/components/landing/HomepageAddButton";
 
 const notes = [
   {
@@ -94,7 +94,7 @@ export default async function OurCollection() {
     console.error("Homepage collection images could not be loaded:", error);
   }
   const normalizeName = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "");
-  const collectionImages = defaultCollectionImages.map((image, index) => ({ ...image, src: imageSettings.get(imageKeys[index]) || image.src, product: products.find((product) => normalizeName(product.name) === normalizeName(image.name)) }));
+  const collectionImages = defaultCollectionImages.map((image, index) => ({ ...image, src: imageSettings.get(imageKeys[index]) || image.src, product: products.find((product) => normalizeName(product.name) === normalizeName(image.name)), onSale: products.some((product) => normalizeName(product.name) === normalizeName(image.name) && (product.isSale || (product.originalPrice != null && product.originalPrice > product.price))) }));
 
   return (
     <section aria-labelledby="collection-title" className="bg-white px-4 pb-20 pt-16 sm:px-6 sm:pb-24 sm:pt-20 lg:px-[4vw] lg:pb-28 lg:pt-[6.8vw]">
@@ -109,6 +109,7 @@ export default async function OurCollection() {
               className="object-cover"
             />
             {image.onSale && <span className="absolute left-3 top-3 bg-white/95 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#252522]">On sale</span>}
+            {image.product && <HomepageAddButton product={image.product} />}
           </div>
         ))}
 
@@ -151,6 +152,7 @@ export default async function OurCollection() {
             className="h-full w-full object-cover"
           />
           {image.onSale && <span className="absolute left-3 top-3 bg-white/95 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#252522]">On sale</span>}
+            {image.product && <HomepageAddButton product={image.product} />}
           </div>
         ))}
       </div>
