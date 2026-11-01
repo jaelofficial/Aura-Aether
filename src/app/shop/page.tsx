@@ -39,7 +39,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
             <Link
               href={`/shop?sort=${currentSort}`}
               aria-current={!currentCategory ? "page" : undefined}
-              className={`text-xs transition-colors ${!currentCategory ? "font-semibold text-[#222a37]" : "text-[#252522] hover:text-[#222a37]"}`}
+              className={`text-xs transition-colors ${!currentCategory ? "font-semibold text-[var(--primary)]" : "text-[#252522] hover:text-[var(--primary)]"}`}
             >
               All Fragrances
             </Link>
@@ -52,7 +52,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
                     key={category.id}
                     href={`/shop?category=${category.slug}&sort=${currentSort}`}
                     aria-current={isSelected ? "page" : undefined}
-                    className={`text-xs transition-colors ${isSelected ? "font-semibold text-[#222a37]" : "text-[#252522] hover:text-[#222a37]"}`}
+                    className={`text-xs transition-colors ${isSelected ? "font-semibold text-[var(--primary)]" : "text-[#252522] hover:text-[var(--primary)]"}`}
                   >
                     {category.name}
                   </Link>
@@ -69,7 +69,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
             <strong className="text-[#252522]">{products.length}</strong> fragrances
             {searchQuery && ` for "${searchQuery}"`}
           </p>
-          <Link href="/gift-sets" className="text-[#5B514F] hover:text-[#222a37] hover:underline">
+          <Link href="/gift-sets" className="text-[#5B514F] hover:text-[var(--primary)] hover:underline">
             Gift sets →
           </Link>
         </div>
@@ -85,7 +85,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
             </p>
             <Link
               href="/shop"
-              className="inline-block px-6 py-3 bg-[#222a37] text-white text-xs font-semibold uppercase tracking-widest hover:bg-[#773B44]"
+              className="inline-block px-6 py-3 bg-[var(--primary)] text-white text-xs font-semibold uppercase tracking-widest hover:bg-[#773B44]"
             >
               Reset Filters
             </Link>
