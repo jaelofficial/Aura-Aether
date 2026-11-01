@@ -65,7 +65,7 @@ export default function HowToOrder() {
       ref={sectionRef}
       id="how-to-order"
       aria-label="How to order"
-      className="relative h-[400svh] bg-[#222a37] text-white"
+      className="relative h-[400svh] bg-[var(--primary)] text-white"
     >
       <div className="sticky top-0 flex h-[100svh] flex-col overflow-hidden px-6 py-6 sm:px-10 sm:py-8 lg:px-[3.5vw] lg:py-20">
         <header className="mb-5 flex shrink-0 items-center justify-between gap-6 sm:mb-8">
