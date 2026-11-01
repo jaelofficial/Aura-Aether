@@ -27,7 +27,7 @@ export default function SpringDealsSpotlight({ products }: { products: Product[]
       </div>
 
       <div className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {fragrances.map((fragrance, index) => (
+        {fragrances.map((fragrance) => (
           <article key={fragrance.id} className="w-[82vw] max-w-[444px] shrink-0 snap-start">
             <div className="relative aspect-square w-full overflow-hidden bg-[#f7f5f4]">
               {getProductImage(fragrance) ? <Image src={getProductImage(fragrance)} alt={fragrance.name} fill sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw" className="object-cover" /> : <div className="flex h-full items-center justify-center text-sm text-[#625A54]">Product image not added yet</div>}
@@ -36,16 +36,12 @@ export default function SpringDealsSpotlight({ products }: { products: Product[]
             <div className="mt-8 flex flex-col gap-4">
               <div className="flex flex-col items-start gap-2">
                 <h3 className="font-sans-clean text-lg font-medium leading-tight">{fragrance.name}</h3>
-                <div className="flex" aria-hidden="true">
-                  {[1, 2, 3, 4].map((star) => (
-                    <Image key={star} src="/images/bestsellers/star-rate.svg" alt="" width={18} height={18} />
-                  ))}
-                </div>
+                <div aria-hidden="true" className="text-sm tracking-[0.2em] text-[var(--accent-copper)]">✦ ✦ ✦ ✦</div>
               </div>
 
               <div className="flex items-end justify-between gap-4">
                 <p className="font-sans-clean text-lg font-medium leading-[1.4] tracking-[0.1px] sm:text-xl">Eau de Parfum</p>
-                <Link href={`/shop/${fragrance.slug}`} className="flex h-[50px] shrink-0 items-center justify-center rounded border border-black px-6 font-sans-clean text-sm transition-colors hover:bg-[#17110F] hover:text-white sm:px-8 sm:text-base">
+                <Link href={`/shop/${fragrance.slug}`} className="flex h-[50px] shrink-0 items-center justify-center rounded border border-black px-6 font-sans-clean text-sm transition-colors hover:bg-[var(--primary)] hover:text-white sm:px-8 sm:text-base">
                   Quick shop
                 </Link>
               </div>
