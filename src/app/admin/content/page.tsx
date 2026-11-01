@@ -22,7 +22,23 @@ const initial: Settings = {
   motto: "Your scent. Your signature.",
   heroImageUrl: "/images/hero-placeholder-1.svg",
   heroImageUrl2: "/images/hero-placeholder-2.svg",
-  heroImageUrl3: "/images/hero-placeholder-3.svg",
+  heroImageUrl3: "/images/hero/emerald-noir.jpeg",
+  heroImageUrl4: "/images/hero/city-sillage.jpeg",
+  homeCollectionImage1: "/images/collection/forest-green.jpeg",
+  homeCollectionImage2: "/images/collection/rose-lamour.jpeg",
+  homeCollectionImage3: "/images/collection/noir-ambre.jpeg",
+  homeCollectionImage4: "/images/collection/ambre-boise.jpeg",
+  homeBotanicalImage1: "/images/botanical-edit/esencia-foret.jpeg",
+  homeBotanicalImage2: "/images/botanical-edit/nectar-terre.jpeg",
+  homeBotanicalImage3: "/images/botanical-edit/bleue-rivage.jpeg",
+  homeHowToOrderImage1: "/images/how-to-order/step-01.jpeg",
+  homeHowToOrderImage2: "/images/how-to-order/step-02.jpeg",
+  homeHowToOrderImage3: "/images/how-to-order/step-03.jpeg",
+  homeHowToOrderImage4: "/images/how-to-order/step-04.jpeg",
+  homeNotesImage1: "/images/hero/orange-amere.jpeg",
+  homeNotesImage2: "/images/botanical-edit/bleue-rivage.jpeg",
+  homeNotesImage3: "/images/hero/cassis-sauvage.jpeg",
+  homeNotesImage4: "/images/botanical-edit/esencia-foret.jpeg",
   heroCtaLabel: "Explore the collection",
   heroCtaUrl: "/shop",
   heroCtaAlignment: "center",
@@ -79,6 +95,21 @@ const groups: Record<string, EditorGroup[]> = {
       { key: "homeBestsellerImage1", label: "Fragrances everyone remembers — Forêt", image: true },
       { key: "homeBestsellerImage2", label: "Fragrances everyone remembers — Ambre Boisé", image: true },
       { key: "homeBestsellerImage3", label: "Fragrances everyone remembers — Noir Ambre", image: true },
+      { key: "homeCollectionImage1", label: "Our Collection — Forêt", image: true },
+      { key: "homeCollectionImage2", label: "Our Collection — Rose L’Amour", image: true },
+      { key: "homeCollectionImage3", label: "Our Collection — Noir Ambre", image: true },
+      { key: "homeCollectionImage4", label: "Our Collection — Ambre Boisé", image: true },
+      { key: "homeBotanicalImage1", label: "Botanical spotlight — Forêt", image: true },
+      { key: "homeBotanicalImage2", label: "Botanical spotlight — Néctar de la Terre", image: true },
+      { key: "homeBotanicalImage3", label: "Botanical spotlight — Bleue Rivage", image: true },
+      { key: "homeHowToOrderImage1", label: "How to order — Step 1", image: true },
+      { key: "homeHowToOrderImage2", label: "How to order — Step 2", image: true },
+      { key: "homeHowToOrderImage3", label: "How to order — Step 3", image: true },
+      { key: "homeHowToOrderImage4", label: "How to order — Step 4", image: true },
+      { key: "homeNotesImage1", label: "Scrolling notes — Image 1", image: true },
+      { key: "homeNotesImage2", label: "Scrolling notes — Image 2", image: true },
+      { key: "homeNotesImage3", label: "Scrolling notes — Image 3", image: true },
+      { key: "homeNotesImage4", label: "Scrolling notes — Image 4", image: true },
     ]},
   ],
   brand: [{ title: "Brand, navigation & footer", description: "Shared identity and site-wide presentation.", fields: [
@@ -241,13 +272,14 @@ export default function StorefrontContentPage() {
         <section className="rounded-2xl border border-[#E5E7EB] bg-white p-5 sm:p-7">
           <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
             <div><h2 className="text-lg font-bold text-[#20242B]">Homepage image gallery</h2><p className="mt-1 text-xs leading-5 text-[#858B96]">These are the rotating hero images. Upload your own image to replace any placeholder.</p></div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8B5D45]">3 hero slides</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8B5D45]">4 hero slides</span>
           </div>
           <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
             {[
               { key: "heroImageUrl", label: "Hero slide 01" },
               { key: "heroImageUrl2", label: "Hero slide 02" },
               { key: "heroImageUrl3", label: "Hero slide 03" },
+      { key: "heroImageUrl4", label: "Hero slide 04" },
             ].map((item, index) => <div key={item.key} className="overflow-hidden rounded-xl border border-[#E8EAEE] bg-[#F8F9FB]">
               <div className="relative aspect-[16/10] overflow-hidden bg-[#E7E1DC]">
                 <img src={settings[item.key] || "/images/hero-placeholder-1.svg"} alt={item.label + " preview"} className="h-full w-full object-cover transition-transform duration-500 hover:scale-105" />
