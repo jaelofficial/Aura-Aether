@@ -50,7 +50,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${playfair.variable} ${jakarta.variable} ${vogue.variable} ${alhambra.variable} h-full`}>
-      <body className="min-h-full flex flex-col font-sans-clean bg-[#FCFBF9] text-[#1C1917] selection:bg-[#EADBC8] selection:text-[#1C1917]">
+      <body className="min-h-full flex flex-col font-sans-clean bg-[var(--background)] text-[var(--foreground)] selection:bg-[#EADBC8] selection:text-[#1C1917]">
         <AuthProvider>
           <CartProvider>
             <SiteChrome />
