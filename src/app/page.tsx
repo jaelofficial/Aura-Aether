@@ -33,7 +33,7 @@ export default async function HomePage() {
       <HowToOrder />
 
 
-      <NotesSection />
+      <NotesSection products={products} />
 
     </div>
   );
