@@ -26,9 +26,16 @@ const defaultBestsellers = [
 export default async function Bestsellers() {
   const imageKeys = ["homeBestsellerImage1", "homeBestsellerImage2", "homeBestsellerImage3"] as const;
   const imageSettings = new Map<string, string>();
+  const saleNames = new Set<string>();
   try {
-    const rows = await prisma.siteSetting.findMany({ where: { key: { in: [...imageKeys] } }, select: { key: true, value: true } });
+    const [rows, products] = await Promise.all([
+      prisma.siteSetting.findMany({ where: { key: { in: [...imageKeys] } }, select: { key: true, value: true } }),
+      prisma.product.findMany({ where: { isGiftSet: false }, select: { name: true, isSale: true, price: true, originalPrice: true } }),
+    ]);
     for (const row of rows) imageSettings.set(row.key, row.value);
+    for (const product of products) {
+      if (product.isSale || (product.originalPrice != null && product.originalPrice > product.price)) saleNames.add(product.name.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase());
+    }
   } catch (error) {
     console.error("Homepage bestseller images could not be loaded:", error);
   }
@@ -65,6 +72,7 @@ export default async function Bestsellers() {
                   sizes="(min-width: 1024px) 30vw, (min-width: 640px) 30vw, 82vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                 />
+                {saleNames.has(product.name.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase()) && <span className="absolute left-3 top-3 bg-white/95 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#252522]">On sale</span>}
               </div>
               <div className="mt-6 flex items-center justify-between gap-4">
                 <span className="text-xs tracking-[0.12em]">0{index + 1}</span>
