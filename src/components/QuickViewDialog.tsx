@@ -60,7 +60,7 @@ export default function QuickViewDialog({ product, recommendations }: QuickViewD
           type="button"
           onClick={close}
           aria-label="Close product details"
-          className="absolute right-3 top-3 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-black transition-colors hover:bg-[#222a37] hover:text-white sm:right-5 sm:top-5"
+          className="absolute right-3 top-3 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-black transition-colors hover:bg-[var(--primary)] hover:text-white sm:right-5 sm:top-5"
         >
           <X size={19} strokeWidth={1.5} />
         </button>
@@ -69,11 +69,11 @@ export default function QuickViewDialog({ product, recommendations }: QuickViewD
           <div className="p-4 sm:p-7 lg:p-9">
             <div className="grid grid-cols-[54px_minmax(0,1fr)] gap-3 sm:grid-cols-[70px_minmax(0,1fr)] sm:gap-4">
               <div className="flex flex-col gap-3">
-                <div className="relative aspect-square overflow-hidden border border-[#773B44] bg-[#222a37]">
+                <div className="relative aspect-square overflow-hidden border border-[#773B44] bg-[var(--primary)]">
                   <Image src={product.image} alt="" fill className="object-contain p-1" sizes="70px" />
                 </div>
               </div>
-              <div className="relative aspect-[4/5] overflow-hidden bg-[#222a37]">
+              <div className="relative aspect-[4/5] overflow-hidden bg-[var(--primary)]">
                 <Image
                   src={product.image}
                   alt={product.name}
@@ -95,7 +95,7 @@ export default function QuickViewDialog({ product, recommendations }: QuickViewD
             <p className="text-[9px] uppercase tracking-[0.22em] text-black sm:text-[10px]">
               {product.scentNotes}
             </p>
-            <h1 id="quick-view-title" className="mt-2 font-serif-luxury text-3xl leading-tight text-[#222a37] sm:text-4xl">
+            <h1 id="quick-view-title" className="mt-2 font-serif-luxury text-3xl leading-tight text-[var(--primary)] sm:text-4xl">
               {product.name}
             </h1>
             <p className="mt-2 text-xs text-black">{product.size}</p>
@@ -116,14 +116,14 @@ export default function QuickViewDialog({ product, recommendations }: QuickViewD
                   type="button"
                   onClick={() => setQuantity((value) => Math.max(1, value - 1))}
                   aria-label="Decrease quantity"
-                  className="px-3 text-black hover:text-[#222a37]"
+                  className="px-3 text-black hover:text-[var(--primary)]"
                 ><Minus size={14} /></button>
                 <span className="min-w-6 text-center text-xs">{quantity}</span>
                 <button
                   type="button"
                   onClick={() => setQuantity((value) => Math.min(Math.max(product.stock, 1), value + 1))}
                   aria-label="Increase quantity"
-                  className="px-3 text-black hover:text-[#222a37]"
+                  className="px-3 text-black hover:text-[var(--primary)]"
                 ><Plus size={14} /></button>
               </div>
               <button
@@ -134,7 +134,7 @@ export default function QuickViewDialog({ product, recommendations }: QuickViewD
                     ? "cursor-not-allowed bg-[#A99C92]"
                     : added
                       ? "bg-[#506246]"
-                      : "bg-[#222a37] hover:bg-[#773B44]"
+                      : "bg-[var(--primary)] hover:bg-[#773B44]"
                   }`}
               >
                 {added && <Check size={15} />}
