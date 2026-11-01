@@ -33,6 +33,22 @@ const steps = [
 export default function HowToOrder() {
   const sectionRef = useRef<HTMLElement>(null);
   const [activeStep, setActiveStep] = useState(0);
+  const [imageOverrides, setImageOverrides] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetch("/api/site-settings")
+      .then((response) => response.json())
+      .then(({ settings }) => {
+        if (!settings) return;
+        setImageOverrides([
+          settings.homeHowToOrderImage1,
+          settings.homeHowToOrderImage2,
+          settings.homeHowToOrderImage3,
+          settings.homeHowToOrderImage4,
+        ]);
+      })
+      .catch((error) => console.error("Could not load how-to-order images:", error));
+  }, []);
 
   useEffect(() => {
     let frame = 0;
@@ -102,8 +118,8 @@ export default function HowToOrder() {
           <div className="relative min-h-0 overflow-hidden bg-white/5">
             {steps.map((step, index) => (
               <Image
-                key={step.image + index}
-                src={step.image}
+                key={(imageOverrides[index] || step.image) + index}
+                src={imageOverrides[index] || step.image}
                 alt={step.alt}
                 fill
                 sizes="(min-width: 1024px) 38vw, 90vw"
