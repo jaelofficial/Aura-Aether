@@ -106,7 +106,7 @@ export default async function OurCollection() {
               alt={image.alt}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 30vw"
-              className="object-contain p-3"
+              className="object-cover"
             />
             {image.onSale && <span className="absolute left-3 top-3 bg-white/95 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#252522]">On sale</span>}
             {image.product && <HomepageAddButton product={image.product} />}
@@ -149,7 +149,7 @@ export default async function OurCollection() {
             width={1361}
             height={1824}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 30vw"
-            className="h-full w-full object-contain p-3"
+            className="h-full w-full object-cover"
           />
           {image.onSale && <span className="absolute left-3 top-3 bg-white/95 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#252522]">On sale</span>}
             {image.product && <HomepageAddButton product={image.product} />}
