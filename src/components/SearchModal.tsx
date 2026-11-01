@@ -59,7 +59,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
       <div className="w-full max-w-2xl animate-fade-in overflow-hidden border border-black/10 bg-white shadow-2xl">
         {/* Search Input Bar */}
         <div className="flex items-center border-b border-black/10 bg-white px-6 py-4">
-          <Search className="mr-3 h-5 w-5 text-[#222a37]" />
+          <Search className="mr-3 h-5 w-5 text-[var(--primary)]" />
           <input
             type="text"
             placeholder="Search by perfume name, accord, or notes (e.g. Amber, Rose, Oud)..."
@@ -71,7 +71,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
           <button
             onClick={onClose}
             aria-label="Close search"
-            className="p-1 text-black/45 transition-colors hover:text-[#222a37]"
+            className="p-1 text-black/45 transition-colors hover:text-[var(--primary)]"
           >
             <X className="w-5 h-5" />
           </button>
@@ -98,10 +98,10 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   router.push(`/shop/${product.slug}`);
                   onClose();
                 }}
-                className="group flex cursor-pointer items-center justify-between p-3 transition-colors hover:bg-[#222a37]/[0.06]"
+                className="group flex cursor-pointer items-center justify-between p-3 transition-colors hover:bg-[var(--primary)]/[0.06]"
               >
                 <div className="flex items-center gap-4">
-                  <div className="relative h-16 w-14 shrink-0 overflow-hidden bg-[#222a37]">
+                  <div className="relative h-16 w-14 shrink-0 overflow-hidden bg-[var(--primary)]">
                     <Image
                       src={product.image}
                       alt={product.name}
@@ -110,7 +110,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                     />
                   </div>
                   <div>
-                    <h4 className="font-serif-luxury text-base font-semibold text-[#222a37] transition-colors group-hover:text-[#773B44]">
+                    <h4 className="font-serif-luxury text-base font-semibold text-[var(--primary)] transition-colors group-hover:text-[#773B44]">
                       {product.name}
                     </h4>
                     <p className="text-[11px] uppercase tracking-wider text-black/50">
@@ -122,14 +122,14 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   <span className="text-sm font-semibold text-black">
                     {formatGhs(product.price)}
                   </span>
-                  <ArrowRight className="h-4 w-4 text-[#222a37] transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="h-4 w-4 text-[var(--primary)] transition-transform group-hover:translate-x-1" />
                 </div>
               </div>
             ))}
 
           {!query && (
             <div className="py-6 px-4 text-center">
-              <p className="mb-3 text-xs uppercase tracking-widest text-[#222a37]">
+              <p className="mb-3 text-xs uppercase tracking-widest text-[var(--primary)]">
                 Popular Searches
               </p>
               <div className="flex flex-wrap justify-center gap-2">
@@ -137,7 +137,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   <button
                     key={term}
                     onClick={() => setQuery(term)}
-                    className="border border-black/15 bg-white px-3 py-1.5 text-xs text-black/70 transition-colors hover:border-[#222a37] hover:text-[#222a37]"
+                    className="border border-black/15 bg-white px-3 py-1.5 text-xs text-black/70 transition-colors hover:border-[var(--primary)] hover:text-[var(--primary)]"
                   >
                     {term}
                   </button>
