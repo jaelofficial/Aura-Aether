@@ -17,7 +17,7 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FCFBF9]">
+    <div className="min-h-screen bg-[var(--background)]">
       {/* 1. Hero Section matching Reference 2 */}
       <HeroSection />
 
