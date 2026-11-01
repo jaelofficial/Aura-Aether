@@ -42,7 +42,7 @@ export default function OrderHistoryPage() {
         <div className="mb-6">
           <Link
             href="/account"
-            className="inline-flex items-center gap-1.5 text-xs text-black/60 transition-colors hover:text-[#222a37]"
+            className="inline-flex items-center gap-1.5 text-xs text-black/60 transition-colors hover:text-[var(--primary)]"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Back to Account Overview</span>
@@ -51,7 +51,7 @@ export default function OrderHistoryPage() {
 
         {/* Page Header */}
         <div className="mb-8 border-b border-black/10 pb-8">
-          <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.25em] text-[#222a37]">
+          <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.25em] text-[var(--primary)]">
             PURCHASE ARCHIVES
           </span>
           <h1 className="font-serif-luxury text-3xl font-normal text-black sm:text-4xl">
@@ -66,10 +66,10 @@ export default function OrderHistoryPage() {
           </div>
         ) : orders.length === 0 ? (
           <div className="border border-black/10 bg-white px-8 py-16 text-center sm:py-20">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#222a37]/10 text-[#222a37]">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--primary)]/10 text-[var(--primary)]">
               <Package className="h-8 w-8" />
             </div>
-            <h3 className="font-serif-luxury mb-2 text-2xl font-normal text-[#222a37]">
+            <h3 className="font-serif-luxury mb-2 text-2xl font-normal text-[var(--primary)]">
               No orders placed yet
             </h3>
             <p className="mx-auto mb-6 max-w-sm text-xs leading-5 text-black/60">
@@ -78,7 +78,7 @@ export default function OrderHistoryPage() {
             </p>
             <Link
               href="/shop"
-              className="inline-block bg-[#222a37] px-8 py-3.5 text-xs font-semibold uppercase tracking-widest text-white transition-colors hover:bg-[#773B44]"
+              className="inline-block bg-[var(--primary)] px-8 py-3.5 text-xs font-semibold uppercase tracking-widest text-white transition-colors hover:bg-[#773B44]"
             >
               Discover Fragrances
             </Link>
@@ -90,7 +90,7 @@ export default function OrderHistoryPage() {
                 {/* Order Top Bar */}
                 <div className="flex flex-wrap items-center justify-between gap-4 border-b border-black/10 pb-4 text-xs">
                   <div>
-                    <span className="text-sm font-semibold text-[#222a37] sm:text-base">
+                    <span className="text-sm font-semibold text-[var(--primary)] sm:text-base">
                       {order.orderNumber}
                     </span>
                     <p className="mt-1 text-[11px] text-black/55">
@@ -106,11 +106,11 @@ export default function OrderHistoryPage() {
                   <div className="flex items-center gap-2">
                     <span
                       className={`px-3 py-1 text-[10px] font-semibold uppercase tracking-wider ${order.status === "PAID"
-                          ? "bg-[#222a37]/10 text-[#773B44]"
+                          ? "bg-[var(--primary)]/10 text-[#773B44]"
                           : order.status === "DELIVERED"
-                            ? "bg-[#222a37]/10 text-[#773B44]"
+                            ? "bg-[var(--primary)]/10 text-[#773B44]"
                             : order.status === "SHIPPED"
-                              ? "bg-[#222a37]/10 text-[#773B44]"
+                              ? "bg-[var(--primary)]/10 text-[#773B44]"
                               : "bg-black/[0.06] text-black/70"
                         }`}
                     >
@@ -129,7 +129,7 @@ export default function OrderHistoryPage() {
                     <div key={item.id} className="flex items-center justify-between gap-4 py-3 text-xs">
                       <div className="flex items-center gap-3">
                         {item.image && (
-                          <div className="relative h-14 w-12 shrink-0 overflow-hidden bg-[#222a37]">
+                          <div className="relative h-14 w-12 shrink-0 overflow-hidden bg-[var(--primary)]">
                             <Image
                               src={item.image}
                               alt={item.productName}
@@ -139,7 +139,7 @@ export default function OrderHistoryPage() {
                           </div>
                         )}
                         <div>
-                          <p className="font-serif-luxury text-sm font-semibold text-[#222a37]">
+                          <p className="font-serif-luxury text-sm font-semibold text-[var(--primary)]">
                             {item.productName}
                           </p>
                           <p className="text-[11px] text-black/55">
@@ -164,7 +164,7 @@ export default function OrderHistoryPage() {
                     <span className="text-sm font-semibold text-black">
                       Total: {formatGhs(order.totalAmount)}
                     </span>
-                    <span className="flex items-center gap-1 text-[11px] text-[#222a37]">
+                    <span className="flex items-center gap-1 text-[11px] text-[var(--primary)]">
                       <ShieldCheck className="h-3.5 w-3.5" />
                       Paid with Paystack
                     </span>
