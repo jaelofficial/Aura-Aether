@@ -38,11 +38,11 @@ export default function ScrollToTop() {
     <div className="fixed bottom-6 right-6 z-40 flex items-center gap-3 print:hidden sm:bottom-8 sm:right-8">
       <div
         aria-hidden="true"
-        className={`hidden items-center gap-2 border border-[#222a37]/20 bg-white px-3 py-1.5 text-xs text-black/65 shadow-lg transition-all duration-200 sm:flex ${isHovered ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-2 opacity-0"
+        className={`hidden items-center gap-2 border border-[var(--primary)]/20 bg-white px-3 py-1.5 text-xs text-black/65 shadow-lg transition-all duration-200 sm:flex ${isHovered ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-2 opacity-0"
           }`}
       >
         <span className="font-medium uppercase tracking-[0.14em]">Top</span>
-        <span className="font-semibold tabular-nums text-[#222a37]">{Math.round(scrollProgress)}%</span>
+        <span className="font-semibold tabular-nums text-[var(--primary)]">{Math.round(scrollProgress)}%</span>
       </div>
 
       <button
@@ -53,7 +53,7 @@ export default function ScrollToTop() {
         onFocus={() => setIsHovered(true)}
         onBlur={() => setIsHovered(false)}
         aria-label={`Scroll to top, ${Math.round(scrollProgress)} percent down the page`}
-        className="group relative flex h-12 w-12 items-center justify-center rounded-full border border-[#222a37]/25 bg-white text-[#222a37] shadow-lg transition duration-200 hover:scale-105 hover:border-[#222a37] hover:bg-[#222a37] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#222a37] focus-visible:ring-offset-2 active:scale-95"
+        className="group relative flex h-12 w-12 items-center justify-center rounded-full border border-[var(--primary)]/25 bg-white text-[var(--primary)] shadow-lg transition duration-200 hover:scale-105 hover:border-[var(--primary)] hover:bg-[var(--primary)] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#222a37] focus-visible:ring-offset-2 active:scale-95"
       >
         <svg width={size} height={size} className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-90" aria-hidden="true">
           <circle
