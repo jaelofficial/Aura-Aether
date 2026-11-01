@@ -40,7 +40,10 @@ export default function Header() {
         if (data?.settings?.brandName) setBrandName(data.settings.brandName);
         if (typeof data?.settings?.logoUrl === "string") setLogoUrl(data.settings.logoUrl);
         const colors = data?.settings || {};
-        if (/^#[0-9a-f]{6}$/i.test(colors.primaryColor || "")) document.documentElement.style.setProperty("--primary", colors.primaryColor);
+        if (/^#[0-9a-f]{6}$/i.test(colors.primaryColor || "")) {
+          document.documentElement.style.setProperty("--primary", colors.primaryColor);
+          document.documentElement.style.setProperty("--foreground", colors.primaryColor);
+        }
         if (/^#[0-9a-f]{6}$/i.test(colors.accentColor || "")) document.documentElement.style.setProperty("--accent-copper", colors.accentColor);
         if (/^#[0-9a-f]{6}$/i.test(colors.backgroundColor || "")) document.documentElement.style.setProperty("--background", colors.backgroundColor);
       })
