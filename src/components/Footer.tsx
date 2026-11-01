@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ShieldCheck, CheckCircle2 } from "lucide-react";
 
 export default function Footer() {
@@ -9,6 +10,7 @@ export default function Footer() {
   const [subscribed, setSubscribed] = useState(false);
   const [footerDescription, setFooterDescription] = useState("Discover fragrances that feel like you. Find your signature scent, mark a moment, and leave a little magic wherever you go.");
   const [brandName, setBrandName] = useState("Aura & Aether Parfums");
+  const [logoUrl, setLogoUrl] = useState("/images/aura-aether-logo.svg");
 
   useEffect(() => {
     fetch("/api/site-settings")
@@ -16,6 +18,7 @@ export default function Footer() {
       .then((data) => {
         if (data?.settings?.footerDescription) setFooterDescription(data.settings.footerDescription);
         if (data?.settings?.brandName) setBrandName(data.settings.brandName);
+        if (typeof data?.settings?.logoUrl === "string") setLogoUrl(data.settings.logoUrl);
       })
       .catch(() => undefined);
   }, []);
@@ -26,11 +29,11 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#222a37] px-6 pb-8 pt-12 text-white sm:px-10 sm:pb-10 sm:pt-16 lg:px-[4vw]">
+    <footer className="bg-[var(--primary)] px-6 pb-8 pt-12 text-white sm:px-10 sm:pb-10 sm:pt-16 lg:px-[4vw]">
       <div className="mx-auto">
         <div className="flex justify-center pb-12 sm:pb-16 lg:pb-20">
           <Link href="/" aria-label={brandName} className="inline-flex items-center transition-opacity hover:opacity-80">
-            <span className="font-alhambra whitespace-nowrap text-[2rem] leading-none tracking-[-0.08em] text-white sm:text-[2.5rem]">AURA &amp; AETHER</span>
+            {logoUrl ? <Image src={logoUrl} alt={`${brandName} logo`} width={280} height={120} className="h-14 w-auto max-w-[220px] object-contain" onError={() => setLogoUrl("")} /> : <span className="whitespace-nowrap font-serif-luxury text-2xl font-semibold tracking-[0.12em] text-white">AURA &amp; AETHER</span>}
           </Link>
         </div>
 
