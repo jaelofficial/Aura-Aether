@@ -137,8 +137,8 @@ export async function PUT(req: Request) {
     const body = await req.json();
 
     if (body.action === "bulk-discount" || body.action === "remove-bulk-discount") {
-      const productIds = Array.isArray(body.productIds)
-        ? [...new Set(body.productIds.filter((id: unknown) => typeof id === "string" && id.trim()))]
+      const productIds: string[] = Array.isArray(body.productIds)
+        ? [...new Set<string>(body.productIds.filter((id: unknown) => typeof id === "string" && id.trim().length > 0))]
         : [];
       if (productIds.length === 0) {
         return NextResponse.json({ error: "Select at least one product" }, { status: 400 });
