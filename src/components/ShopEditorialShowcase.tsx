@@ -59,7 +59,7 @@ export default async function ShopEditorialShowcase() {
             <Link href={product ? `/shop/${product.slug}` : "/shop"} className="group block">
               <div className="relative aspect-[4/5] overflow-hidden bg-[#F2F0ED]">
                 <Image src={image} alt={slot.name + " fragrance"} fill sizes="(max-width: 640px) 48vw, (max-width: 1024px) 32vw, 24vw" className="object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
-                {onSale && <span className="absolute left-3 top-3 bg-white/95 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#252522]">{discounted ? "On sale" : "On sale"}</span>}
+                {onSale && <span className="absolute left-3 top-3 bg-white/95 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#252522]">{"On sale"}</span>}
               </div>
               <h3 className="mt-3 text-sm font-medium text-[#242421]">{slot.name}</h3>
               {product && <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1 text-xs text-[#242421]">
