@@ -236,7 +236,7 @@ function OrderSuccessContent() {
           </Link>
 
           <Link
-            href="/track-order"
+            href={`/track-order?orderNumber=${encodeURIComponent(order.orderNumber)}`}
             className="aa-button inline-flex items-center gap-2 px-8 py-3.5 rounded-full border border-[#D5CDC4] text-xs font-bold uppercase tracking-widest text-[#4A443F] hover:bg-white transition-all"
           >
             <PackageSearch className="w-4 h-4" />
