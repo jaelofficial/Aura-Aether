@@ -22,6 +22,7 @@ const jakarta = Plus_Jakarta_Sans({
 const vogue = localFont({ src: "../../public/fonts/Vogue-Regular.otf", variable: "--font-vogue", display: "swap" });
 
 export const metadata: Metadata = {
+  icons: { icon: "/images/WhatsApp%20Image%202026-10-12%20at%2007.54.43(2).jpeg" },
   title: "Aura & Aether Parfums | Artisanal Luxury Fragrances",
   description:
     "Discover Aura & Aether Parfums. Handcrafted luxury perfumes, rare essences, curated gift sets, and signature fragrance collections.",
