@@ -133,7 +133,7 @@ function OrderSuccessContent() {
           </p>
 
           <div className="mt-6 inline-flex flex-wrap items-center justify-center gap-3 text-xs bg-[#FAF7F4] border border-[#EDE7DF] px-5 py-2.5 rounded-full text-[#4A443F]">
-            <span>Order #: <strong>{order.orderNumber}</strong></span>
+            <span>Order number: <strong>{order.orderNumber}</strong></span>
             <span>•</span>
             <span>Ref: <strong>{order.paymentReference}</strong></span>
             <span>•</span>
@@ -171,8 +171,12 @@ function OrderSuccessContent() {
                 <span>Items Subtotal:</span>
                 <span className="font-semibold text-[#1C1917]">{formatGhs(order.subtotal)}</span>
               </div>
+              <div className="flex justify-between">
+                <span>Delivery fee:</span>
+                <span className="font-semibold text-[#1C1917]">{order.deliveryFee === 0 ? "Free" : formatGhs(order.deliveryFee)}</span>
+              </div>
               <p className="rounded-xl bg-[#FAF7F3] p-3 text-[11px] leading-5 text-[#6B635B]">
-                Delivery has not been charged here. We will call to confirm your location and arrange an Uber delivery; the courier cost will be discussed before dispatch.
+                We will contact you to confirm your exact delivery location before dispatch.
               </p>
               <div className="pt-2 border-t border-[#EFE9E2] flex justify-between text-sm font-bold text-[#1C1917]">
                 <span>Total Paid:</span>
