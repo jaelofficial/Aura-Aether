@@ -58,16 +58,16 @@ export default function Header() {
         <div className="relative flex w-full items-center justify-between px-4 py-5 sm:px-6 lg:px-[4vw] lg:py-7">
           <Link href="/" aria-label={brandName} className="relative z-10 flex shrink-0 items-center transition-opacity hover:opacity-80">
             <Image
-              src="/images/aura-aether-logo.svg"
+              src="/images/aura-aether-logo.png"
               alt="Aura & Aether Parfums"
-              width={104}
-              height={65}
+              width={72}
+              height={72}
               priority
-              className="h-12 w-[78px] object-contain sm:h-14 sm:w-[90px]"
+              className="h-14 w-14 object-contain sm:h-16 sm:w-16"
             />
           </Link>
 
-          <nav aria-label="Main navigation" className={`${pillClass} absolute left-1/2 hidden -translate-x-1/2 gap-6 lg:flex`}>
+          <nav aria-label="Main navigation" className={`${pillClass} ml-3 hidden gap-6 lg:flex`}>
             <Link href="/" className={linkClass}>Home</Link>
             <Link href="/shop" className={`${linkClass} flex items-center gap-1.5`}>Shop</Link>
             <Link href="/gift-sets" className={linkClass}>Gifts</Link>
