@@ -1,7 +1,8 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { PackageSearch, Search, CheckCircle2, Clock3, Truck, PackageCheck, AlertCircle } from "lucide-react";
 
 type TrackedOrder = {
@@ -37,7 +38,13 @@ function stageIndex(status: TrackedOrder["status"]) {
 }
 
 export default function TrackOrderPage() {
+  const searchParams = useSearchParams();
   const [orderId, setOrderId] = useState("");
+
+  useEffect(() => {
+    const orderNumber = searchParams.get("orderNumber");
+    if (orderNumber) setOrderId(orderNumber);
+  }, [searchParams]);
   const [order, setOrder] = useState<TrackedOrder | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
