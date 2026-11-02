@@ -69,7 +69,7 @@ export default async function Bestsellers() {
 
       <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3 lg:mt-16">
         {bestsellers.map((product, index) => (
-          <article key={product.name} className="w-full min-w-0">
+          <article key={product.name} className={`w-full min-w-0 ${index === 1 ? "sm:relative sm:z-10 sm:scale-[1.04] sm:origin-center" : ""}`}>
             <Link href={product.product ? `/shop/${product.product.slug}` : "/shop"} className="group block">
               <div className="relative aspect-[4/5] w-full overflow-hidden bg-black/10">
                 <Image
