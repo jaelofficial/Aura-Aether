@@ -16,6 +16,7 @@ const navLinks = [
   { name: "Gift Sets", href: "/gift-sets" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
+  { name: "Track Order", href: "/track-order" },
 ];
 
 const iconClass = "h-6 w-6 shrink-0";
@@ -74,6 +75,7 @@ export default function Header() {
           <nav aria-label="Account and shopping" className={`${pillClass} ml-auto hidden gap-5 lg:flex`}>
             <Link href="/about" className={linkClass}>Our Story</Link>
             <Link href="/contact" className={linkClass}>Contact</Link>
+            <Link href="/track-order" className={linkClass}>Track Order</Link>
             <span aria-hidden="true" className={`h-6 w-px ${isColorHeader ? "bg-white/25" : "bg-[#E6E6E6]"}`} />
             <Link href={user ? "/account" : "/login"} aria-label="Account" title={user ? `Signed in as ${user.name}` : "Sign in or register"} className={linkClass}>
               <UserIcon className="h-5 w-5" strokeWidth={1.6} />
