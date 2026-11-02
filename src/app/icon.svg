@@ -1,10 +1,3 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <circle cx="32" cy="32" r="29" fill="#241B18"/>
-  <circle cx="32" cy="32" r="27" fill="none" stroke="#E8B58F" stroke-width="1.5"/>
-  <g fill="none" stroke="#E8B58F" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-    <path d="M27 15h10v5H27zM25 20h14v6H25z"/>
-    <path d="M22 28h20l3 6v16H19V34z"/>
-    <path d="M23 35h18M25 40h14"/>
-  </g>
-  <path d="M32 29c-3 4-5 6-5 9a5 5 0 0 0 10 0c0-3-2-5-5-9z" fill="#E8B58F" opacity=".9"/>
+  <image href="/images/aura-aether-logo.png" width="64" height="64" preserveAspectRatio="xMidYMid meet"/>
 </svg>
