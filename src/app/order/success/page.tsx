@@ -128,7 +128,7 @@ function OrderSuccessContent() {
           </h1>
 
           <p className="text-sm text-[#6B635B] font-light max-w-lg mx-auto leading-relaxed">
-            Your payment of <strong>{formatGhs(order.totalAmount)}</strong> was successfully verified.
+            Your payment of <strong>{formatGhs(order.totalAmount)}</strong> was successfully verified. Keep your order number below to track your delivery.
             We are preparing your artisanal flacons for dispatch.
           </p>
 
