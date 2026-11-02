@@ -2,11 +2,12 @@ import { NextResponse } from "next/server";
 import { getOrderByOrderNumber } from "@/lib/db";
 
 export async function GET(request: Request) {
-  const orderNumber = new URL(request.url).searchParams.get("orderId")?.trim();
+  const params = new URL(request.url).searchParams;
+  const orderNumber = (params.get("orderNumber") || params.get("orderId"))?.trim();
 
   if (!orderNumber || orderNumber.length > 40) {
     return NextResponse.json(
-      { error: "Enter a valid order ID." },
+      { error: "Enter a valid order number." },
       { status: 400, headers: { "Cache-Control": "no-store" } }
     );
   }
@@ -16,7 +17,7 @@ export async function GET(request: Request) {
 
     if (!order) {
       return NextResponse.json(
-        { error: "We could not find an order with that ID. Check the number and try again." },
+        { error: "We could not find an order with that number. Check it and try again." },
         { status: 404, headers: { "Cache-Control": "no-store" } }
       );
     }
