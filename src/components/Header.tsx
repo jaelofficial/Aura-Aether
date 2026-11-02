@@ -56,7 +56,18 @@ export default function Header() {
     <>
       <header className={`${overlaysHero ? "absolute" : "sticky"} left-0 right-0 top-0 z-40 w-full ${overlaysHero ? "bg-transparent" : "border-b border-[#EEE9E4] bg-[#FFFEFC]/95 backdrop-blur-md"}`}>
         <div className="relative flex w-full items-center justify-between px-4 py-5 sm:px-6 lg:px-[4vw] lg:py-7">
-          <nav aria-label="Main navigation" className={`${pillClass} hidden gap-6 lg:flex`}>
+          <Link href="/" aria-label={brandName} className="relative z-10 flex shrink-0 items-center transition-opacity hover:opacity-80">
+            <Image
+              src="/images/aura-aether-logo.svg"
+              alt="Aura & Aether Parfums"
+              width={104}
+              height={65}
+              priority
+              className="h-12 w-[78px] object-contain sm:h-14 sm:w-[90px]"
+            />
+          </Link>
+
+          <nav aria-label="Main navigation" className={`${pillClass} absolute left-1/2 hidden -translate-x-1/2 gap-6 lg:flex`}>
             <Link href="/" className={linkClass}>Home</Link>
             <Link href="/shop" className={`${linkClass} flex items-center gap-1.5`}>Shop</Link>
             <Link href="/gift-sets" className={linkClass}>Gifts</Link>
@@ -65,11 +76,6 @@ export default function Header() {
               <Image src="/images/naya-icons/search.svg" alt="" width={23} height={23} className={`${iconClass} ${isColorHeader ? "brightness-0 invert" : ""}`} />
             </button>
           </nav>
-
-          <Link href="/" aria-label={brandName} className={`absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center whitespace-nowrap transition-opacity hover:opacity-80 ${isColorHeader ? "text-white" : "text-[var(--primary)]"}`}>
-            <span className="font-[cursive] text-[17px] font-semibold tracking-normal sm:text-xl">𝓐𝓾𝓻𝓪 &amp; 𝓐𝓮𝓽𝓱𝓮𝓻</span>
-            <span className="mt-0.5 text-[10px] font-semibold tracking-normal sm:text-xs">𝓟𝓪𝓻𝓯𝓾𝓶𝓼 ✨</span>
-          </Link>
 
           <nav aria-label="Account and shopping" className={`${pillClass} ml-auto hidden gap-5 lg:flex`}>
             <Link href="/about" className={linkClass}>Our Story</Link>
