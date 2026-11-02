@@ -62,7 +62,8 @@ export default function Footer() {
             <h4 className="mb-5 text-xs font-bold uppercase tracking-[0.18em] text-white">Customer Care</h4>
             <ul className="space-y-3 text-xs leading-relaxed text-white/80">
               <li><Link href="/account" className="transition-colors hover:text-white">My Account</Link></li>
-              <li><Link href="/account/orders" className="transition-colors hover:text-white">Order Tracking</Link></li>
+              <li><Link href="/track-order" className="transition-colors hover:text-white">Track an Order</Link></li>
+              <li><Link href="/account/orders" className="transition-colors hover:text-white">My Order History</Link></li>
               <li><Link href="/contact" className="transition-colors hover:text-white">Contact Boutique</Link></li>
               <li><Link href="/contact#faq" className="transition-colors hover:text-white">Fragrance Consultation FAQ</Link></li>
             </ul>
