@@ -10,7 +10,7 @@ export default function Footer() {
   const [subscribed, setSubscribed] = useState(false);
   const [footerDescription, setFooterDescription] = useState("Discover fragrances that feel like you. Find your signature scent, mark a moment, and leave a little magic wherever you go.");
   const [brandName, setBrandName] = useState("Aura & Aether Parfums");
-  const [logoUrl, setLogoUrl] = useState("/images/aura-aether-logo.svg");
+  const [logoUrl, setLogoUrl] = useState("/images/aura-aether-logo.png");
 
   useEffect(() => {
     fetch("/api/site-settings")
@@ -19,7 +19,7 @@ export default function Footer() {
         if (data?.settings?.footerDescription) setFooterDescription(data.settings.footerDescription);
         if (data?.settings?.brandName) setBrandName(data.settings.brandName);
         if (typeof data?.settings?.logoUrl === "string" && data.settings.logoUrl.trim()) setLogoUrl(data.settings.logoUrl.trim());
-        else setLogoUrl("/images/aura-aether-logo.svg");
+        else setLogoUrl("/images/aura-aether-logo.png");
       })
       .catch(() => undefined);
   }, []);
@@ -34,7 +34,7 @@ export default function Footer() {
       <div className="mx-auto">
         <div className="flex justify-center pb-12 sm:pb-16 lg:pb-20">
           <Link href="/" aria-label={brandName} className="inline-flex items-center transition-opacity hover:opacity-80">
-            {logoUrl ? <Image src={logoUrl} alt={`${brandName} logo`} width={300} height={186} className="h-20 w-auto max-w-[280px] object-contain" onError={() => setLogoUrl("")} /> : <span className="whitespace-nowrap font-serif-luxury text-2xl font-semibold tracking-[0.12em] text-white">AURA &amp; AETHER</span>}
+            {logoUrl ? <Image src={logoUrl} alt={`${brandName} logo`} width={300} height={186} className="h-20 w-auto max-w-[280px] object-contain" onError={() => setLogoUrl("/images/aura-aether-logo.png")} /> : <span className="whitespace-nowrap font-serif-luxury text-2xl font-semibold tracking-[0.12em] text-white">AURA &amp; AETHER</span>}
           </Link>
         </div>
 
