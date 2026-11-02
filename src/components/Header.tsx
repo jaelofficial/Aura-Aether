@@ -67,8 +67,8 @@ export default function Header() {
           </nav>
 
           <Link href="/" aria-label={brandName} className={`absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center whitespace-nowrap transition-opacity hover:opacity-80 ${isColorHeader ? "text-white" : "text-[var(--primary)]"}`}>
-            <span className="font-serif-luxury text-lg font-semibold tracking-[0.12em] sm:text-xl">AURA &amp; AETHER</span>
-            <span className="mt-0.5 text-[8px] font-semibold tracking-[0.35em] sm:text-[9px]">PARFUMS</span>
+            <span className="font-[cursive] text-[17px] font-semibold tracking-normal sm:text-xl">𝓐𝓾𝓻𝓪 &amp; 𝓐𝓮𝓽𝓱𝓮𝓻</span>
+            <span className="mt-0.5 text-[10px] font-semibold tracking-normal sm:text-xs">𝓟𝓪𝓻𝓯𝓾𝓶𝓼 ✨</span>
           </Link>
 
           <nav aria-label="Account and shopping" className={`${pillClass} ml-auto hidden gap-5 lg:flex`}>
