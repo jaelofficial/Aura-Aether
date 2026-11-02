@@ -49,7 +49,7 @@ export default function TrackOrderPage() {
     setOrder(null);
 
     try {
-      const response = await fetch(`/api/orders/track?orderId=${encodeURIComponent(orderId.trim())}`, {
+      const response = await fetch(`/api/orders/track?orderNumber=${encodeURIComponent(orderId.trim())}`, {
         cache: "no-store",
       });
       const data = await response.json();
@@ -74,19 +74,19 @@ export default function TrackOrderPage() {
           <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[#B77F60]">Aura &amp; Aether Parfums</p>
           <h1 className="font-serif-luxury text-3xl font-medium text-[#1C1917] sm:text-4xl">Track your order</h1>
           <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-[#78716C]">
-            Enter the order ID shown after your payment to check the latest status of your order. You do not need an account.
+            Enter the order number shown after your payment to check the latest status of your order. You do not need an account.
           </p>
         </div>
 
         <form onSubmit={handleTrack} className="rounded-3xl border border-[#ECE5DD] bg-white p-5 shadow-sm sm:p-7">
-          <label htmlFor="orderId" className="mb-2 block text-xs font-bold uppercase tracking-wider text-[#4A443F]">Order ID</label>
+          <label htmlFor="orderId" className="mb-2 block text-xs font-bold uppercase tracking-wider text-[#4A443F]">Order number</label>
           <div className="flex flex-col gap-3 sm:flex-row">
             <input
               id="orderId"
               name="orderId"
               value={orderId}
               onChange={(event) => setOrderId(event.target.value)}
-              placeholder="Enter your order ID"
+              placeholder="Enter your order number (e.g. ORD-2026-12345)"
               autoComplete="off"
               required
               maxLength={40}
@@ -103,7 +103,7 @@ export default function TrackOrderPage() {
           <section aria-live="polite" className="mt-6 rounded-3xl border border-[#ECE5DD] bg-white p-5 shadow-sm sm:p-7">
             <div className="flex flex-col justify-between gap-3 border-b border-[#EFE9E2] pb-5 sm:flex-row sm:items-start">
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8C827A]">Order ID</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8C827A]">Order number</p>
                 <h2 className="mt-1 break-all font-serif-luxury text-2xl text-[#1C1917]">{order.orderNumber}</h2>
                 <p className="mt-2 text-xs text-[#78716C]">Placed {formatDate(order.createdAt)}</p>
               </div>
