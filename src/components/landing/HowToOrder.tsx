@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const defaultSteps = [
   {
@@ -31,7 +31,6 @@ const defaultSteps = [
 ];
 
 export default function HowToOrder() {
-  const sectionRef = useRef<HTMLElement>(null);
   const [activeStep, setActiveStep] = useState(0);
   const [steps, setSteps] = useState(defaultSteps);
 
@@ -49,93 +48,71 @@ export default function HowToOrder() {
   }, []);
 
   useEffect(() => {
-    let frame = 0;
-    const updateActiveStep = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const section = sectionRef.current;
-        if (!section) return;
+    const interval = window.setInterval(() => {
+      setActiveStep((current) => (current + 1) % defaultSteps.length);
+    }, 4000);
 
-        const scrollableDistance = Math.max(1, section.offsetHeight - window.innerHeight);
-        const sectionTop = section.getBoundingClientRect().top + window.scrollY;
-        const rawProgress = (window.scrollY - sectionTop) / scrollableDistance;
-        const progress = Math.min(1, Math.max(0, rawProgress));
-        const nextStep = Math.round(progress * (defaultSteps.length - 1));
-        setActiveStep((current) => current === nextStep ? current : nextStep);
-      });
-    };
-
-    updateActiveStep();
-    window.addEventListener("scroll", updateActiveStep, { passive: true });
-    window.addEventListener("resize", updateActiveStep);
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", updateActiveStep);
-      window.removeEventListener("resize", updateActiveStep);
-    };
+    return () => window.clearInterval(interval);
   }, []);
 
   return (
     <section
-      ref={sectionRef}
       id="how-to-order"
       aria-label="How to order"
-      className="relative h-[400svh] bg-[#222a37] text-white"
+      className="relative bg-[#222a37] px-6 py-12 text-white sm:px-10 sm:py-16 lg:px-[3.5vw] lg:py-24"
     >
-      <div className="sticky top-0 flex h-[100svh] flex-col overflow-hidden px-6 py-6 sm:px-10 sm:py-8 lg:px-[3.5vw] lg:py-20">
-        <header className="mb-5 flex shrink-0 items-center justify-between gap-6 sm:mb-8">
-          <h2 className="text-3xl font-medium leading-tight tracking-[-0.04em] sm:text-5xl lg:text-[4.5rem]">
-            How to order.
-          </h2>
-          <span className="text-xs text-white/75 sm:text-sm">The process</span>
-        </header>
+      <header className="mb-8 flex items-center justify-between gap-6 sm:mb-10">
+        <h2 className="text-3xl font-medium leading-tight tracking-[-0.04em] sm:text-5xl lg:text-[4.5rem]">
+          How to order.
+        </h2>
+        <span className="text-xs text-white/75 sm:text-sm">The process</span>
+      </header>
 
-        <div className="grid min-h-0 flex-1 gap-5 lg:grid-cols-[1.15fr_0.85fr] lg:items-stretch lg:gap-14">
-          <ol className="relative flex min-h-0 flex-col justify-between gap-2 py-1 sm:gap-3 lg:gap-0 lg:py-2">
-            <span aria-hidden="true" className="absolute bottom-0 left-0 top-0 w-px bg-white/25" />
-            {steps.map((step, index) => {
-              const isActive = index === activeStep;
-              return (
-                <li
-                  key={step.title}
-                  aria-current={isActive ? "step" : undefined}
-                  className={`relative grid grid-cols-[34px_1fr] gap-3 pl-4 transition-opacity duration-500 sm:grid-cols-[56px_1fr] sm:gap-5 sm:pl-6 ${isActive ? "opacity-100" : "opacity-45"}`}
-                >
-                  <span aria-hidden="true" className={`absolute bottom-0 left-0 top-0 w-[2px] transition-colors duration-500 ${isActive ? "bg-white" : "bg-transparent"}`} />
-                  <span className="pt-1 text-xs tabular-nums sm:pt-2 sm:text-sm">0{index + 1}</span>
-                  <div>
-                    <h3 className="text-lg leading-tight tracking-[-0.03em] sm:text-2xl lg:text-3xl">{step.title}</h3>
-                    <p className="mt-1 max-w-[470px] text-xs leading-relaxed text-white/85 sm:mt-2 sm:text-sm lg:text-base">
-                      {step.description}
-                    </p>
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
+      <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-stretch lg:gap-14">
+        <ol className="relative flex flex-col justify-between gap-6 py-1 sm:gap-8 lg:gap-6 lg:py-2">
+          <span aria-hidden="true" className="absolute bottom-0 left-0 top-0 w-px bg-white/25" />
+          {steps.map((step, index) => {
+            const isActive = index === activeStep;
+            return (
+              <li
+                key={step.title}
+                aria-current={isActive ? "step" : undefined}
+                className={`relative grid grid-cols-[34px_1fr] gap-3 pl-4 transition-opacity duration-500 sm:grid-cols-[56px_1fr] sm:gap-5 sm:pl-6 ${isActive ? "opacity-100" : "opacity-45"}`}
+              >
+                <span aria-hidden="true" className={`absolute bottom-0 left-0 top-0 w-[2px] transition-colors duration-500 ${isActive ? "bg-white" : "bg-transparent"}`} />
+                <span className="pt-1 text-xs tabular-nums sm:pt-2 sm:text-sm">0{index + 1}</span>
+                <div>
+                  <h3 className="text-lg leading-tight tracking-[-0.03em] sm:text-2xl lg:text-3xl">{step.title}</h3>
+                  <p className="mt-1 max-w-[470px] text-xs leading-relaxed text-white/85 sm:mt-2 sm:text-sm lg:text-base">
+                    {step.description}
+                  </p>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
 
-          <div className="relative min-h-0 overflow-hidden bg-white/5">
-            {steps.map((step, index) => (
-              <Image
-                key={step.image + index}
-                src={step.image}
-                alt={step.alt}
-                fill
-                sizes="(min-width: 1024px) 38vw, 90vw"
-                priority={index === 0}
-                aria-hidden={index !== activeStep}
-                className={`object-cover transition-opacity duration-700 ${index === activeStep ? "opacity-100" : "opacity-0"}`}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-4 flex shrink-0 items-center gap-2" aria-label={`Step ${activeStep + 1} of ${steps.length}`}>
+        <div className="relative aspect-[4/3] overflow-hidden bg-white/5 lg:aspect-auto lg:min-h-[440px]">
           {steps.map((step, index) => (
-            <span key={step.title} className={`h-1 rounded-full transition-all duration-500 ${index === activeStep ? "w-8 bg-white" : "w-2 bg-white/40"}`} />
+            <Image
+              key={step.image + index}
+              src={step.image}
+              alt={step.alt}
+              fill
+              sizes="(min-width: 1024px) 38vw, 90vw"
+              priority={index === 0}
+              aria-hidden={index !== activeStep}
+              className={`object-cover transition-opacity duration-700 ${index === activeStep ? "opacity-100" : "opacity-0"}`}
+            />
           ))}
-          <span className="ml-2 text-[10px] tabular-nums text-white/75">0{activeStep + 1} / 0{steps.length}</span>
         </div>
+      </div>
+
+      <div className="mt-7 flex items-center gap-2" aria-label={`Step ${activeStep + 1} of ${steps.length}`}>
+        {steps.map((step, index) => (
+          <span key={step.title} className={`h-1 rounded-full transition-all duration-500 ${index === activeStep ? "w-8 bg-white" : "w-2 bg-white/40"}`} />
+        ))}
+        <span className="ml-2 text-[10px] tabular-nums text-white/75">0{activeStep + 1} / 0{steps.length}</span>
       </div>
     </section>
   );
