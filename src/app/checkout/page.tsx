@@ -7,7 +7,9 @@ import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { formatGhs } from "@/lib/paystack";
-import { ShieldCheck, Lock, ArrowLeft, Loader2, AlertCircle } from "lucide-react";
+import { ShieldCheck, Lock, ArrowLeft, Loader2, AlertCircle, Truck } from "lucide-react";
+
+type DeliveryRange = { label: string; fee: number };
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -25,6 +27,45 @@ export default function CheckoutPage() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [deliveryRanges, setDeliveryRanges] = useState<DeliveryRange[]>([]);
+  const [deliveryRange, setDeliveryRange] = useState("");
+  const [freeDeliveryPromo, setFreeDeliveryPromo] = useState(false);
+  const [deliverySettingsLoaded, setDeliverySettingsLoaded] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/site-settings", { cache: "no-store" })
+      .then((response) => {
+        if (!response.ok) throw new Error("Could not load delivery options.");
+        return response.json();
+      })
+      .then((data) => {
+        if (cancelled) return;
+        const settings = data?.settings || {};
+        const ranges = String(settings.deliveryRanges || "")
+          .split(/\\r?\\n/)
+          .map((line: string) => {
+            const [label, feeText] = line.split("|");
+            return { label: (label || "").trim(), fee: Number((feeText || "").trim()) };
+          })
+          .filter((range: DeliveryRange) => range.label && Number.isFinite(range.fee) && range.fee >= 0);
+        setDeliveryRanges(ranges);
+        setFreeDeliveryPromo(settings.deliveryFreePromo === "true");
+        setDeliverySettingsLoaded(true);
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setDeliveryRanges([]);
+          setDeliverySettingsLoaded(true);
+          setErrorMessage("We could not load delivery options. Please refresh the page or contact us.");
+        }
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  const selectedDeliveryRange = deliveryRanges.find((range) => range.label === deliveryRange);
+  const deliveryFee = freeDeliveryPromo ? 0 : selectedDeliveryRange?.fee ?? 0;
+  const checkoutTotal = subtotal + deliveryFee;
 
   // Auto-fill if customer is logged in
   useEffect(() => {
@@ -55,6 +96,14 @@ export default function CheckoutPage() {
   const handlePayNow = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage("");
+    if (!freeDeliveryPromo && !selectedDeliveryRange) {
+      setErrorMessage("Please select a delivery range before continuing.");
+      return;
+    }
+    if (!deliverySettingsLoaded) {
+      setErrorMessage("Please wait while delivery options finish loading.");
+      return;
+    }
     setIsLoading(true);
 
     try {
@@ -64,6 +113,7 @@ export default function CheckoutPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
+          deliveryRange,
           userId: user?.id || null,
           items: items.map((i) => ({
             productId: i.productId,
@@ -192,9 +242,36 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              <div className="border-l-2 border-[var(--primary)] bg-[var(--primary)]/[0.06] p-4 text-sm leading-6 text-black/70">
-                <strong className="block text-black">Delivery will be confirmed after your order.</strong>
-                We will call you to confirm your exact location and arrange an Uber delivery. The delivery cost will be discussed with you before dispatch, so no delivery fee is added to this payment.
+              <div className="space-y-3 border border-black/10 bg-white p-4">
+                <div className="flex items-center gap-2">
+                  <Truck className="h-4 w-4 text-[var(--primary)]" />
+                  <h2 className="text-xs font-semibold uppercase tracking-[0.15em] text-black">Delivery range</h2>
+                </div>
+                {freeDeliveryPromo ? (
+                  <p className="text-sm text-black/70">Free delivery is currently active. No delivery fee will be added.</p>
+                ) : (
+                  <>
+                    <label htmlFor="deliveryRange" className="block text-xs text-black/65">Select the delivery area that applies to you *</label>
+                    <select
+                      id="deliveryRange"
+                      name="deliveryRange"
+                      required
+                      value={deliveryRange}
+                      onChange={(event) => { setDeliveryRange(event.target.value); setErrorMessage(""); }}
+                      disabled={!deliverySettingsLoaded || deliveryRanges.length === 0}
+                      className="w-full border border-black/15 bg-white px-4 py-3 text-sm text-black outline-none transition-colors focus:border-[var(--primary)] disabled:cursor-not-allowed disabled:bg-black/5"
+                    >
+                      <option value="">{deliverySettingsLoaded ? "Choose your delivery range" : "Loading delivery options..."}</option>
+                      {deliveryRanges.map((range) => (
+                        <option key={range.label} value={range.label}>{range.label} — {formatGhs(range.fee)}</option>
+                      ))}
+                    </select>
+                    {deliverySettingsLoaded && deliveryRanges.length === 0 && (
+                      <p role="alert" className="text-xs leading-5 text-red-700">Delivery ranges have not been configured yet. Please contact us before placing your order.</p>
+                    )}
+                  </>
+                )}
+                <p className="text-[11px] leading-5 text-black/55">We will contact you to confirm your exact delivery location before dispatch.</p>
               </div>
 
               {/* Delivery Notes */}
@@ -216,7 +293,7 @@ export default function CheckoutPage() {
               <div className="space-y-3 border-t border-black/10 pt-6">
                 <button
                   type="submit"
-                  disabled={isLoading}
+                  disabled={isLoading || !deliverySettingsLoaded || (!freeDeliveryPromo && !selectedDeliveryRange)}
                   className="flex w-full items-center justify-center gap-2 bg-[var(--primary)] px-6 py-4 text-xs font-semibold uppercase tracking-widest text-white transition-colors hover:bg-[#773B44] disabled:opacity-60"
                 >
                   {isLoading ? (
@@ -227,7 +304,7 @@ export default function CheckoutPage() {
                   ) : (
                     <>
                       <Lock className="w-4 h-4" />
-                      <span>Pay {formatGhs(total)} via Paystack</span>
+                      <span>Pay {formatGhs(checkoutTotal)} via Paystack</span>
                     </>
                   )}
                 </button>
@@ -279,9 +356,13 @@ export default function CheckoutPage() {
                 <span>Subtotal</span>
                 <span className="font-semibold text-black">{formatGhs(subtotal)}</span>
               </div>
+              <div className="flex justify-between">
+                <span>Delivery</span>
+                <span className="font-semibold text-black">{freeDeliveryPromo ? "Free" : selectedDeliveryRange ? formatGhs(deliveryFee) : "Select a range"}</span>
+              </div>
               <div className="flex justify-between border-t border-black/10 pt-3 text-base font-bold text-black">
                 <span>Total Due</span>
-                <span>{formatGhs(total)}</span>
+                <span>{formatGhs(checkoutTotal)}</span>
               </div>
             </div>
           </div>
