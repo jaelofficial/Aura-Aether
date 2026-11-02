@@ -58,7 +58,7 @@ export default function Header() {
         <div className="relative flex w-full items-center justify-between px-4 py-5 sm:px-6 lg:px-[4vw] lg:py-7">
           <Link href="/" aria-label={brandName} className="relative z-10 flex shrink-0 items-center transition-opacity hover:opacity-80">
             <Image
-              src="/images/WhatsApp%20Image%202026-10-12%20at%2007.54.43(2).jpeg"
+              src="/images/aura-aether-logo.jpeg"
               alt="Aura & Aether Parfums"
               width={72}
               height={72}
