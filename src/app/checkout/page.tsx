@@ -13,7 +13,7 @@ type DeliveryRange = { label: string; fee: number };
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, subtotal, total, clearCart } = useCart();
+  const { items, subtotal, clearCart } = useCart();
   const { user } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -43,7 +43,7 @@ export default function CheckoutPage() {
         if (cancelled) return;
         const settings = data?.settings || {};
         const ranges = String(settings.deliveryRanges || "")
-          .split(/\\r?\\n/)
+          .split(/\r?\n/)
           .map((line: string) => {
             const [label, feeText] = line.split("|");
             return { label: (label || "").trim(), fee: Number((feeText || "").trim()) };
