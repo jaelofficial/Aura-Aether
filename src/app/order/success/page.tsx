@@ -133,7 +133,7 @@ function OrderSuccessContent() {
           </p>
 
           <div className="mt-6 inline-flex flex-wrap items-center justify-center gap-3 text-xs bg-[#FAF7F4] border border-[#EDE7DF] px-5 py-2.5 rounded-full text-[#4A443F]">
-            <span>Order number: <strong>{order.orderNumber}</strong></span>
+            <span>Paystack Transaction ID / Order ID: <strong>{order.payment?.paystackId || order.orderNumber}</strong></span>
             <span>•</span>
             <span>Ref: <strong>{order.paymentReference}</strong></span>
             <span>•</span>
