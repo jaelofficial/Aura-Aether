@@ -79,19 +79,19 @@ export default function TrackOrderPage() {
           <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[#B77F60]">Aura &amp; Aether Parfums</p>
           <h1 className="font-serif-luxury text-3xl font-medium text-[#1C1917] sm:text-4xl">Track your order</h1>
           <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-[#78716C]">
-            Enter the order number shown after your payment to check the latest status of your order. You do not need an account.
+            Enter the Paystack transaction ID (Payment ID) from your payment receipt to check your order status. You do not need an account.
           </p>
         </div>
 
         <form onSubmit={handleTrack} className="rounded-3xl border border-[#ECE5DD] bg-white p-5 shadow-sm sm:p-7">
-          <label htmlFor="orderId" className="mb-2 block text-xs font-bold uppercase tracking-wider text-[#4A443F]">Order number</label>
+          <label htmlFor="orderId" className="mb-2 block text-xs font-bold uppercase tracking-wider text-[#4A443F]">Paystack transaction ID / Order ID</label>
           <div className="flex flex-col gap-3 sm:flex-row">
             <input
               id="orderId"
               name="orderId"
               value={orderId}
               onChange={(event) => setOrderId(event.target.value)}
-              placeholder="Enter your order number (e.g. ORD-2026-12345)"
+              placeholder="Enter your Paystack transaction ID"
               autoComplete="off"
               required
               maxLength={40}
