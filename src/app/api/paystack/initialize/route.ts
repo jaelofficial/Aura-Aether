@@ -125,7 +125,9 @@ export async function POST(req: Request) {
     const timestamp = Date.now();
     const randomHex = Math.floor(Math.random() * 0xfffff).toString(16);
     const paymentReference = `AA-${timestamp}-${randomHex}`.toUpperCase();
-    const orderNumber = `ORD-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 90000)}`;
+    // Derive the order number from the same unique suffix as the Paystack reference.
+    // Example: AA-1793714125037-1A773 -> ORD-1793714125037-1A773
+    const orderNumber = `ORD-${paymentReference.slice(3)}`;
 
     // 5. Create PENDING Order in Database
     const order = await createOrder({
