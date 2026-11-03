@@ -113,10 +113,12 @@ export async function POST(req: Request) {
       .filter((range) => range.label && Number.isFinite(range.fee) && range.fee >= 0);
     const selectedDeliveryRange = configuredRanges.find((range) => range.label === String(deliveryRange || "").trim());
     const freeDeliveryPromo = deliverySettings.deliveryFreePromo === "true";
-    if (!freeDeliveryPromo && !selectedDeliveryRange) {
+    if (!freeDeliveryPromo && configuredRanges.length > 0 && !selectedDeliveryRange) {
       return NextResponse.json({ error: "Please select a valid delivery range. Refresh checkout and try again." }, { status: 400 });
     }
-    const deliveryFee = freeDeliveryPromo ? 0 : selectedDeliveryRange!.fee;
+    // If the store has not configured delivery pricing, allow the customer to pay
+    // for the items now and confirm any applicable delivery fee with them separately.
+    const deliveryFee = freeDeliveryPromo ? 0 : selectedDeliveryRange?.fee ?? 0;
     const finalTotal = calculatedSubtotal + deliveryFee;
 
     // 4. Generate unique transaction reference & human-readable order number
@@ -134,7 +136,14 @@ export async function POST(req: Request) {
       customerPhone: customerPhone.trim(),
       deliveryAddress: deliveryAddress.trim(),
       city: city.trim(),
-      notes: [notes?.trim(), `Delivery range selected: ${freeDeliveryPromo ? "Free delivery promotion" : selectedDeliveryRange!.label}`].filter(Boolean).join("\n") || null,
+      notes: [
+        notes?.trim(),
+        freeDeliveryPromo
+          ? "Delivery: free delivery promotion"
+          : selectedDeliveryRange
+            ? `Delivery range selected: ${selectedDeliveryRange.label}`
+            : "Delivery range not configured at checkout; delivery fee to be confirmed with customer",
+      ].filter(Boolean).join("\n") || null,
       subtotal: calculatedSubtotal,
       deliveryFee,
       totalAmount: finalTotal,
