@@ -133,9 +133,9 @@ function OrderSuccessContent() {
           </p>
 
           <div className="mt-6 inline-flex flex-wrap items-center justify-center gap-3 text-xs bg-[#FAF7F4] border border-[#EDE7DF] px-5 py-2.5 rounded-full text-[#4A443F]">
-            <span>Paystack Transaction ID / Order ID: <strong>{order.payment?.paystackId || order.orderNumber}</strong></span>
+            <span>Order ID: <strong>{order.orderNumber}</strong></span>
             <span>•</span>
-            <span>Payment reference (not used for tracking): <strong>{order.paymentReference}</strong></span>
+            <span>Paystack reference (maps to this order): <strong>{order.paymentReference}</strong></span>
             <span>•</span>
             <span className="flex items-center gap-1 text-[#10B981]">
               <ShieldCheck className="w-3.5 h-3.5" />
