@@ -285,8 +285,13 @@ export async function getOrderByOrderNumber(orderNumber: string): Promise<Order 
   const useDb = await checkPostgres();
   if (useDb) {
     try {
-      const order = await prisma.order.findUnique({
-        where: { orderNumber },
+      const order = await prisma.order.findFirst({
+        where: {
+          OR: [
+            { orderNumber },
+            { payment: { is: { paystackId: orderNumber } } },
+          ],
+        },
         include: { items: true, payment: true },
       });
       if (order) {
@@ -305,7 +310,7 @@ export async function getOrderByOrderNumber(orderNumber: string): Promise<Order 
       // fallback
     }
   }
-  return memoryStore.orders.find((o) => o.orderNumber === orderNumber) || null;
+  return memoryStore.orders.find((o) => o.orderNumber === orderNumber || o.payment?.paystackId === orderNumber) || null;
 }
 
 export async function getOrderById(id: string): Promise<Order | null> {
