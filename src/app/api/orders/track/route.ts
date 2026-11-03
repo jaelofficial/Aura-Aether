@@ -26,7 +26,7 @@ export async function GET(request: Request) {
     return NextResponse.json(
       {
         order: {
-          orderNumber: order.payment?.paystackId || order.orderNumber,
+          orderNumber: order.orderNumber,
           status: order.status,
           paymentStatus: order.paymentStatus,
           createdAt: order.createdAt,
