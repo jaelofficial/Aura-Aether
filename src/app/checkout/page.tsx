@@ -96,7 +96,7 @@ export default function CheckoutPage() {
   const handlePayNow = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage("");
-    if (!freeDeliveryPromo && !selectedDeliveryRange) {
+    if (!freeDeliveryPromo && deliveryRanges.length > 0 && !selectedDeliveryRange) {
       setErrorMessage("Please select a delivery range before continuing.");
       return;
     }
@@ -249,7 +249,7 @@ export default function CheckoutPage() {
                 </div>
                 {freeDeliveryPromo ? (
                   <p className="text-sm text-black/70">Free delivery is currently active. No delivery fee will be added.</p>
-                ) : (
+                ) : deliveryRanges.length > 0 ? (
                   <>
                     <label htmlFor="deliveryRange" className="block text-xs text-black/65">Select the delivery area that applies to you *</label>
                     <select
@@ -258,7 +258,7 @@ export default function CheckoutPage() {
                       required
                       value={deliveryRange}
                       onChange={(event) => { setDeliveryRange(event.target.value); setErrorMessage(""); }}
-                      disabled={!deliverySettingsLoaded || deliveryRanges.length === 0}
+                      disabled={!deliverySettingsLoaded}
                       className="w-full border border-black/15 bg-white px-4 py-3 text-sm text-black outline-none transition-colors focus:border-[var(--primary)] disabled:cursor-not-allowed disabled:bg-black/5"
                     >
                       <option value="">{deliverySettingsLoaded ? "Choose your delivery range" : "Loading delivery options..."}</option>
@@ -266,10 +266,11 @@ export default function CheckoutPage() {
                         <option key={range.label} value={range.label}>{range.label} — {formatGhs(range.fee)}</option>
                       ))}
                     </select>
-                    {deliverySettingsLoaded && deliveryRanges.length === 0 && (
-                      <p role="alert" className="text-xs leading-5 text-red-700">Delivery ranges have not been configured yet. Please contact us before placing your order.</p>
-                    )}
                   </>
+                ) : (
+                  <p className="text-sm leading-6 text-black/70">
+                    Delivery pricing has not been configured yet. You can still place your order; we will confirm any applicable delivery fee with you before dispatch.
+                  </p>
                 )}
                 <p className="text-[11px] leading-5 text-black/55">We will contact you to confirm your exact delivery location before dispatch.</p>
               </div>
@@ -293,7 +294,7 @@ export default function CheckoutPage() {
               <div className="space-y-3 border-t border-black/10 pt-6">
                 <button
                   type="submit"
-                  disabled={isLoading || !deliverySettingsLoaded || (!freeDeliveryPromo && !selectedDeliveryRange)}
+                  disabled={isLoading || !deliverySettingsLoaded || (!freeDeliveryPromo && deliveryRanges.length > 0 && !selectedDeliveryRange)}
                   className="flex w-full items-center justify-center gap-2 bg-[var(--primary)] px-6 py-4 text-xs font-semibold uppercase tracking-widest text-white transition-colors hover:bg-[#773B44] disabled:opacity-60"
                 >
                   {isLoading ? (
@@ -358,7 +359,7 @@ export default function CheckoutPage() {
               </div>
               <div className="flex justify-between">
                 <span>Delivery</span>
-                <span className="font-semibold text-black">{freeDeliveryPromo ? "Free" : selectedDeliveryRange ? formatGhs(deliveryFee) : "Select a range"}</span>
+                <span className="font-semibold text-black">{freeDeliveryPromo ? "Free" : selectedDeliveryRange ? formatGhs(deliveryFee) : deliveryRanges.length === 0 ? "To be confirmed" : "Select a range"}</span>
               </div>
               <div className="flex justify-between border-t border-black/10 pt-3 text-base font-bold text-black">
                 <span>Total Due</span>
