@@ -420,9 +420,8 @@ export async function updateOrderPaymentSuccess({
         data: {
           status: "PAID",
           paymentStatus: "SUCCESS",
-          // Use Paystack's verified transaction ID as the customer-facing order number.
-          // Keep the internal Order.id unchanged so OrderItem relations remain valid.
-          ...(paystackId ? { orderNumber: paystackId } : {}),
+          // Keep the ORD order number stable; it is derived from the Paystack reference.
+          // Store Paystack's numeric transaction ID separately in the Payment record.
           payment: {
             upsert: {
               create: {
@@ -473,7 +472,6 @@ export async function updateOrderPaymentSuccess({
   // Memory update
   order.status = "PAID";
   order.paymentStatus = "SUCCESS";
-  if (paystackId) order.orderNumber = paystackId;
   order.payment = {
     id: `pay-${Date.now()}`,
     orderId: order.id,
