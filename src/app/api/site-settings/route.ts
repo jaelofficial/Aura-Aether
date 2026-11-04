@@ -112,7 +112,7 @@ export async function GET() {
     for (const row of rows) {
       if (!Object.prototype.hasOwnProperty.call(DEFAULTS, row.key)) continue;
       if (legacyHeroPlaceholders[row.key] === row.value) continue;
-      settings[row.key] = row.key === "logoUrl" && (row.value === "/images/aura-aether-logo.png" || row.value === "/images/aura-aether-logo-light.png")
+      settings[row.key] = row.key === "logoUrl" && /\/images\/aura-aether-logo(?:-light)?\.(?:png|svg)$/i.test(row.value)
         ? "/images/aura-aether-logo.svg"
         : row.value;
     }
