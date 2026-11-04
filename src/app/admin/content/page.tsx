@@ -25,6 +25,8 @@ const initial: Settings = {
   heroImageUrl2: "/images/hero/desert-amber.jpeg",
   heroImageUrl3: "/images/hero/emerald-noir.jpeg",
   heroImageUrl4: "/images/hero/city-sillage.jpeg",
+  heroImageUrl5: "/images/hero/cassis-sauvage.jpeg",
+  heroImageUrl6: "/images/hero/orange-amere.jpeg",
   homeStepImage1: "/images/how-to-order/step-01.jpeg",
   homeStepImage2: "/images/how-to-order/step-02.jpeg",
   homeStepImage3: "/images/how-to-order/step-03.jpeg",
@@ -290,14 +292,16 @@ export default function StorefrontContentPage() {
         <section className="rounded-2xl border border-[#E5E7EB] bg-white p-5 sm:p-7">
           <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
             <div><h2 className="text-lg font-bold text-[#20242B]">Homepage image gallery</h2><p className="mt-1 text-xs leading-5 text-[#858B96]">These are the original rotating hero images. Upload a replacement whenever you want to change a slide.</p></div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8B5D45]">4 hero slides</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8B5D45]">6 hero slides</span>
           </div>
-          <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {[
               { key: "heroImageUrl", label: "Hero slide 01" },
               { key: "heroImageUrl2", label: "Hero slide 02" },
               { key: "heroImageUrl3", label: "Hero slide 03" },
               { key: "heroImageUrl4", label: "Hero slide 04" },
+              { key: "heroImageUrl5", label: "Hero slide 05" },
+              { key: "heroImageUrl6", label: "Hero slide 06" },
             ].map((item, index) => <div key={item.key} className="overflow-hidden rounded-xl border border-[#E8EAEE] bg-[#F8F9FB]">
               <div className="relative aspect-[16/10] overflow-hidden bg-[#E7E1DC]">
                 <img src={settings[item.key] || "/images/hero-placeholder-1.svg"} alt={item.label + " preview"} className="h-full w-full object-cover transition-transform duration-500 hover:scale-105" />
