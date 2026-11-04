@@ -37,10 +37,12 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: "Order not found" }, { status: 200 });
       }
 
-      // 5 & 6. Idempotency: Ensure order not already marked as paid
+      // 5 & 6. If payment was already recorded, still retry the receipt.
+      // Resend's idempotency key prevents a duplicate customer email.
       if (order.status === "PAID" && order.paymentStatus === "SUCCESS") {
-        console.log(`Webhook: Order ${order.orderNumber} already marked as paid.`);
-        return NextResponse.json({ message: "Already processed" }, { status: 200 });
+        await sendOrderReceiptEmail(order);
+        console.log(`Webhook: Order ${order.orderNumber} was already paid; receipt delivery was retried.`);
+        return NextResponse.json({ message: "Already processed; receipt checked" }, { status: 200 });
       }
 
       // 7, 8, 9. Update payment status, order status, and inventory safely
