@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { verifyPaystackWebhookSignature } from "@/lib/paystack";
 import { getOrderByReference, updateOrderPaymentSuccess } from "@/lib/db";
+import { sendOrderReceiptEmail } from "@/lib/receipt-email";
 
 export async function POST(req: Request) {
   try {
