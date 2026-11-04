@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getOrderByReference, updateOrderPaymentSuccess } from "@/lib/db";
 import { verifyPaystackTransaction, pesewasToGhs } from "@/lib/paystack";
+import { sendOrderReceiptEmail } from "@/lib/receipt-email";
 
 export async function POST(req: Request) {
   try {
@@ -24,6 +25,7 @@ export async function POST(req: Request) {
 
     // If order was already verified as PAID (e.g. by webhook earlier)
     if (order.status === "PAID" && order.paymentStatus === "SUCCESS") {
+      await sendOrderReceiptEmail(order);
       return NextResponse.json({
         success: true,
         order,
@@ -69,6 +71,10 @@ export async function POST(req: Request) {
       channel: paystackResult.data.channel,
       amount: order.totalAmount,
     });
+
+    if (updatedOrder) {
+      await sendOrderReceiptEmail(updatedOrder);
+    }
 
     return NextResponse.json({
       success: true,
