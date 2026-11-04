@@ -44,12 +44,16 @@ export async function POST(req: Request) {
       }
 
       // 7, 8, 9. Update payment status, order status, and inventory safely
-      await updateOrderPaymentSuccess({
+      const updatedOrder = await updateOrderPaymentSuccess({
         reference,
         paystackId: String(data.id),
         channel: data.channel,
         amount: order.totalAmount,
       });
+
+      if (updatedOrder) {
+        await sendOrderReceiptEmail(updatedOrder);
+      }
 
       console.log(`Webhook: Successfully confirmed order ${order.orderNumber} (Ref: ${reference})`);
     }
