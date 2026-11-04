@@ -1,4 +1,4 @@
-import { Order } from "@/types";
+import type { Order } from "@/types";
 
 function escapeHtml(value: string): string {
   return value.replace(/[&<>"']/g, (character) => {
@@ -41,7 +41,7 @@ export async function sendOrderReceiptEmail(order: Order): Promise<void> {
   const orderNumber = escapeHtml(order.orderNumber);
   const paymentReference = escapeHtml(order.paymentReference);
   const paymentChannel = escapeHtml(order.payment?.channel || "Paystack");
-  const paidAt = new Date(order.payment?.paidAt || new Date()).toLocaleString("en-GH", {
+  const paidAt = new Date(order.payment?.paidAt ? String(order.payment.paidAt) : Date.now()).toLocaleString("en-GH", {
     dateStyle: "long",
     timeStyle: "short",
     timeZone: "Africa/Accra",
