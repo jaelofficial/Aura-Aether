@@ -6,7 +6,7 @@ import { prisma } from "@/lib/db";
 const DEFAULTS: Record<string, string> = {
   // Brand identity and global styling
   brandName: "Aura & Aether Parfums",
-  logoUrl: "/images/aura-aether-logo.svg",
+  logoUrl: "/images/aura-aether-logo.png",
   primaryColor: "#17110F",
   accentColor: "#B77F60",
   backgroundColor: "#FCFBF9",
@@ -113,7 +113,7 @@ export async function GET() {
       if (!Object.prototype.hasOwnProperty.call(DEFAULTS, row.key)) continue;
       if (legacyHeroPlaceholders[row.key] === row.value) continue;
       settings[row.key] = row.key === "logoUrl" && /\/images\/aura-aether-logo(?:-light)?\.(?:png|svg)$/i.test(row.value)
-        ? "/images/aura-aether-logo.svg"
+        ? "/images/aura-aether-logo.png"
         : row.value;
     }
     return NextResponse.json({ settings }, { headers: { "Cache-Control": "private, max-age=10, must-revalidate" } });
