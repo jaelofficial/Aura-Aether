@@ -137,11 +137,14 @@ export async function PUT(req: Request) {
     const body = await req.json();
 
     if (body.action === "bulk-discount" || body.action === "remove-bulk-discount") {
-      const productIds: string[] = Array.isArray(body.productIds)
-        ? body.productIds
-            .filter((id: unknown): id is string => typeof id === "string" && id.trim().length > 0)
-            .filter((id, index, ids) => ids.indexOf(id) === index)
-        : [];
+      const productIds: string[] = [];
+      if (Array.isArray(body.productIds)) {
+        for (const id of body.productIds as unknown[]) {
+          if (typeof id === "string" && id.trim().length > 0 && !productIds.includes(id)) {
+            productIds.push(id);
+          }
+        }
+      }
       if (productIds.length === 0) {
         return NextResponse.json({ error: "Select at least one product" }, { status: 400 });
       }
