@@ -39,7 +39,6 @@ export async function sendOrderReceiptEmail(order: Order): Promise<void> {
 
   const customerName = escapeHtml(order.customerName);
   const orderNumber = escapeHtml(order.orderNumber);
-  const paymentReference = escapeHtml(order.paymentReference);
   const paymentChannel = escapeHtml(order.payment?.channel || "Paystack");
   const paidAt = new Date(order.payment?.paidAt ? String(order.payment.paidAt) : Date.now()).toLocaleString("en-GH", {
     dateStyle: "long",
@@ -75,7 +74,6 @@ export async function sendOrderReceiptEmail(order: Order): Promise<void> {
     "Thank you for your order. Your payment has been verified successfully.",
     "",
     `Order ID: ${order.orderNumber}`,
-    `Paystack reference: ${order.paymentReference}`,
     `Payment method: ${order.payment?.channel || "Paystack"}`,
     `Payment date: ${paidAt}`,
     "Payment status: PAID",
@@ -124,7 +122,6 @@ export async function sendOrderReceiptEmail(order: Order): Promise<void> {
             <tr><td style="padding:7px 0;color:#8b8177;">Payment status</td><td align="right" style="padding:7px 0;font-weight:bold;color:#28734d;">PAID</td></tr>
             <tr><td style="padding:7px 0;color:#8b8177;">Payment date</td><td align="right" style="padding:7px 0;color:#29231e;">${escapeHtml(paidAt)}</td></tr>
             <tr><td style="padding:7px 0;color:#8b8177;">Payment method</td><td align="right" style="padding:7px 0;color:#29231e;">${paymentChannel}</td></tr>
-            <tr><td style="padding:7px 0;color:#8b8177;">Paystack reference</td><td align="right" style="padding:7px 0;color:#29231e;word-break:break-all;">${paymentReference}</td></tr>
           </table>
 
           <div style="font-family:Georgia,serif;font-size:18px;margin-bottom:8px;">Order summary</div>
