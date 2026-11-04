@@ -2,6 +2,7 @@ import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import ShopSort from "@/components/ShopSort";
 import ShopCategoryFilter from "@/components/ShopCategoryFilter";
+import ShopEditorialShowcase from "@/components/ShopEditorialShowcase";
 import { getProducts, getCategories } from "@/lib/db";
 
 
@@ -62,6 +63,8 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
 
           <ShopSort category={currentCategory} search={searchQuery} sort={currentSort} />
         </div>
+
+        <ShopEditorialShowcase />
 
         {/* Results Counter */}
         <div className="mb-5 flex justify-between items-center text-xs text-[#77776F]">
