@@ -18,8 +18,10 @@ export default function Footer() {
       .then((data) => {
         if (data?.settings?.footerDescription) setFooterDescription(data.settings.footerDescription);
         if (data?.settings?.brandName) setBrandName(data.settings.brandName);
-        if (typeof data?.settings?.logoUrl === "string" && data.settings.logoUrl.trim()) setLogoUrl(data.settings.logoUrl.trim());
-        else setLogoUrl("/images/aura-aether-logo.svg");
+        const configuredLogo = typeof data?.settings?.logoUrl === "string" ? data.settings.logoUrl.trim() : "";
+        setLogoUrl(configuredLogo && configuredLogo !== "/images/aura-aether-logo.png" && configuredLogo !== "/images/aura-aether-logo-light.png"
+          ? configuredLogo
+          : "/images/aura-aether-logo.svg");
       })
       .catch(() => undefined);
   }, []);
@@ -34,7 +36,7 @@ export default function Footer() {
       <div className="mx-auto">
         <div className="flex justify-center pb-12 sm:pb-16 lg:pb-20">
           <Link href="/" aria-label={brandName} className="inline-flex items-center transition-opacity hover:opacity-80">
-            {logoUrl ? <Image src={logoUrl} alt={`${brandName} logo`} width={300} height={186} className="h-20 w-auto max-w-[280px] object-contain" onError={() => setLogoUrl("")} /> : <span className="whitespace-nowrap font-serif-luxury text-2xl font-semibold tracking-[0.12em] text-white">AURA &amp; AETHER</span>}
+            <Image src={logoUrl} alt={`${brandName} logo`} width={300} height={186} className="h-20 w-auto max-w-[280px] object-contain" onError={() => setLogoUrl("/images/aura-aether-logo.svg")} />
           </Link>
         </div>
 
