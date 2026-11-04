@@ -68,7 +68,7 @@ export default function Header() {
           </nav>
 
           <Link href="/" aria-label={brandName} className={`absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center whitespace-nowrap transition-opacity hover:opacity-80 ${isColorHeader ? "text-white" : "text-[var(--primary)]"}`}>
-            <Image src="/images/aura-aether-logo.svg" alt="Aura & Aether Parfums" width={180} height={112} priority className="h-12 w-auto object-contain sm:h-14" />
+            <Image src="/images/aura-aether-logo.png" alt="Aura & Aether Parfums" width={180} height={112} priority className="h-12 w-auto object-contain sm:h-14" />
           </Link>
 
           <nav aria-label="Account and shopping" className={`${pillClass} ml-auto hidden gap-5 lg:flex`}>
