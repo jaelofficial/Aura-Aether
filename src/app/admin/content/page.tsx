@@ -12,7 +12,7 @@ type EditorGroup = { title: string; description: string; fields: Field[] };
 
 const initial: Settings = {
   brandName: "Aura & Aether Parfums",
-  logoUrl: "/images/aura-aether-logo.svg",
+  logoUrl: "/images/aura-aether-logo.png",
   primaryColor: "#17110F",
   accentColor: "#B77F60",
   backgroundColor: "#FCFBF9",
