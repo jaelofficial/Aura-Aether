@@ -20,6 +20,8 @@ const DEFAULTS: Record<string, string> = {
   heroImageUrl2: "/images/hero/desert-amber.jpeg",
   heroImageUrl3: "/images/hero/emerald-noir.jpeg",
   heroImageUrl4: "/images/hero/city-sillage.jpeg",
+  heroImageUrl5: "/images/hero/cassis-sauvage.jpeg",
+  heroImageUrl6: "/images/hero/orange-amere.jpeg",
 
   homeBestsellerImage1: "/images/bestsellers/foret.jpeg",
   homeBestsellerImage2: "/images/bestsellers/ambre-boise.jpeg",
