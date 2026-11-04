@@ -84,8 +84,9 @@ export async function sendOrderReceiptEmail(order: Order): Promise<void> {
     textItems,
     "",
     `Subtotal: ${money(order.subtotal)}`,
-    `Delivery: ${order.deliveryFee === 0 ? "Free" : money(order.deliveryFee)}`,
-    `TOTAL PAID: ${money(order.totalAmount)}`,
+    `Delivery fee: ${order.deliveryFee === 0 ? "To be communicated" : money(order.deliveryFee)}`,
+    "We will contact you by phone to confirm your delivery location and communicate the delivery fee before dispatch. This fee is not included in the amount paid.",
+    `TOTAL PAID: ${money(order.totalAmount)} (delivery excluded if not yet confirmed)`,
     "",
     "DELIVERY DETAILS",
     order.customerName,
@@ -133,7 +134,8 @@ export async function sendOrderReceiptEmail(order: Order): Promise<void> {
 
           <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="font-size:13px;border-collapse:collapse;margin-top:16px;">
             <tr><td style="padding:7px 0;color:#71675e;">Subtotal</td><td align="right" style="padding:7px 0;">${money(order.subtotal)}</td></tr>
-            <tr><td style="padding:7px 0;color:#71675e;">Delivery fee</td><td align="right" style="padding:7px 0;">${order.deliveryFee === 0 ? "Free" : money(order.deliveryFee)}</td></tr>
+            <tr><td style="padding:7px 0;color:#71675e;">Delivery fee</td><td align="right" style="padding:7px 0;">${order.deliveryFee === 0 ? "To be communicated" : money(order.deliveryFee)}</td></tr>
+            <tr><td colspan="2" style="padding:8px 0;font-size:11px;line-height:1.6;color:#8b8177;">We will contact you by phone to confirm your delivery location and communicate the delivery fee before dispatch. This fee is not included in the amount paid above.</td></tr>
             <tr><td style="padding:15px 0;border-top:1px solid #ded5ca;font-weight:bold;font-size:15px;">TOTAL PAID</td><td align="right" style="padding:15px 0;border-top:1px solid #ded5ca;font-weight:bold;font-size:16px;">${money(order.totalAmount)}</td></tr>
           </table>
 
