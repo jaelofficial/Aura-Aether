@@ -135,8 +135,6 @@ function OrderSuccessContent() {
           <div className="mt-6 inline-flex flex-wrap items-center justify-center gap-3 text-xs bg-[#FAF7F4] border border-[#EDE7DF] px-5 py-2.5 rounded-full text-[#4A443F]">
             <span>Order ID: <strong>{order.orderNumber}</strong></span>
             <span>•</span>
-            <span>Paystack reference (maps to this order): <strong>{order.paymentReference}</strong></span>
-            <span>•</span>
             <span className="flex items-center gap-1 text-[#10B981]">
               <ShieldCheck className="w-3.5 h-3.5" />
               Paystack Paid
@@ -173,10 +171,10 @@ function OrderSuccessContent() {
               </div>
               <div className="flex justify-between">
                 <span>Delivery fee:</span>
-                <span className="font-semibold text-[#1C1917]">{order.deliveryFee === 0 ? "Free" : formatGhs(order.deliveryFee)}</span>
+                <span className="font-semibold text-[#1C1917]">{order.deliveryFee === 0 ? "To be communicated" : formatGhs(order.deliveryFee)}</span>
               </div>
               <p className="rounded-xl bg-[#FAF7F3] p-3 text-[11px] leading-5 text-[#6B635B]">
-                We will contact you to confirm your exact delivery location before dispatch.
+                We will contact you to confirm your delivery location and communicate the delivery fee before dispatch. The delivery fee is not included in the amount paid above.
               </p>
               <div className="pt-2 border-t border-[#EFE9E2] flex justify-between text-sm font-bold text-[#1C1917]">
                 <span>Total Paid:</span>
