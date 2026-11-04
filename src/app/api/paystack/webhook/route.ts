@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { verifyPaystackWebhookSignature } from "@/lib/paystack";
 import { getOrderByReference, updateOrderPaymentSuccess } from "@/lib/db";
-import { sendOrderReceiptEmail } from "@/lib/receipt-email";
 
 export async function POST(req: Request) {
   try {
@@ -37,25 +36,19 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: "Order not found" }, { status: 200 });
       }
 
-      // 5 & 6. If payment was already recorded, still retry the receipt.
-      // Resend's idempotency key prevents a duplicate customer email.
+      // 5 & 6. Idempotency: Ensure order not already marked as paid
       if (order.status === "PAID" && order.paymentStatus === "SUCCESS") {
-        await sendOrderReceiptEmail(order);
-        console.log(`Webhook: Order ${order.orderNumber} was already paid; receipt delivery was retried.`);
-        return NextResponse.json({ message: "Already processed; receipt checked" }, { status: 200 });
+        console.log(`Webhook: Order ${order.orderNumber} already marked as paid.`);
+        return NextResponse.json({ message: "Already processed" }, { status: 200 });
       }
 
       // 7, 8, 9. Update payment status, order status, and inventory safely
-      const updatedOrder = await updateOrderPaymentSuccess({
+      await updateOrderPaymentSuccess({
         reference,
         paystackId: String(data.id),
         channel: data.channel,
         amount: order.totalAmount,
       });
-
-      if (updatedOrder) {
-        await sendOrderReceiptEmail(updatedOrder);
-      }
 
       console.log(`Webhook: Successfully confirmed order ${order.orderNumber} (Ref: ${reference})`);
     }
