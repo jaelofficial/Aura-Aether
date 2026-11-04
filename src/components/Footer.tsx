@@ -19,9 +19,7 @@ export default function Footer() {
         if (data?.settings?.footerDescription) setFooterDescription(data.settings.footerDescription);
         if (data?.settings?.brandName) setBrandName(data.settings.brandName);
         const configuredLogo = typeof data?.settings?.logoUrl === "string" ? data.settings.logoUrl.trim() : "";
-        setLogoUrl(configuredLogo && configuredLogo !== "/images/aura-aether-logo.png" && configuredLogo !== "/images/aura-aether-logo-light.png"
-          ? configuredLogo
-          : "/images/aura-aether-logo.svg");
+        setLogoUrl(configuredLogo || "/images/aura-aether-logo.svg");
       })
       .catch(() => undefined);
   }, []);
