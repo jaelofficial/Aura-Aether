@@ -126,7 +126,9 @@ export async function GET() {
     for (const row of rows) {
       if (!Object.prototype.hasOwnProperty.call(DEFAULTS, row.key)) continue;
       if (legacyHeroPlaceholders[row.key] === row.value) continue;
-      settings[row.key] = row.value;
+      settings[row.key] = row.key === "logoUrl" && (row.value === "/images/aura-aether-logo.png" || row.value === "/images/aura-aether-logo-light.png")
+        ? "/images/aura-aether-logo.svg"
+        : row.value;
     }
     return NextResponse.json({ settings }, { headers: { "Cache-Control": "private, max-age=10, must-revalidate" } });
   } catch (error) {
