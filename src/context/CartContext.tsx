@@ -78,7 +78,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         ];
       }
     });
-    setIsCartOpen(true);
+    // Keep the customer on the shopping page; they can open the cart when ready.
   };
 
   const removeItem = (productId: string) => {
