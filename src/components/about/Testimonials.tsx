@@ -1,103 +1,64 @@
 "use client";
 
-import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useRef } from "react";
-
-const testimonials = [
-  {
-    src: "/images/testimonials/client-note-ama-cropped-navy.jpeg",
-    alt: "Client note from Ama in Accra praising a custom fragrance oil blend",
-    position: "lg:left-[3%] lg:top-[10%] lg:rotate-[-5deg]",
-    layer: 2,
-  },
-  {
-    src: "/images/testimonials/client-note-kofi-cropped-navy.jpeg",
-    alt: "Client note from Kofi in East Legon recommending Aura & Aether fragrances",
-    position: "lg:left-[27%] lg:top-[18%] lg:rotate-[3deg]",
-    layer: 4,
-  },
-  {
-    src: "/images/testimonials/client-note-naa-cropped-navy.jpeg",
-    alt: "Client note from Naa in Osu celebrating a custom perfume oil blend",
-    position: "lg:left-[52%] lg:top-[9%] lg:rotate-[-3deg]",
-    layer: 3,
-  },
-  {
-    src: "/images/testimonials/client-note-elikem-cropped-navy.jpeg",
-    alt: "Client note from Elikem praising the fragrance and packaging",
-    position: "lg:left-[76%] lg:top-[19%] lg:rotate-[5deg]",
-    layer: 6,
-  },
-  {
-    src: "/images/testimonials/client-note-akosua-cropped-navy.jpeg",
-    alt: "Client note from Akosua about finding a bold signature fragrance",
-    position: "lg:left-[9%] lg:top-[56%] lg:rotate-[4deg]",
-    layer: 7,
-  },
-  {
-    src: "/images/testimonials/client-note-yaa-cropped-navy.jpeg",
-    alt: "Client note from Yaa about a personalized perfume oil gift",
-    position: "lg:left-[37%] lg:top-[62%] lg:rotate-[-5deg]",
-    layer: 5,
-  },
-  {
-    src: "/images/testimonials/fragrance-experience-cropped-navy.jpeg",
-    alt: "A fragrance experience note for Dede's Scents & Fragrances",
-    position: "lg:left-[66%] lg:top-[57%] lg:rotate-[2deg]",
-    layer: 1,
-  },
-];
+import { getClientSiteSettings } from "@/lib/site-settings-client";
+import { DEFAULT_CLIENT_NOTES, type ClientNote } from "@/lib/site-content";
 
 export default function Testimonials() {
+  const [notes, setNotes] = useState<ClientNote[]>(DEFAULT_CLIENT_NOTES);
   const carouselRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    getClientSiteSettings().then((settings) => {
+      if (!settings.clientNotes) return;
+      try {
+        const parsed = JSON.parse(settings.clientNotes);
+        if (Array.isArray(parsed)) {
+          setNotes(parsed.filter((note): note is ClientNote =>
+            !!note && typeof note.id === "string" && typeof note.name === "string" &&
+            typeof note.location === "string" && typeof note.message === "string" &&
+            typeof note.signoff === "string"
+          ));
+        }
+      } catch {
+        // Keep the built-in notes if an older or invalid setting is stored.
+      }
+    });
+  }, []);
 
   function scrollCards(direction: -1 | 1) {
     const carousel = carouselRef.current;
-    const firstCard = carousel?.querySelector<HTMLElement>("figure");
+    const firstCard = carousel?.querySelector<HTMLElement>("article");
     if (!carousel || !firstCard) return;
     const gap = Number.parseFloat(getComputedStyle(carousel).columnGap) || 0;
     carousel.scrollBy({ left: direction * (firstCard.offsetWidth + gap), behavior: "smooth" });
   }
 
   return (
-    <section
-      aria-label="Customer testimonials"
-      className="relative overflow-hidden bg-white py-8 lg:h-[100svh] lg:min-h-[700px] lg:py-0"
-    >
-      <div ref={carouselRef} className="relative mx-auto flex max-w-full snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain px-5 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:px-8 lg:absolute lg:inset-0 lg:block lg:overflow-visible lg:px-0 lg:pb-0">
-        {testimonials.map((item) => (
-          <figure
-            key={item.src}
-            className={`relative w-[82vw] flex-none snap-center overflow-hidden  transition-transform duration-500 hover:z-20 hover:scale-[1.025] lg:absolute lg:w-[22vw] lg:max-w-[340px] ${item.position}`}
-            style={{ zIndex: item.layer }}
-          >
-            <Image
-              src={item.src}
-              alt={item.alt}
-              width={1615}
-              height={1445}
-              sizes="(max-width: 640px) 92vw, (max-width: 1024px) 45vw, 22vw"
-              className="block h-auto w-full"
-            />
-          </figure>
+    <section aria-label="Customer testimonials" className="bg-white px-5 py-16 sm:px-8 lg:px-[4vw] lg:py-24">
+      <div className="mx-auto mb-10 max-w-3xl text-center">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9A765F]">Kind words</p>
+        <h2 className="mt-3 font-serif-luxury text-3xl text-[#17110F] sm:text-4xl">Notes from our clients.</h2>
+      </div>
+      <div ref={carouselRef} className="mx-auto grid max-w-[1500px] grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 lg:gap-7">
+        {notes.map((note) => (
+          <article key={note.id} className="relative flex min-h-[290px] flex-col bg-[#222A37] px-6 pb-7 pt-10 text-[#F8E7DE] shadow-[0_16px_38px_rgba(25,32,43,0.12)] sm:px-8 sm:pt-12">
+            <span aria-hidden="true" className="absolute -top-2 left-1/2 h-7 w-28 -translate-x-1/2 rotate-[-2deg] bg-[#E9D7D3]/90 shadow-sm" />
+            <blockquote className="flex-1 text-sm leading-7 sm:text-[15px]">“{note.message}”</blockquote>
+            <div className="mt-7 border-t border-white/15 pt-4">
+              <p className="text-sm font-semibold">{note.name}</p>
+              {note.location && <p className="mt-1 text-xs text-white/65">{note.location}</p>}
+              {note.signoff && <p className="mt-4 font-serif-luxury text-xl italic text-[#EBCFC4]">{note.signoff}</p>}
+            </div>
+          </article>
         ))}
       </div>
-      <div className="mt-3 flex justify-end gap-2 px-5 sm:px-8 lg:hidden">
-        <button
-          type="button"
-          aria-label="Previous testimonial"
-          onClick={() => scrollCards(-1)}
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--primary)] text-white transition-colors hover:bg-[#303b4d]"
-        >
+      <div className="mx-auto mt-6 flex max-w-[1500px] justify-end gap-2 sm:hidden">
+        <button type="button" aria-label="Previous testimonial" onClick={() => scrollCards(-1)} className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--primary)] text-white transition-colors hover:bg-[#303b4d]">
           <ChevronLeft aria-hidden="true" className="h-5 w-5" />
         </button>
-        <button
-          type="button"
-          aria-label="Next testimonial"
-          onClick={() => scrollCards(1)}
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--primary)] text-white transition-colors hover:bg-[#303b4d]"
-        >
+        <button type="button" aria-label="Next testimonial" onClick={() => scrollCards(1)} className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--primary)] text-white transition-colors hover:bg-[#303b4d]">
           <ChevronRight aria-hidden="true" className="h-5 w-5" />
         </button>
       </div>
