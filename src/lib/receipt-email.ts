@@ -26,7 +26,7 @@ function money(value: number): string {
  * Resend's idempotency key prevents duplicate receipts when the success page
  * retries verification for the same order.
  */
-export async function sendOrderReceiptEmail(order: Order): Promise<void> {
+export async function sendOrderReceiptEmail(order: Order): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   const fromEmail = process.env.CONTACT_FROM_EMAIL;
 
@@ -34,7 +34,7 @@ export async function sendOrderReceiptEmail(order: Order): Promise<void> {
     console.warn(
       "Order receipt email was not sent: configure RESEND_API_KEY and CONTACT_FROM_EMAIL."
     );
-    return;
+    return false;
   }
 
   const customerName = escapeHtml(order.customerName);
@@ -178,12 +178,15 @@ export async function sendOrderReceiptEmail(order: Order): Promise<void> {
     if (!response.ok) {
       const errorBody = await response.text().catch(() => "Could not read Resend response");
       console.error("Order receipt email failed:", { status: response.status, body: errorBody });
-      return;
+      return false;
     }
 
     console.log("Order receipt email sent:", order.orderNumber);
+    return true;
   } catch (error) {
     // Email failure must not undo or hide a payment that Paystack has verified.
+    // Returning false lets the Paystack webhook request a retry.
     console.error("Could not send order receipt email:", error);
+    return false;
   }
 }
