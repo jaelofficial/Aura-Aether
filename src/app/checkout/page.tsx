@@ -69,14 +69,15 @@ export default function CheckoutPage() {
 
   // Auto-fill if customer is logged in
   useEffect(() => {
-    if (user) {
+    if (!user) return;
+    queueMicrotask(() => {
       setFormData((prev) => ({
         ...prev,
         customerName: prev.customerName || user.name || "",
         customerEmail: prev.customerEmail || user.email || "",
         customerPhone: prev.customerPhone || user.phone || "",
       }));
-    }
+    });
   }, [user]);
 
   // If cart is empty, redirect

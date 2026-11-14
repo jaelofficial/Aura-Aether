@@ -127,7 +127,9 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     const requestedTab = new URLSearchParams(window.location.search).get("tab");
-    if (requestedTab === "orders" || requestedTab === "products" || requestedTab === "categories" || requestedTab === "new-product") setActiveTab(requestedTab);
+    if (requestedTab === "orders" || requestedTab === "products" || requestedTab === "categories" || requestedTab === "new-product") {
+      queueMicrotask(() => setActiveTab(requestedTab));
+    }
     fetchData();
   }, []);
 

@@ -39,7 +39,8 @@ export default function AccountSettingsPage() {
   }, [isLoading, user, router]);
 
   useEffect(() => {
-    if (user) {
+    if (!user) return;
+    queueMicrotask(() => {
       setForm((current) => ({
         ...current,
         name: user.name || "",
@@ -48,7 +49,7 @@ export default function AccountSettingsPage() {
         address: user.address || "",
         city: user.city || "",
       }));
-    }
+    });
   }, [user]);
 
   const updateField = (key: keyof AccountForm, value: string) => {

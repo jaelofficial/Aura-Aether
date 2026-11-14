@@ -42,7 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    fetchCurrentUser();
+    void Promise.resolve().then(() => fetchCurrentUser());
   }, []);
 
   const login = async (email: string, password: string) => {

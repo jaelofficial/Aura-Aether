@@ -27,8 +27,10 @@ function OrderSuccessContent() {
       (typeof window !== "undefined" ? sessionStorage.getItem("last_aura_order_ref") : null);
 
     if (!ref) {
-      setError("No transaction reference was found for this order.");
-      setIsVerifying(false);
+      queueMicrotask(() => {
+        setError("No transaction reference was found for this order.");
+        setIsVerifying(false);
+      });
       return;
     }
 
