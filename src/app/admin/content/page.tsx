@@ -214,7 +214,9 @@ export default function StorefrontContentPage() {
 
   useEffect(() => {
     const section = new URLSearchParams(window.location.search).get("section");
-    if (section && pages.some((page) => page.id === section)) setActiveSection(section);
+    if (section && pages.some((page) => page.id === section)) {
+      queueMicrotask(() => setActiveSection(section));
+    }
   }, []);
 
   useEffect(() => {
