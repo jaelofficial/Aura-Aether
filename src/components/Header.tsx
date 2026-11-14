@@ -9,6 +9,7 @@ import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import SearchModal from "./SearchModal";
 import CartDrawer from "./CartDrawer";
+import { getClientSiteSettings } from "@/lib/site-settings-client";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -34,11 +35,9 @@ export default function Header() {
   const [brandName, setBrandName] = useState("Aura & Aether Parfums");
 
   useEffect(() => {
-    fetch("/api/site-settings")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data?.settings?.brandName) setBrandName(data.settings.brandName);
-        const colors = data?.settings || {};
+    getClientSiteSettings().then((settings) => {
+        if (settings.brandName) setBrandName(settings.brandName);
+        const colors = settings;
         if (/^#[0-9a-f]{6}$/i.test(colors.primaryColor || "")) {
           document.documentElement.style.setProperty("--primary", colors.primaryColor);
           document.documentElement.style.setProperty("--foreground", colors.primaryColor);
@@ -68,7 +67,7 @@ export default function Header() {
           </nav>
 
           <Link href="/" aria-label={brandName} className={`absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center whitespace-nowrap transition-opacity hover:opacity-80 ${isColorHeader ? "text-white" : "text-[var(--primary)]"}`}>
-            <Image src="/images/aura-aether-logo.png" alt="Aura & Aether Parfums" width={180} height={112} priority className="h-12 w-auto object-contain sm:h-14" />
+            <Image src="/images/aura-aether-logo.png" alt="Aura & Aether Parfums" width={180} height={112} priority className="h-14 w-auto object-contain sm:h-16" />
           </Link>
 
           <nav aria-label="Account and shopping" className={`${pillClass} ml-auto hidden gap-5 lg:flex`}>
