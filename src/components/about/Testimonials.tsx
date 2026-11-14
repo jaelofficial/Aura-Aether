@@ -41,9 +41,9 @@ export default function Testimonials() {
         <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9A765F]">Kind words</p>
         <h2 className="mt-3 font-serif-luxury text-3xl text-[#17110F] sm:text-4xl">Notes from our clients.</h2>
       </div>
-      <div ref={carouselRef} className="mx-auto grid max-w-[1500px] grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 lg:gap-7">
+      <div ref={carouselRef} className="mx-auto grid max-w-[1500px] grid-flow-col auto-cols-[88%] grid-cols-none snap-x snap-mandatory gap-5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:grid-flow-row sm:auto-cols-auto sm:grid-cols-2 sm:overflow-visible xl:grid-cols-3 lg:gap-7">
         {notes.map((note) => (
-          <article key={note.id} className="relative flex min-h-[290px] flex-col bg-[#222A37] px-6 pb-7 pt-10 text-[#F8E7DE] shadow-[0_16px_38px_rgba(25,32,43,0.12)] sm:px-8 sm:pt-12">
+          <article key={note.id} className="relative flex min-h-[290px] snap-center flex-col bg-[#222A37] px-6 pb-7 pt-10 text-[#F8E7DE] shadow-[0_16px_38px_rgba(25,32,43,0.12)] sm:px-8 sm:pt-12">
             <span aria-hidden="true" className="absolute -top-2 left-1/2 h-7 w-28 -translate-x-1/2 rotate-[-2deg] bg-[#E9D7D3]/90 shadow-sm" />
             <blockquote className="flex-1 text-sm leading-7 sm:text-[15px]">“{note.message}”</blockquote>
             <div className="mt-7 border-t border-white/15 pt-4">
