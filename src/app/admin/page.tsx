@@ -129,7 +129,9 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     const requestedTab = new URLSearchParams(window.location.search).get("tab");
-    if (requestedTab === "orders" || requestedTab === "products" || requestedTab === "categories" || requestedTab === "new-product") setActiveTab(requestedTab);
+    if (requestedTab === "orders" || requestedTab === "products" || requestedTab === "categories" || requestedTab === "new-product") {
+      queueMicrotask(() => setActiveTab(requestedTab));
+    }
     fetchData();
   }, []);
 
@@ -715,7 +717,7 @@ export default function AdminDashboardPage() {
             <form onSubmit={handleBulkDiscount} className="mb-6 rounded-2xl border border-[#E7D8BC] bg-[#FCFAF6] p-5">
               <div className="mb-4">
                 <h3 className="font-serif-luxury text-lg font-semibold text-[#1C1917]">Bulk Discounts</h3>
-                <p className="mt-1 text-xs text-[#78716C]">Apply one percentage discount to selected fragrances or your entire catalog. Original prices are saved so discounts won't compound.</p>
+                <p className="mt-1 text-xs text-[#78716C]">Apply one percentage discount to selected fragrances or your entire catalog. Original prices are saved so discounts won&apos;t compound.</p>
               </div>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-[1fr_1fr_auto] md:items-end">
                 <div>
