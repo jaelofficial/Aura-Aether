@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { DEFAULT_CLIENT_NOTES } from "@/lib/site-content";
 
 const DEFAULTS: Record<string, string> = {
   // Brand identity and global styling
@@ -59,6 +60,9 @@ const DEFAULTS: Record<string, string> = {
   homeHowToOrderImage4: "/images/how-to-order/step-04.jpeg",
   // About page
   aboutTitle: "Our story",
+  aboutFounderTitle: "A fragrance house with a story",
+  aboutFounderText: "Aura & Aether was created for the moments, moods, and memories that make you who you are.",
+  clientNotes: JSON.stringify(DEFAULT_CLIENT_NOTES),
   aboutIntro: "Aura & Aether was created for the moments, moods, and memories that make you who you are.",
   aboutImageUrl: "",
   aboutStoryImage1: "/images/about-story/story-01-desktop.jpeg",
