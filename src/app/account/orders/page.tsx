@@ -31,7 +31,7 @@ export default function OrderHistoryPage() {
     if (user) {
       fetchOrders();
     } else if (!isLoading) {
-      setIsFetching(false);
+      queueMicrotask(() => setIsFetching(false));
     }
   }, [user, isLoading]);
 
