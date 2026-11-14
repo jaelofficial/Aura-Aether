@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { getClientSiteSettings } from "@/lib/site-settings-client";
 
 
 
@@ -10,8 +11,7 @@ export default function StoryHero() {
   const [storyImages, setStoryImages] = useState<string[]>([]);
 
   useEffect(() => {
-    fetch("/api/site-settings").then((res) => res.ok ? res.json() : null).then((data) => {
-      const settings = data?.settings || {};
+    getClientSiteSettings().then((settings) => {
       setStoryImages([settings.aboutStoryImage1, settings.aboutStoryImage2, settings.aboutStoryImage3, settings.aboutStoryImage4].filter((url): url is string => typeof url === "string" && url.trim().length > 0));
     }).catch(() => setStoryImages([]));
   }, []);
