@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { prisma, getProducts } from "@/lib/db";
+import { getHomepageProducts, getSiteSettingsMap } from "@/lib/db";
 
 const notes = [
   {
@@ -81,15 +81,10 @@ function CollectionNote({
 
 export default async function OurCollection() {
   const imageKeys = ["homeCollectionImage1", "homeCollectionImage2", "homeCollectionImage3", "homeCollectionImage4"] as const;
-  const imageSettings = new Map<string, string>();
-  let products: Awaited<ReturnType<typeof getProducts>> = [];
+  let imageSettings = new Map<string, string>();
+  let products: Awaited<ReturnType<typeof getHomepageProducts>> = [];
   try {
-    const [rows, catalog] = await Promise.all([
-      prisma.siteSetting.findMany({ where: { key: { in: [...imageKeys] } }, select: { key: true, value: true } }),
-      getProducts({ giftSets: false }),
-    ]);
-    for (const row of rows) imageSettings.set(row.key, row.value);
-    products = catalog;
+    [imageSettings, products] = await Promise.all([getSiteSettingsMap(), getHomepageProducts()]);
   } catch (error) {
     console.error("Homepage collection images could not be loaded:", error);
   }
