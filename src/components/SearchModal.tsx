@@ -20,8 +20,10 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
   useEffect(() => {
     if (!isOpen) {
-      setQuery("");
-      setResults([]);
+      queueMicrotask(() => {
+        setQuery("");
+        setResults([]);
+      });
       return;
     }
 
