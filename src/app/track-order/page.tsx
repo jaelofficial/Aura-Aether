@@ -41,7 +41,7 @@ export default function TrackOrderPage() {
 
   useEffect(() => {
     const orderNumber = new URLSearchParams(window.location.search).get("orderNumber");
-    if (orderNumber) setOrderId(orderNumber);
+    if (orderNumber) queueMicrotask(() => setOrderId(orderNumber));
   }, []);
   const [order, setOrder] = useState<TrackedOrder | null>(null);
   const [error, setError] = useState("");
