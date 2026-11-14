@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { verifyPaystackWebhookSignature } from "@/lib/paystack";
 import { getOrderByReference, updateOrderPaymentSuccess } from "@/lib/db";
+import { sendOrderReceiptEmail } from "@/lib/receipt-email";
 
 export async function POST(req: Request) {
   try {
@@ -38,19 +39,45 @@ export async function POST(req: Request) {
 
       // 5 & 6. Idempotency: Ensure order not already marked as paid
       if (order.status === "PAID" && order.paymentStatus === "SUCCESS") {
-        console.log(`Webhook: Order ${order.orderNumber} already marked as paid.`);
+        // Retry the receipt if an earlier delivery attempt failed. Resend uses
+        // an order-specific idempotency key to prevent duplicate customer emails.
+        const receiptSent = await sendOrderReceiptEmail(order);
+        if (!receiptSent) {
+          return NextResponse.json(
+            { error: "Payment is confirmed, but the receipt email could not be sent yet." },
+            { status: 500 }
+          );
+        }
+        console.log(`Webhook: Order ${order.orderNumber} was already paid; receipt delivery checked.`);
         return NextResponse.json({ message: "Already processed" }, { status: 200 });
       }
 
       // 7, 8, 9. Update payment status, order status, and inventory safely
-      await updateOrderPaymentSuccess({
+      const updatedOrder = await updateOrderPaymentSuccess({
         reference,
         paystackId: String(data.id),
         channel: data.channel,
         amount: order.totalAmount,
       });
 
-      console.log(`Webhook: Successfully confirmed order ${order.orderNumber} (Ref: ${reference})`);
+      if (!updatedOrder) {
+        return NextResponse.json(
+          { error: "Payment was received, but the order could not be updated." },
+          { status: 500 }
+        );
+      }
+
+      // Send the same custom receipt used by the customer verification flow.
+      // A failed send returns 500 so Paystack can retry the webhook.
+      const receiptSent = await sendOrderReceiptEmail(updatedOrder);
+      if (!receiptSent) {
+        return NextResponse.json(
+          { error: "Payment is confirmed, but the receipt email could not be sent yet." },
+          { status: 500 }
+        );
+      }
+
+      console.log(`Webhook: Successfully confirmed order ${order.orderNumber} and sent receipt (Ref: ${reference})`);
     }
 
     // 10. Return successful response
