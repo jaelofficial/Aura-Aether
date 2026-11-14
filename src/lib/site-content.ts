@@ -1,0 +1,17 @@
+export type ClientNote = {
+  id: string;
+  name: string;
+  location: string;
+  message: string;
+  signoff: string;
+};
+
+export const DEFAULT_CLIENT_NOTES: ClientNote[] = [
+  { id: "ama", name: "Ama K.", location: "Accra, Ghana", message: "I bought a custom oil blend from Aura & Aether last month, and I am absolutely in love! I told her I wanted something warm, rich, and unique for daily wear, and she crafted the most beautiful, long-lasting signature scent. I’ve already gotten so many compliments on it here in East Legon. Aura & Aether truly has an incredible talent for blending notes. I won’t be buying my fragrances anywhere else!", signoff: "A happy customer!" },
+  { id: "kofi", name: "Kofi A.", location: "East Legon", message: "I visited Aura & Aether for the first time last week, and I am so glad I did! I was looking for a rich, warm scent with vanilla and amber notes, and they helped me pick the absolute perfect blend. The quality is amazing—it lasts all day and I have been getting so many compliments! Natural, authentic, and beautiful packaging too. Highly recommend!", signoff: "I will be back!" },
+  { id: "naa", name: "Naa Shormey", location: "Osu", message: "I order all my gifts from Aura & Aether because their scents are absolutely elite! New customer. Just got a custom perfume oil blend for my sister’s birthday, and she hasn’t stopped raving about it. The way they blend the jasmine and sandalwood is pure magic. Truly the best scent shop in Accra, the longevity is top tier!", signoff: "Absolute magic!" },
+  { id: "elikem", name: "Elikem M.", location: "Airport Residential Area", message: "I am absolutely obsessed with Aura & Aether! I ordered their custom perfume oil as a gift for myself, and the packaging alone made it feel so luxurious. The scent itself is heavenly—it has the perfect balance of warm vanilla and spice that lasts the entire day. I have received endless compliments every time I wear it. I am already planning my next order, they’ve gained a customer for life!", signoff: "Highly recommend!" },
+  { id: "akosua", name: "Akosua B.", location: "Spintex", message: "I was looking for a signature scent that was both bold and comforting, and Aura & Aether delivered exactly that! The fragrance is rich, beautifully balanced, and stays with me throughout the busy workday. I also love that the custom blends feel so personal and luxurious. Getting my order was so easy and the customer service is unmatched. This is definitely my go-to fragrance shop now!", signoff: "Truly the best!" },
+  { id: "yaa", name: "Yaa O.", location: "Osu", message: "I bought a customized perfume oil blend from Aura & Aether for my mother’s birthday, and she absolutely adores it! She hasn’t stopped raving about the subtle vanilla, rose, and amber notes. The fragrance is rich, beautifully balanced, and has incredible longevity—lasting through her entire day. The elegant packaging and seamless delivery made it the perfect gift. Aura & Aether has definitely earned a customer for life!", signoff: "Pure perfection!" },
+  { id: "mawusi", name: "Mawusi G.", location: "Cantonments", message: "I bought the signature woody and vanilla oil blend from Aura & Aether, and I cannot get over how good it is. It smells incredibly rich and expensive without being overwhelming, and the longevity is unmatched—I can still smell it on my skin at the end of a long day. The level of care that went into the scent and the gorgeous packaging is amazing. Accra’s best-kept secret!", signoff: "Absolutely in love!" },
+];
