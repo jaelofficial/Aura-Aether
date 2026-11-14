@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { prisma, getProducts } from "@/lib/db";
+import { getHomepageProducts, getSiteSettingsMap } from "@/lib/db";
 
 const defaultBestsellers = [
   {
@@ -27,16 +27,10 @@ const defaultBestsellers = [
 ];
 
 export default async function Bestsellers() {
-  const imageKeys = defaultBestsellers.map((product) => product.imageKey);
-  const imageSettings = new Map<string, string>();
-  let products: Awaited<ReturnType<typeof getProducts>> = [];
+  let imageSettings = new Map<string, string>();
+  let products: Awaited<ReturnType<typeof getHomepageProducts>> = [];
   try {
-    const [rows, catalog] = await Promise.all([
-      prisma.siteSetting.findMany({ where: { key: { in: imageKeys } }, select: { key: true, value: true } }),
-      getProducts({ giftSets: false }),
-    ]);
-    for (const row of rows) imageSettings.set(row.key, row.value);
-    products = catalog;
+    [imageSettings, products] = await Promise.all([getSiteSettingsMap(), getHomepageProducts()]);
   } catch (error) {
     console.error("Homepage bestseller content could not be loaded:", error);
   }
@@ -67,15 +61,13 @@ export default async function Bestsellers() {
         </Link>
       </div>
 
-      <div className="mt-12 flex items-end justify-between gap-0 lg:mt-16">
+      <div className="mt-12 grid grid-cols-3 items-end gap-3 sm:gap-6 lg:mt-16 lg:gap-10 xl:gap-14">
         {bestsellers.map((product, index) => (
           <article
             key={product.name}
             className={index === 1
-              ? "relative z-10 w-[38%] max-w-[500px] shrink-0 sm:w-[38%]"
-              : index === 0
-                ? "relative z-0 w-[33%] max-w-[440px] shrink-0 translate-x-[2cm] sm:w-[33%]"
-                : "relative z-0 w-[33%] max-w-[440px] shrink-0 -translate-x-[2cm] sm:w-[33%]"}
+              ? "relative z-10 w-full min-w-0 -translate-y-2 sm:-translate-y-4"
+              : "relative z-0 w-full min-w-0"}
           >
             <Link href={product.product ? `/shop/${product.product.slug}` : "/shop"} className="group block">
               <div className={index === 1
@@ -85,7 +77,7 @@ export default async function Bestsellers() {
                   src={product.image}
                   alt={product.alt}
                   fill
-                  sizes={index === 1 ? "(min-width: 1024px) 38vw, 38vw" : "(min-width: 1024px) 33vw, 33vw"}
+                  sizes="(max-width: 640px) 32vw, (max-width: 1024px) 30vw, 28vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                 />
               </div>
