@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { getClientSiteSettings } from "@/lib/site-settings-client";
 
 const defaultSlides = [
   {
@@ -37,9 +38,8 @@ export default function HeroSection() {
 
   useEffect(() => {
     let active = true;
-    fetch("/api/site-settings").then((response) => response.ok ? response.json() : null).then((data) => {
+    getClientSiteSettings().then((settings) => {
       if (!active) return;
-      const settings = data?.settings || {};
       setSlides(defaultSlides.map((slide, index) => {
         const key = index === 0 ? "heroImageUrl" : `heroImageUrl${index + 1}`;
         const savedImage = settings[key];
