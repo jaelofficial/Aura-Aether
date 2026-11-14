@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { Lock, Mail, ArrowRight, AlertCircle, Shield } from "lucide-react";
+import { Lock, Mail, ArrowRight, AlertCircle, } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();

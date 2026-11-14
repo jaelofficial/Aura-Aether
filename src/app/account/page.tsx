@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { User, Package, LogOut, ArrowRight, ShieldCheck, Settings } from "lucide-react";
+import { User, Package, LogOut, ArrowRight, Settings } from "lucide-react";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -79,16 +79,16 @@ export default function AccountPage() {
           </div>
 
           <div className="mb-8 rounded-3xl border border-[#ECE5DD] bg-white p-6 shadow-2xs sm:p-8">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FAF5EE] text-[#C59B4B]"><Settings className="h-5 w-5" /></div>
-              <div><h3 className="font-serif-luxury text-lg font-semibold text-[#1C1917]">Account Settings</h3><p className="mt-1 text-xs text-[#78716C]">Update your email, password, and personal details.</p></div>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FAF5EE] text-[#C59B4B]"><Settings className="h-5 w-5" /></div>
+                <div><h3 className="font-serif-luxury text-lg font-semibold text-[#1C1917]">Account Settings</h3><p className="mt-1 text-xs text-[#78716C]">Update your email, password, and personal details.</p></div>
+              </div>
+              <Link href="/account/settings" className="inline-flex items-center justify-center gap-2 rounded-full border border-[#D5CDC4] px-5 py-3 text-xs font-semibold text-[#1C1917] transition hover:border-[#B77F60] hover:bg-[#FAF7F4]">Manage settings <ArrowRight className="h-4 w-4" /></Link>
             </div>
-            <Link href="/account/settings" className="inline-flex items-center justify-center gap-2 rounded-full border border-[#D5CDC4] px-5 py-3 text-xs font-semibold text-[#1C1917] transition hover:border-[#B77F60] hover:bg-[#FAF7F4]">Manage settings <ArrowRight className="h-4 w-4" /></Link>
           </div>
-        </div>
 
-        {/* Orders Quick Access */}
+          {/* Orders Quick Access */}
           <div className="bg-white rounded-3xl border border-[#ECE5DD] p-6 sm:p-8 space-y-4 shadow-2xs flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-3 pb-4 border-b border-[#EFE9E2]">

@@ -4,7 +4,7 @@ import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { CheckCircle2, AlertTriangle, ArrowRight, ShoppingCart, ShieldCheck, RefreshCw, PackageSearch } from "lucide-react";
+import { CheckCircle2, AlertTriangle, ArrowRight, ShieldCheck, RefreshCw, PackageSearch } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { Order } from "@/types";
 import { formatGhs } from "@/lib/paystack";

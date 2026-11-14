@@ -5,7 +5,6 @@ import Link from "next/link";
 import { ArrowLeft, Check, Eye, Image as ImageIcon, Link2, Monitor, Save, Smartphone, Type, Upload } from "lucide-react";
 
 type Edit = { selector: string; type: "text" | "image" | "link"; value: string };
-type SavedEdits = { items: Edit[]; order: string[] };
 type Selection = { selector: string; type: Edit["type"]; value: string; label: string } | null;
 
 function selectorFor(main: HTMLElement, element: Element): string {

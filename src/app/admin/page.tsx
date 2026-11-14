@@ -16,8 +16,6 @@ import {
   Edit2,
   Trash2,
   CheckCircle,
-  Truck,
-  Clock,
   RefreshCw,
 } from "lucide-react";
 
@@ -575,41 +573,37 @@ export default function AdminDashboardPage() {
         <div id="admin-tabs" className="flex items-center gap-2 border-b border-[#EFE9E2] mb-8 pb-3">
           <button
             onClick={() => setActiveTab("orders")}
-            className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-colors ${
-              activeTab === "orders"
-                ? "bg-[#1C1917] text-white"
-                : "text-[#5C554F] hover:bg-[#F2ECE4]"
-            }`}
+            className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-colors ${activeTab === "orders"
+              ? "bg-[#1C1917] text-white"
+              : "text-[#5C554F] hover:bg-[#F2ECE4]"
+              }`}
           >
             Orders &amp; Fulfillment ({orders.length})
           </button>
           <button
             onClick={() => setActiveTab("products")}
-            className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-colors ${
-              activeTab === "products"
-                ? "bg-[#1C1917] text-white"
-                : "text-[#5C554F] hover:bg-[#F2ECE4]"
-            }`}
+            className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-colors ${activeTab === "products"
+              ? "bg-[#1C1917] text-white"
+              : "text-[#5C554F] hover:bg-[#F2ECE4]"
+              }`}
           >
             Product Catalog ({products.length})
           </button>
           <button
             onClick={() => setActiveTab("categories")}
-            className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-colors ${
-              activeTab === "categories"
-                ? "bg-[#1C1917] text-white"
-                : "text-[#5C554F] hover:bg-[#F2ECE4]"
-            }`}
+            className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-colors ${activeTab === "categories"
+              ? "bg-[#1C1917] text-white"
+              : "text-[#5C554F] hover:bg-[#F2ECE4]"
+              }`}
           >
             Categories ({categories.length})
           </button>
           <button
             onClick={() => setActiveTab("new-product")}
-            className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 ${
-              activeTab === "new-product"
-                ? "bg-[#1C1917] text-white"
-                : "text-[#5C554F] hover:bg-[#F2ECE4]"
-            }`}
+            className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 ${activeTab === "new-product"
+              ? "bg-[#1C1917] text-white"
+              : "text-[#5C554F] hover:bg-[#F2ECE4]"
+              }`}
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add New Fragrance</span>
@@ -668,15 +662,14 @@ export default function AdminDashboardPage() {
                             onChange={(e) =>
                               handleUpdateOrderStatus(o.id, e.target.value as Order["status"])
                             }
-                            className={`text-[11px] font-bold uppercase rounded-lg px-2.5 py-1 border transition-colors cursor-pointer ${
-                              o.status === "PAID"
-                                ? "bg-[#ECFDF5] border-[#A7F3D0] text-[#065F46]"
-                                : o.status === "SHIPPED"
+                            className={`text-[11px] font-bold uppercase rounded-lg px-2.5 py-1 border transition-colors cursor-pointer ${o.status === "PAID"
+                              ? "bg-[#ECFDF5] border-[#A7F3D0] text-[#065F46]"
+                              : o.status === "SHIPPED"
                                 ? "bg-[#EFF6FF] border-[#BFDBFE] text-[#1E40AF]"
                                 : o.status === "DELIVERED"
-                                ? "bg-[#F3E8FF] border-[#DDD6FE] text-[#6B21A8]"
-                                : "bg-[#FEF3C7] border-[#FDE68A] text-[#92400E]"
-                            }`}
+                                  ? "bg-[#F3E8FF] border-[#DDD6FE] text-[#6B21A8]"
+                                  : "bg-[#FEF3C7] border-[#FDE68A] text-[#92400E]"
+                              }`}
                           >
                             <option value="PENDING">PENDING</option>
                             <option value="PAID">PAID</option>
@@ -715,7 +708,7 @@ export default function AdminDashboardPage() {
             <form onSubmit={handleBulkDiscount} className="mb-6 rounded-2xl border border-[#E7D8BC] bg-[#FCFAF6] p-5">
               <div className="mb-4">
                 <h3 className="font-serif-luxury text-lg font-semibold text-[#1C1917]">Bulk Discounts</h3>
-                <p className="mt-1 text-xs text-[#78716C]">Apply one percentage discount to selected fragrances or your entire catalog. Original prices are saved so discounts won't compound.</p>
+                <p className="mt-1 text-xs text-[#78716C]">Apply one percentage discount to selected fragrances or your entire catalog. Original prices are saved so discounts won&apos;t compound.</p>
               </div>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-[1fr_1fr_auto] md:items-end">
                 <div>
@@ -794,9 +787,8 @@ export default function AdminDashboardPage() {
                             -
                           </button>
                           <span
-                            className={`font-semibold ${
-                              p.stock < 5 ? "text-[#DC2626]" : "text-[#1C1917]"
-                            }`}
+                            className={`font-semibold ${p.stock < 5 ? "text-[#DC2626]" : "text-[#1C1917]"
+                              }`}
                           >
                             {p.stock}
                           </span>
