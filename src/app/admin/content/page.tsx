@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CheckCircle2, Save, Upload, House, Palette, ShoppingBag, Gift, Mail, Sparkles, Truck } from "lucide-react";
 import ProductImageLibrary from "@/components/admin/ProductImageLibrary";
+import { DEFAULT_CLIENT_NOTES, type ClientNote } from "@/lib/site-content";
+import { invalidateClientSiteSettings } from "@/lib/site-settings-client";
 
 type Settings = Record<string, string>;
 type AdminUser = { id: string; name: string; email: string; role: "ADMIN" };
@@ -58,6 +60,9 @@ const initial: Settings = {
   homePromoDescription: "Explore fragrances for every mood, moment, and version of you.",
   homePromoImageUrl: "/images/spring-peonies.svg",
   aboutTitle: "Our story",
+  aboutFounderTitle: "A fragrance house with a story",
+  aboutFounderText: "Aura & Aether was created for the moments, moods, and memories that make you who you are.",
+  clientNotes: JSON.stringify(DEFAULT_CLIENT_NOTES),
   aboutIntro: "Aura & Aether was created for the moments, moods, and memories that make you who you are.",
   aboutImageUrl: "",
   aboutStoryImage1: "/images/about-story/story-01-desktop.jpeg", aboutStoryImage2: "/images/about-story/story-02-desktop.jpeg", aboutStoryImage3: "/images/about-story/story-03-desktop.jpeg", aboutStoryImage4: "/images/about-story/story-04-desktop.jpeg",
@@ -142,6 +147,8 @@ const groups: Record<string, EditorGroup[]> = {
   about: [{ title: "About page", description: "Edit your public brand story introduction.", fields: [
     { key: "aboutTitle", label: "Page heading" },
     { key: "aboutIntro", label: "Introduction", multiline: true },
+    { key: "aboutFounderTitle", label: "Founder section heading" },
+    { key: "aboutFounderText", label: "Founder story text", multiline: true },
     { key: "aboutStoryImage1", label: "About story image 1", image: true },
     { key: "aboutStoryImage2", label: "About story image 2", image: true },
     { key: "aboutStoryImage3", label: "About story image 3", image: true },
@@ -185,6 +192,7 @@ export default function StorefrontContentPage() {
   const [user, setUser] = useState<AdminUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [settings, setSettings] = useState<Settings>(initial);
+  const [clientNotes, setClientNotes] = useState<ClientNote[]>(DEFAULT_CLIENT_NOTES);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
@@ -214,7 +222,14 @@ export default function StorefrontContentPage() {
       .then(async (res) => {
         if (!res.ok) throw new Error("Could not load saved settings.");
         const data = await res.json();
-        setSettings({ ...initial, ...data.settings });
+        const loadedSettings = { ...initial, ...data.settings };
+        setSettings(loadedSettings);
+        try {
+          const parsedNotes = JSON.parse(loadedSettings.clientNotes || "[]");
+          setClientNotes(Array.isArray(parsedNotes) ? parsedNotes : DEFAULT_CLIENT_NOTES);
+        } catch {
+          setClientNotes(DEFAULT_CLIENT_NOTES);
+        }
       })
       .catch((error) => setMessage(error instanceof Error ? error.message : "Could not load saved settings."))
       .finally(() => setLoading(false));
@@ -247,10 +262,11 @@ export default function StorefrontContentPage() {
       const res = await fetch("/api/site-settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ settings }),
+        body: JSON.stringify({ settings: { ...settings, clientNotes: JSON.stringify(clientNotes) } }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Save failed");
+      invalidateClientSiteSettings();
       setMessage("Changes saved successfully.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Could not save changes.");
@@ -340,6 +356,29 @@ export default function StorefrontContentPage() {
             </label>)}
           </div>
         </section>)}
+
+        {activeSection === "about" && (
+          <section className="rounded-2xl border border-[#E5E7EB] bg-white p-5 sm:p-7">
+            <div className="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+              <div><h2 className="text-base font-bold text-[#20242B]">Client notes</h2><p className="mt-1 max-w-2xl text-xs leading-5 text-[#858B96]">Add, edit or remove the written testimonials displayed on the Our Story page.</p></div>
+              <button type="button" onClick={() => setClientNotes((current) => [...current, { id: `note-${Date.now()}`, name: "", location: "", message: "", signoff: "" }])} className="inline-flex shrink-0 items-center justify-center rounded-lg bg-[#20242B] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#424852]">Add client note</button>
+            </div>
+            <div className="space-y-4">
+              {clientNotes.map((note, index) => (
+                <div key={note.id} className="rounded-xl border border-[#E8EAEE] bg-[#FAFBFC] p-4 sm:p-5">
+                  <div className="mb-4 flex items-center justify-between gap-3"><p className="text-xs font-bold uppercase tracking-wider text-[#8B5D45]">Client note {index + 1}</p><button type="button" onClick={() => setClientNotes((current) => current.filter((item) => item.id !== note.id))} className="text-xs font-semibold text-red-600 hover:text-red-800">Remove</button></div>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <label className="block"><span className="text-xs font-bold text-[#454C57]">Client name</span><input value={note.name} onChange={(event) => setClientNotes((current) => current.map((item) => item.id === note.id ? { ...item, name: event.target.value } : item))} className="mt-2 w-full rounded-lg border border-[#E0E3E8] bg-white px-3 py-2.5 text-sm outline-none focus:border-[#B77F60]" placeholder="e.g. Ama K." /></label>
+                    <label className="block"><span className="text-xs font-bold text-[#454C57]">Location (optional)</span><input value={note.location} onChange={(event) => setClientNotes((current) => current.map((item) => item.id === note.id ? { ...item, location: event.target.value } : item))} className="mt-2 w-full rounded-lg border border-[#E0E3E8] bg-white px-3 py-2.5 text-sm outline-none focus:border-[#B77F60]" placeholder="e.g. Accra, Ghana" /></label>
+                    <label className="block sm:col-span-2"><span className="text-xs font-bold text-[#454C57]">Client message</span><textarea rows={4} value={note.message} onChange={(event) => setClientNotes((current) => current.map((item) => item.id === note.id ? { ...item, message: event.target.value } : item))} className="mt-2 w-full rounded-lg border border-[#E0E3E8] bg-white px-3 py-2.5 text-sm leading-6 outline-none focus:border-[#B77F60]" placeholder="Enter the client's testimonial..." /></label>
+                    <label className="block sm:col-span-2"><span className="text-xs font-bold text-[#454C57]">Closing line (optional)</span><input value={note.signoff} onChange={(event) => setClientNotes((current) => current.map((item) => item.id === note.id ? { ...item, signoff: event.target.value } : item))} className="mt-2 w-full rounded-lg border border-[#E0E3E8] bg-white px-3 py-2.5 text-sm outline-none focus:border-[#B77F60]" placeholder="e.g. Highly recommend!" /></label>
+                  </div>
+                </div>
+              ))}
+              {clientNotes.length === 0 && <p className="rounded-xl border border-dashed border-[#D9DDE4] p-6 text-center text-sm text-[#858B96]">No client notes yet. Use “Add client note” to create the first one.</p>}
+            </div>
+          </section>
+        )}
 
         {message && <div role="status" className={`flex items-start gap-2 rounded-xl border p-4 text-sm ${message.toLowerCase().includes("could not") || message.toLowerCase().includes("failed") ? "border-red-200 bg-red-50 text-red-700" : "border-emerald-200 bg-emerald-50 text-emerald-800"}`}><CheckCircle2 size={17} className="mt-0.5 shrink-0" /><span>{message}</span></div>}
         <div className="sticky bottom-4 z-20 flex flex-col justify-between gap-3 rounded-2xl border border-[#E5E7EB] bg-white/95 p-3 shadow-lg backdrop-blur sm:flex-row sm:items-center sm:px-5">
