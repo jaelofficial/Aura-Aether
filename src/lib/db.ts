@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { cache } from "react";
 import { initialCategories } from "./data";
 import { Product, Category, Order, User } from "@/types";
 
@@ -593,3 +594,12 @@ export async function deleteProduct(id: string): Promise<boolean> {
 
   throw new Error("PostgreSQL is unavailable. Product was not deleted.");
 }
+
+
+// Share homepage product and settings reads between server components during one render.
+export const getHomepageProducts = cache(async () => getProducts({ giftSets: false }));
+
+export const getSiteSettingsMap = cache(async () => {
+  const rows = await prisma.siteSetting.findMany({ select: { key: true, value: true } });
+  return new Map(rows.map((row) => [row.key, row.value] as const));
+});
